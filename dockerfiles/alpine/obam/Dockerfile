@@ -37,9 +37,9 @@ ARG WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obam-1.4.0.zip
 ARG MOTD='printf "\n\
  Welcome to WSO2 Docker Resources \n\
  --------------------------------- \n\
- This Docker container comprises of a WSO2 product, running with its latest GA release \n\
- which is under the Apache License, Version 2.0. \n\
- Read more about Apache License, Version 2.0 here @ http://www.apache.org/licenses/LICENSE-2.0.\n"'
+ This Docker container comprises of the WSO2 Open Banking Solution, with its latest GA release \n\
+ which is under The WSO2 Commercial License 1.0. \n\
+ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"'
 ENV ENV=${USER_HOME}"/.ashrc"
 
 # create the non-root user and group and set MOTD login message
