@@ -7,8 +7,7 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking Key Manager pack downloaded through [WUM](https://docs.wso2.com/display/OB140/Setting+Up+Servers)
     + Host the downloaded pack locally or on a remote location.
-    > The hosted location will be passed as the build argument `WSO2_SERVER_DIST_URL` when building the Docker image. 
-    > eg:- `ARG WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obkm-1.4.0.zip` 
+    > The hosted location will be passed as the build argument `WSO2_SERVER_DIST_URL` when building the Docker image.
 
 ## How to build an image and run
 

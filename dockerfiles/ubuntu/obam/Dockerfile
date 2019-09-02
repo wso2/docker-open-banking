@@ -32,14 +32,14 @@ ARG WSO2_SERVER_NAME=wso2-obam
 ARG WSO2_SERVER_VERSION=1.4.0
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
-ARG WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obam-1.4.0.zip
+ARG WSO2_SERVER_DIST_URL
 # build argument for MOTD
 ARG MOTD="\n\
 Welcome to WSO2 Docker resources.\n\
 ------------------------------------ \n\
-This Docker container comprises of a WSO2 product, running with its latest GA release \n\
-which is under the Apache License, Version 2.0. \n\
-Read more about Apache License, Version 2.0 here @ http://www.apache.org/licenses/LICENSE-2.0.\n"
+This Docker container comprises of The WSO2 Open Banking Solution, with its latest GA release \n\
+which is under The WSO2 Commercial License 1.0. \n\
+Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"
 
 # create the non-root user and group and set MOTD login message
 RUN \
