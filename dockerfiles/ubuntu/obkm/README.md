@@ -44,7 +44,7 @@ As an example, steps required to change the port offset using `carbon.xml` is as
 
 ##### 1. Stop the Key Manager container if it's already running.
 
-In WSO2 Key Manager 1.4.0 product distribution, `carbon.xml` configuration file <br>
+In WSO2 Open Banking Key Manager 1.4.0 product distribution, `carbon.xml` configuration file <br>
 can be found at `<DISTRIBUTION_HOME>/repository/conf`. Copy the file to some suitable location of the host machine, <br>
 referred to as `<SOURCE_CONFIGS>/carbon.xml` and change the offset value under ports to 1.
 
@@ -58,12 +58,12 @@ chmod o+r <SOURCE_CONFIGS>/carbon.xml
 
 ```
 docker run \
--p 9444:9444 \
+-p 9447:9447 \
 --volume <SOURCE_CONFIGS>/carbon.xml:<TARGET_CONFIGS>/carbon.xml \
-wso2is-km:5.7.0
+wso2-obkm:1.4.0
 ```
 
-> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2is-km-5.7.0/repository/conf folder of the container.
+> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obkm-1.4.0/repository/conf folder of the container.
 
 ## Docker command usage references
 
