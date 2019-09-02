@@ -7,7 +7,7 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking Key Manager pack downloaded through [WUM](https://docs.wso2.com/display/OB140/Setting+Up+Servers)
     + Host the downloaded pack locally or on a remote location.
-    + Set the hosted location as the `WSO2_SERVER_DIST_URL` variable in the Dockerfile.
+    > The hosted location will be passed as the build argument `WSO2_SERVER_DIST_URL` when building the Docker image. 
     > eg:- `ARG WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obkm-1.4.0.zip` 
 
 ## How to build an image and run
@@ -24,8 +24,9 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBKM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build -t wso2-obkm:1.4.0 .`
-    
+    + `docker build --build-arg WSO2_SERVER_DIST_URL=<<URL_OF_THE_HOSTED_LOCATION/FILENAME>> -t wso2-obkm:1.4.0 .`
+    > eg:- `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obkm-1.4.0.zip -t wso2-obkm:1.4.0 .`
+
 ##### 3. Running the Docker image.
 
 - `docker run -it -p 9446:9446 wso2-obkm:1.4.0`
@@ -44,7 +45,7 @@ As an example, steps required to change the port offset using `carbon.xml` is as
 
 ##### 1. Stop the Key Manager container if it's already running.
 
-In WSO2 Key Manager 1.4.0 product distribution, `carbon.xml` configuration file <br>
+In WSO2 Open Banking Key Manager 1.4.0 product distribution, `carbon.xml` configuration file <br>
 can be found at `<DISTRIBUTION_HOME>/repository/conf`. Copy the file to some suitable location of the host machine, <br>
 referred to as `<SOURCE_CONFIGS>/carbon.xml` and change the offset value under ports to 1.
 
@@ -58,12 +59,12 @@ chmod o+r <SOURCE_CONFIGS>/carbon.xml
 
 ```
 docker run \
--p 9444:9444 \
+-p 9447:9447 \
 --volume <SOURCE_CONFIGS>/carbon.xml:<TARGET_CONFIGS>/carbon.xml \
-wso2is-km:5.7.0
+wso2-obkm:1.4.0
 ```
 
-> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2is-km-5.7.0/repository/conf folder of the container.
+> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obkm-1.4.0/repository/conf folder of the container.
 
 ## Docker command usage references
 
