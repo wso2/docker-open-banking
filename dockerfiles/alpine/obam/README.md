@@ -7,8 +7,7 @@ This section defines the step-by-step instructions to build an [Alpine](https://
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking API Manager pack downloaded through [WUM](https://docs.wso2.com/display/OB140/Setting+Up+Servers)
     + Host the downloaded pack locally or on a remote location.
-    + Set the hosted location as the `WSO2_SERVER_DIST_URL` variable in the Dockerfile.
-    > eg:- `ARG WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obam-1.4.0.zip` 
+    > The hosted location will be passed as the build argument `WSO2_SERVER_DIST_URL` when building the Docker image. 
 
 ## How to build an image and run
 
@@ -24,7 +23,8 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build -t wso2-obam:1.4.0-alpine .`
+    + `docker build --build-arg WSO2_SERVER_DIST_URL=<<URL_OF_THE_HOSTED_LOCATION/FILENAME>> -t wso2-obam:1.4.0-alpine .`
+    > eg:- `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obam-1.4.0.zip -t wso2-obam:1.4.0-alpine .`
     
 ##### 3. Running the Docker image.
 
