@@ -91,4 +91,3 @@ EXPOSE 9763 9443
 
 # initiate container and start WSO2 Carbon server
 ENTRYPOINT ["/home/wso2carbon/docker-entrypoint.sh"]
-
