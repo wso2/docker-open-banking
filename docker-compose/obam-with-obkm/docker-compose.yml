@@ -23,10 +23,10 @@ services:
     image: mysql:5.7.24
     ports:
       - "3306"
-    environments:
+    environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - "./mysql/scripts/setup.sql:/docker-entrypoint-initdb.d"
+      - "./mysql/scripts:/docker-entrypoint-initdb.d"
     command: [--ssl=0]
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-uroot", "-proot"]
@@ -43,7 +43,7 @@ services:
       timeout: 120s
       start_period: 100s
       retries: 5 
-    depends on:
+    depends_on:
       - "mysql"
     volumes:
       - "./obkm/UK:/home/wso2carbon/wso2-config-volume"
@@ -66,7 +66,7 @@ services:
       timeout: 10s
       start_period: 150s
       retries: 5 
-    depends on:
+    depends_on:
       - "mysql"
       - "obkm"
     volumes:
@@ -74,6 +74,8 @@ services:
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9443:9443"
+      - "8243:8243"
+      - "8280:8280"
     entrypoint:
       - "/home/wso2carbon/wait-for-it.sh"
       - "obkm:9446"
