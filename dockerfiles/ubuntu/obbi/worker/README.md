@@ -1,4 +1,4 @@
-# Dockerfile for Worker Profile of WSO2 API Manager Analytics #
+# Dockerfile for Worker Profile of WSO2 Open Banking Business Intelligence #
 
 This section defines the step-by-step instructions to build [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for Worker profile of
 WSO2 Open Banking Business Intelligence 1.4.0.
