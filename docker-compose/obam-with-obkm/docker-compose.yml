@@ -38,7 +38,7 @@ services:
 
   obkm:
     container_name: obkm
-    image: wso2-obkm:1.4.0
+    image: docker.wso2.com/wso2-obkm
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9446/carbon/admin/login.jsp"]
       interval: 10s
@@ -56,13 +56,13 @@ services:
       - "/home/wso2carbon/wait-for-it.sh"
       - "mysql:3306"
       - "-t"
-      - "30"
+      - "150"
       - "--"
       - "./docker-entrypoint.sh"
 
   obam:
     container_name: obam
-    image: wso2-obam:1.4.0
+    image: docker.wso2.com/wso2-obam
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/carbon/admin/login.jsp"]
       interval: 10s
@@ -83,6 +83,6 @@ services:
       - "/home/wso2carbon/wait-for-it.sh"
       - "obkm:9446"
       - "-t"
-      - "150"
+      - "240"
       - "--"
       - "./docker-entrypoint.sh"
