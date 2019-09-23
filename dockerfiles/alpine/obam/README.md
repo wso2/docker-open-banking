@@ -24,7 +24,8 @@ git clone https://github.com/wso2/docker-open-banking.git
 - Navigate to `<OBAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
     + `docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obam:1.4.0-alpine .`
-    > eg:- `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obam-1.4.0.zip -t wso2-obam:1.4.0-alpine .`
+    > eg:- Hosted locally: `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obam-1.4.0.zip -t wso2-obam:1.4.0-alpine .`
+    > eg:- Hosted remotely: `docker build --build-arg WSO2_SERVER_DIST_URL=http://<public_ip:port>/wso2-obam-1.4.0.zip -t wso2-obam:1.4.0-alpine .`
     
 ##### 3. Running the Docker image.
 
