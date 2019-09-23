@@ -48,7 +48,7 @@ services:
     depends_on:
       - "mysql"
     volumes:
-      - "./obkm/UK:/home/wso2carbon/wso2-config-volume"
+      - "./obkm/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9446:9446"
@@ -73,7 +73,7 @@ services:
       - "mysql"
       - "obkm"
     volumes:
-      - "./obam/UK:/home/wso2carbon/wso2-config-volume"
+      - "./obam/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9443:9443"
