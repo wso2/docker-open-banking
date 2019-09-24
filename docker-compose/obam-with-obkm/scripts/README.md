@@ -6,7 +6,7 @@
  * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Docker](https://www.docker.com/get-docker) and [Docker Compose](https://docs.docker.com/compose/install/#install-compose)
    in order to run the steps provided in following **Quick Start Guide**. <br><br>
  * In order to use WSO2 Open Banking Docker images, you need an active WSO2 Open Banking subscription. If you do not possess an active WSO2
-   Open Banking subscription, you can contact us for a Free Trial Subscription from [here](https://wso2.com/solutions/financial/open-banking/).<br><br>
+   Open Banking subscription, you can contact us from [here](https://wso2.com/solutions/financial/open-banking/).<br><br>
  * If you wish to run the Docker Compose setup using Docker images built locally, build Docker images using Docker resources available from [here](../../dockerfiles/) and remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml`. <br><br>
     
 ## Quick Start Guide
@@ -27,7 +27,7 @@
      Instead, extract the zip file and directly browse to `docker-open-banking-<released-version-here>/docker-compose/obam-with-obkm` folder. 
      
     > If you want to try out an already released tag, after executing 2nd step, checkout the relevant tag, 
-     i.e. for example: git checkout tags/v1.4.0.1 and continue below steps.
+     i.e. for example: git checkout tags/v1.4.0.2 and continue below steps.
 
 3. Execute the `deploy.sh` script to start the deployment.
    ```
