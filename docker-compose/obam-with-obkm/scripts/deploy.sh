@@ -30,45 +30,34 @@ function echoBold () {
     ${ECHO} -e $'\e[1m'"${1}"$'\e[0m'
 }
 
-read -p "Do you have a WSO2 Subscription? (Y/N)" -r REPLY
+read -p "Enter Your Open-Banking Specification (UK[1]/Berlin[2]): " SPEC
 ${ECHO}
 
-if [[ ${REPLY} =~ ^[Yy]$ ]]; then
-    read -p "Enter Your WSO2 Username: " WSO2_SUBSCRIPTION_USERNAME
+if [[ ${SPEC} =~ "1" ]]; then
+    echoBold "Configuring WSO2 Open Banking UK specification..."
     ${ECHO}
-    read -s -p "Enter Your WSO2 Password: " WSO2_SUBSCRIPTION_PASSWORD
-    ${ECHO}
-    ${ECHO}
-    read -p "Enter Your Open-Banking Specification (UK[1]/Berlin[2]): " SPEC
-    ${ECHO}
-
-    echoBold "Logging into WSO2 Private Docker Registry (docker.wso2.com)"
-    ${ECHO}
-    ${DOCKER_CLIENT} login --username ${WSO2_SUBSCRIPTION_USERNAME} --password ${WSO2_SUBSCRIPTION_PASSWORD} docker.wso2.com
-
-    if [[ ${SPEC} =~ "1" ]]; then
-	    echoBold "Configuring WSO2 Open Banking UK specification..."
-        ${ECHO}
-    elif [[ ${SPEC} =~ "2" ]]; then
-        if ! ${SED} -i.bak -e 's|/uk|/berlin|' ../docker-compose.yml; then
-        echoBold "Could not configure to use the WSO2 Docker image available at DockerHub"
-        exit 1
-	    else
-	        echoBold "Configuring WSO2 Open Banking Berlin specification..."
-            ${ECHO}
-        fi
+elif [[ ${SPEC} =~ "2" ]]; then
+    if ! ${SED} -i.bak -e 's|/uk|/berlin|' ../docker-compose.yml; then
+    echoBold "Could not configure to use the WSO2 Docker image available at DockerHub"
+    exit 1
     else
-    echoBold "You have entered an in invalid option"
-	echoBold "Configuring the default WSO2 Open Banking UK specification..."
-    ${ECHO}
+        echoBold "Configuring WSO2 Open Banking Berlin specification..."
+        ${ECHO}
     fi
-elif [[ ${REPLY} =~ ^[Nn]$ || -z "${REPLY}" ]]; then
-    echoBold "Please request a free trial subscription from https://wso2.com/solutions/financial/open-banking"
-    exit 1
 else
-    echoBold "You have entered an invalid option."
-    exit 1
+echoBold "You have entered an in invalid option"
+echoBold "Configuring the default WSO2 Open Banking UK specification..."
+${ECHO}
 fi
+
+read -p "Enter Your WSO2 Username: " WSO2_SUBSCRIPTION_USERNAME
+${ECHO}
+read -s -p "Enter Your WSO2 Password: " WSO2_SUBSCRIPTION_PASSWORD
+${ECHO}
+${ECHO}
+echoBold "Logging into WSO2 Private Docker Registry (docker.wso2.com)"
+${ECHO}
+${DOCKER_CLIENT} login --username ${WSO2_SUBSCRIPTION_USERNAME} --password ${WSO2_SUBSCRIPTION_PASSWORD} docker.wso2.com
 
 # remove backed up files
 ${TEST} -f ../*.bak && rm ../*.bak
