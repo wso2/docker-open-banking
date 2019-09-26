@@ -9,7 +9,7 @@
 	},
 	"ccportalRoles" : ["Internal/CustomerCareOfficer"],
 	"consentStatus" : ["Revoked", "Authorised", "AwaitingAuthorisation", "AcceptedTechnicalValidation", "AcceptedCustomerProfile"],
-	"DeployedSpecification" : UK,
+	"DeployedSpecification" : "UK",
 	"consentStatuses" : {
 		"UKAccount" : ["Authorised", "AwaitingAuthorisation"],
 		"BERLINAccount" : ["received", "rejected", "partiallyAuthorised", "valid", "revokedByPsu", "expired", "terminatedByTpp"],
