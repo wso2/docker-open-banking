@@ -3,7 +3,18 @@ All notable changes to this project 1.4.x per each release will be documented in
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## [v1.4.0.2] - 2019.09.26
+## [v1.4.0.3] - TBA
+
+### Added
+- Docker Compose resources for Open Banking Berlin specification for Open Banking API Manager with Open Banking Key Manager profile
+
+### Changed
+- Separated DB scripts into different directories based on the specification
+
+### Added
+- Docker Compose resources for Open Banking UK specification for Open Banking API Manager with Open Banking Key Manager profile
+
+## [v1.4.0.2] - 2019-09-26
 
 ### Added
 - Docker Compose resources for Open Banking UK specification for Open Banking API Manager with Open Banking Key Manager profile
