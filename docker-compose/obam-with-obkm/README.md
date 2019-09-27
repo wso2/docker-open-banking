@@ -33,6 +33,7 @@
    ```
    docker-compose up
    ```
+   > By default Docker Compose resources are set to start UK specification based deployment of WSO2 Open Banking Solution. If you want to start a Berlin specification based deployment, please replace all the `/uk` directories in the [docker-compose.yml](docker-compose.yml) with `/berlin` or use the quick start script available [here](scripts/deploy.sh).
 
 4. Access the WSO2 Open Banking API Manager web UIs using the below URLs via a web browser.
 
