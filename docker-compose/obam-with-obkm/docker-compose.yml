@@ -28,6 +28,11 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - "./mysql/scripts/uk:/docker-entrypoint-initdb.d"
+      - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
     command: [--ssl=0]
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-uroot", "-proot"]

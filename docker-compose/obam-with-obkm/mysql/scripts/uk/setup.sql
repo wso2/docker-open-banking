@@ -1,5 +1,3 @@
-SET GLOBAL max_connections = 1500;
-
 DROP DATABASE IF EXISTS openbank_apimgt_statsdb  ; CREATE DATABASE openbank_apimgt_statsdb;
 DROP DATABASE IF EXISTS openbank_apimgtdb  ; CREATE DATABASE openbank_apimgtdb;
 DROP DATABASE IF EXISTS openbank_openbankingdb  ; CREATE DATABASE openbank_openbankingdb;
@@ -7,7 +5,7 @@ DROP DATABASE IF EXISTS openbank_mbstoredb  ; CREATE DATABASE openbank_mbstoredb
 DROP DATABASE IF EXISTS openbank_commondb  ; CREATE DATABASE openbank_commondb;
 
 /*
-Create tables for openbank_apimgtdb;
+Create tables for openbank_apimgtdb
 */
 
 USE openbank_apimgtdb;
