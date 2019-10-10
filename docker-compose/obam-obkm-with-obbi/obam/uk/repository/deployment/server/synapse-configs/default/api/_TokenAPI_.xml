@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/token" name="_WSO2AMTokenAPI_" xmlns="http://ws.apache.org/ns/synapse">
+    <resource faultSequence="_token_fault_" methods="POST" url-mapping="/*">
+        <inSequence>
+            <property expression="get-property('keyManager.port')" name="uri.var.portnum"/>
+            <property expression="get-property('keyManager.hostname')" name="uri.var.hostname"/>
+            <send>
+                <endpoint>
+                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/token">
+                        <timeout>
+                            <duration>60000</duration>
+                            <responseAction>fault</responseAction>
+                        </timeout>
+                    </http>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+    </resource>
+    <handlers>
+        <handler class="org.wso2.carbon.apimgt.gateway.handlers.ext.APIManagerCacheExtensionHandler"/>
+        <handler class="org.wso2.carbon.apimgt.gateway.handlers.common.SynapsePropertiesHandler"/>
+        <handler class="com.wso2.finance.open.banking.common.identity.validation.SignatureAlgorithmValidatorHandler"/>
+        <!--<handler class="com.wso2.finance.open.banking.mtls.validator.handler.MTLSValidationHandler"/>-->
+    </handlers>
+</api>
