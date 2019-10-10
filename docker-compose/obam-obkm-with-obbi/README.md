@@ -27,7 +27,7 @@
      Instead, extract the zip file and directly browse to `docker-open-banking-<released-version-here>/docker-compose/obam-obkm-with-obbi` folder. 
      
     > If you want to try out an already released tag, after executing 2nd step, checkout the relevant tag, 
-     i.e. for example: git checkout tags/v1.4.0.2 and continue below steps.
+     i.e. for example: git checkout tags/v1.4.0.3 and continue below steps.
 
 3. Execute following Docker Compose command to start the deployment.
    ```
