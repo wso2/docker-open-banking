@@ -71,7 +71,7 @@ services:
     container_name: obbi-dashboard
     image: docker.wso2.com/wso2-obbi-dashboard
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "	9449"]
+      test: ["CMD", "nc", "-z", "localhost", "9449"]
       interval: 10s
       timeout: 10s
       start_period: 150s
