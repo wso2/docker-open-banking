@@ -44,7 +44,7 @@
 
     <mount path="/_system/config" overwrite="true">
         <instanceId>configInstance</instanceId>
-        <targetPath>/_system/config</targetPath>
+        <targetPath>/_system/obam/config</targetPath>
     </mount>
 
 
