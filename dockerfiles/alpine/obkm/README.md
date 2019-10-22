@@ -66,6 +66,27 @@ wso2-obkm:1.4.0-alpine
 
 > In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obkm-1.4.0/repository/conf folder of the container.
 
+## How to add a custom keystore
+
+##### 1. Create a new keystore.
+
+Follow the steps given in [Creating a new keystore](https://docs.wso2.com/display/ADMIN44x/Creating+New+Keystores).
+
+##### 2. Import the certificate of the keystores to the truststore.
+
+* Import the public key certificate of the new server keystore to the truststore of WSO2 Open Banking Key Manager.
+* If there are any client certificates, import them to the truststore as well.
+
+##### 3. Add the new keystore and truststore to WSO2 Open Banking Key Manager.
+
+* Copy the generated keystore to `<DISTRIBUTION_HOME>/repository/resources/security`.
+* Replace the existing `<DISTRIBUTION_HOME>/repository/resources/security/client-truststore.jks` with the truststore updated in step 2
+* To configure the keystore and trustore follow [Configuring KeyStores](https://docs.wso2.com/display/ADMIN44x/Configuring+Keystores+in+WSO2+Products).
+
+##### 4. Build the Docker Image for Open Banking Key Manager.
+
+Build the Docker Image following the above steps.
+
 ## Docker command usage references
 
 * [Docker build command reference](https://docs.docker.com/engine/reference/commandline/build/)
