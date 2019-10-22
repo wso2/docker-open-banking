@@ -34,8 +34,13 @@ read -p "Enter Your Open-Banking Specification (UK[1]/Berlin[2]): " SPEC
 ${ECHO}
 
 if [[ ${SPEC} =~ "1" ]]; then
-    echoBold "Configuring WSO2 Open Banking UK specification..."
-    ${ECHO}
+    if ! ${SED} -i.bak -e 's|/berlin|/uk|' ../docker-compose.yml; then
+    echoBold "Could not configure to use the WSO2 Docker image available at DockerHub"
+    exit 1
+    else
+        echoBold "Configuring WSO2 Open Banking UK specification..."
+        ${ECHO}
+    fi
 elif [[ ${SPEC} =~ "2" ]]; then
     if ! ${SED} -i.bak -e 's|/uk|/berlin|' ../docker-compose.yml; then
     echoBold "Could not configure to use the WSO2 Docker image available at DockerHub"
