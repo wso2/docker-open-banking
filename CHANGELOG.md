@@ -3,6 +3,17 @@ All notable changes to this project 1.4.x per each release will be documented in
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [v1.4.0.4] - 2019-10-24
+
+### Added
+- Backward support for changing uk and berlin specs
+- Readme instructions on creating a keystore
+- openbank_geolocationdb mysql scripts
+
+### Changed
+- Incorrect mount path of registryDB
+- MySQL url of WSO2AM_STATS_DB
+
 ## [v1.4.0.3] - 2019-10-11
 
 ### Added
