@@ -1,6 +1,6 @@
 # Docker and Docker Compose Resources for WSO2 Open Banking
 
-This repository contains following Docker resources:
+This repository contains the following resources:
 
 - WSO2 Open Banking API Manager Dockerfile for Ubuntu and Alpine
 - WSO2 Open Banking Key Manager Dockerfile for Ubuntu and Alpine
