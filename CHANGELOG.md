@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Incorrect mount path of registryDB
 - MySQL url of WSO2AM_STATS_DB
 
+For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.4.0.4](https://github.com/wso2/docker-open-banking/milestone/5).
+
 ## [v1.4.0.3] - 2019-10-11
 
 ### Added
