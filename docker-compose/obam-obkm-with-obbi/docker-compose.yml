@@ -87,7 +87,7 @@ services:
       - "/home/wso2carbon/wait-for-it.sh"
       - "obbi-worker:9444"
       - "-t"
-      - "180"
+      - "240"
       - "--"
       - "./docker-entrypoint.sh"
 
@@ -112,7 +112,7 @@ services:
       - "/home/wso2carbon/wait-for-it.sh"
       - "obbi-dashboard:9449"
       - "-t"
-      - "180"
+      - "210"
       - "--"
       - "./docker-entrypoint.sh"
 
