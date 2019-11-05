@@ -3,6 +3,15 @@ All notable changes to this project 1.4.x per each release will be documented in
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [v1.4.0.5] - TBA
+
+### Fixed
+- Failure to accept product startup options
+
+For detailed information on the tasks carried out during this release, please see the GitHub milestone
+[v3.0.0.2](https://github.com/wso2/docker-apim/milestone/9).
+
+
 ## [v1.4.0.4] - 2019-10-24
 
 ### Added
