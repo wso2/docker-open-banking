@@ -74,6 +74,7 @@ RUN \
     && mkdir ${USER_HOME}/wso2-tmp \
     && cp -r ${WSO2_SERVER_HOME}/repository/deployment/server/synapse-configs ${USER_HOME}/wso2-tmp \
     && cp -r ${WSO2_SERVER_HOME}/repository/deployment/server/executionplans ${USER_HOME}/wso2-tmp \
+    && cp -r ${WSO2_SERVER_HOME}/repository/database ${USER_HOME}/wso2-tmp \
     && rm -f ${WSO2_SERVER}.zip
 
 # set the user and work directory
