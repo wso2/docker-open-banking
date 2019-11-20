@@ -27,7 +27,7 @@
      Instead, extract the zip file and directly browse to `docker-open-banking-<released-version-here>/docker-compose/obam-with-obkm` folder. 
      
     > If you want to try out an already released tag, after executing 2nd step, checkout the relevant tag, 
-     i.e. for example: git checkout tags/v1.4.0.2 and continue below steps.
+     i.e. for example: git checkout tags/v1.4.0.5 and continue below steps.
 
 3. Execute following Docker Compose command to start the deployment.
    ```
@@ -37,31 +37,43 @@
 
 4. Access the WSO2 Open Banking API Manager web UIs using the below URLs via a web browser.
 
- ```
+   ```
    https://localhost:9443/publisher
    https://localhost:9443/store
    https://localhost:9443/admin
    https://localhost:9443/carbon
- ```
+  ```
  
- Access the servers using following credentials.
+  Access the servers using following credentials.
     
- * Username: admin@wso2.com <br>
- * Password: wso2123
+  * Username: admin@wso2.com <br>
+  * Password: wso2123
  
- Please note that API Gateway will be available on following ports.
- ```
+  Please note that API Gateway will be available on following ports.
+  ```
     https://localhost:8243
     https://localhost:8280
- ```
+  ```
 
- WSO2 Open Banking API Manager will use WSO2 Open Banking Key Manager to generate OAuth2 tokens and validate those tokens during API invocations. You can access the WSO2 Open Banking Key Manager-Management portal using the below URL via a web browser.
+  WSO2 Open Banking API Manager will use WSO2 Open Banking Key Manager to generate OAuth2 tokens and validate those tokens during API invocations. You can access the WSO2 Open Banking Key Manager-Management portal using the below URL via a web browser.
 
-```
+  ```
    https://localhost:9446/carbon
- ```
+  ```
  
- Access the servers using following credentials.
+  Access the servers using following credentials.
     
- * Username: admin@wso2.com <br>
- * Password: wso2123
+  * Username: admin@wso2.com <br>
+  * Password: wso2123
+
+5. Follow the documentation to use WSO2 Open Banking:
+
+    To deploy the APIs
+      * [Deploying APIs for UK](https://docs.wso2.com/display/OB140/Deploying+APIs+for+UK)
+      * [Deploying APIs for Berlin](https://docs.wso2.com/display/OB140/Deploying+APIs+for+Berlin)
+
+    To try out the solution:
+      * [Try Out WSO2 Open Banking UK](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+UK)
+      * [Try Out WSO2 Open Banking Berlin](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+Berlin?src=sidebar)
+
+For more information, see [WSO2 Open Banking documentation](https://docs.wso2.com/display/OB140).
