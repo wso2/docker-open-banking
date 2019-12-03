@@ -81,12 +81,12 @@
 
 5. Follow the documentation to use WSO2 Open Banking:
 
-    To deploy the APIs
-      * [Deploying APIs for UK](https://docs.wso2.com/display/OB140/Deploying+APIs+for+UK)
-      * [Deploying APIs for Berlin](https://docs.wso2.com/display/OB140/Deploying+APIs+for+Berlin)
+a. To deploy APIs
+* [Deploying APIs for UK](https://docs.wso2.com/display/OB140/Deploying+APIs+for+UK)
+* [Deploying APIs for Berlin](https://docs.wso2.com/display/OB140/Deploying+APIs+for+Berlin)
 
-    To try out the solution:
-      * [Try Out WSO2 Open Banking UK](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+UK)
-      * [Try Out WSO2 Open Banking Berlin](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+Berlin?src=sidebar)
+b. To try out the solution:
+* [Try Out WSO2 Open Banking UK](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+UK)
+* [Try Out WSO2 Open Banking Berlin](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+Berlin?src=sidebar)
 
-For more information, see the [WSO2 Open Banking documentation](https://docs.wso2.com/display/OB140).
+For more information, see [WSO2 Open Banking documentation](https://docs.wso2.com/display/OB140).
