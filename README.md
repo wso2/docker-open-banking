@@ -15,7 +15,6 @@ Docker Compose resources have been created according to the most common WSO2 Ope
 
 **Change log** from previous v1.4.0.4 release: [View Here](CHANGELOG.md)
 
-## Reporting issues
+## Contributions
 
-We encourage you to report any issues and documentation faults regarding Docker and Docker Compose resources for WSO2 API Management.
-Please report your issues [here](https://github.com/wso2/docker-open-banking/issues).
+For details on how to contribute to this repository, please refer [this](CONTRIBUTING.md) documentation.
