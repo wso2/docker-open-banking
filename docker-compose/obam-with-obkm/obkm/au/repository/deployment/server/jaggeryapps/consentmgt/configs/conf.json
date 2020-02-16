@@ -1,0 +1,26 @@
+{
+	"app" : "consentmgt",
+	"applicationType" : "oauth2",
+	"tenantDomain": "carbon.super",
+	"apimHost":"http://obam",
+	"apimNioPort":"8280",
+	"apimHttpPort":"9763",
+	"kmHost" : "https://obkm",
+	"kmPort" : "9446",
+	"kmTokenAPI" : "oauth2/token",
+	"kmAuthorizeAPI" : "oauth2/authorize",
+	"applicationId":"",
+	"authCredential":"",
+	"redirectUrl":"https://obkm:9446/consentmgt",
+	"logoutUrl": "https://obkm:9446/consentmgt",
+	"tokenApiName" : "token",
+	"tokenApiVersion" : "",
+	"authorizeApiName" : "authorize",
+	"authorizeApiVersion" : "",
+	"pagination" : {
+		"limit" : 11,
+		"actualLimit" : 10,
+		"offset": 0
+	},
+	"DeployedSpecification" : "UK"
+}
