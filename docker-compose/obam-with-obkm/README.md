@@ -33,7 +33,7 @@
    ```
    docker-compose up
    ```
-   > By default Docker Compose resources are set to start UK specification based deployment of WSO2 Open Banking Solution. If you want to start a Berlin specification based deployment, please replace all the `/uk` directories in the [docker-compose.yml](docker-compose.yml) with `/berlin` or use the quick start script available [here](scripts/deploy.sh).
+   > By default Docker Compose resources are set to start UK specification based deployment of WSO2 Open Banking Solution. If you want to start a Berlin specification based deployment, please replace all the `/uk` directories in the [docker-compose.yml](docker-compose.yml) with `/berlin`. If you want to start an AU specification based deployment, please replace all the `/uk` directories in the [docker-compose.yml](docker-compose.yml) with `/au`. The quick start script available [here](scripts/deploy.sh) also can be used to start a deployment with the preferred specification.
 
 4. Access the WSO2 Open Banking API Manager web UIs using the below URLs via a web browser.
 
@@ -71,10 +71,12 @@
 a. To deploy APIs
 * [Deploying APIs for UK](https://docs.wso2.com/display/OB140/Deploying+APIs+for+UK)
 * [Deploying APIs for Berlin](https://docs.wso2.com/display/OB140/Deploying+APIs+for+Berlin)
+* [Deploying APIs for AU](https://docs.wso2.com/display/OB140/Try+Local+Setup+for+AU#TryLocalSetupforAU-ConfiguringAPIs)
 
 b. To try out the solution:
 * [Try Out WSO2 Open Banking UK](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+UK)
 * [Try Out WSO2 Open Banking Berlin](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+Berlin?src=sidebar)
+* [Try Out WSO2 Open Banking AU](https://docs.wso2.com/display/OB140/Try+Out+WSO2+Open+Banking+Au)
 
 For more information, see [WSO2 Open Banking documentation](https://docs.wso2.com/display/OB140).
 
