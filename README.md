@@ -5,7 +5,7 @@ This repository contains the following resources:
 - WSO2 Open Banking API Manager Dockerfile for Ubuntu and Alpine
 - WSO2 Open Banking Key Manager Dockerfile for Ubuntu and Alpine
 - WSO2 Open Banking Business Intelligence Dockerfile for Ubuntu and Alpine
-- Docker Compose resources to evaluate WSO2 Open Banking API Manager with WSO2 Open Banking Key Manager profile based on UK and Berlin specifications
+- Docker Compose resources to evaluate WSO2 Open Banking API Manager with WSO2 Open Banking Key Manager profile based on UK, Berlin and AU specifications
 - Docker Compose resources to evaluate WSO2 Open Banking API Manager and WSO2 Open Banking Key Manager with WSO2 Open Banking Business Intelligence profiles based on UK and Berlin specifications
 
 Docker resources for WSO2 Open Banking API Manager, WSO2 Open Banking Key Manager and WSO2 Open Banking Business Intelligence help you build generic Docker images for deploying the corresponding product servers in containerized environments. Each Docker image includes the JDK, the relevant product distribution and a collection of utility libraries. Configurations, custom JDBC
