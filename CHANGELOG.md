@@ -3,6 +3,14 @@ All notable changes to this project 1.4.x per each release will be documented in
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [v1.4.0.6] - 2020-03-30
+
+### Added
+- Open Banking AU specification support
+
+For detailed information on the tasks carried out during this release, please see the GitHub milestone
+[v1.4.0.6](https://github.com/wso2/docker-open-banking/milestone/7).
+
 ## [v1.4.0.5] - 2019-11-07
 
 ### Fixed
