@@ -1,13 +1,13 @@
 # Dockerfile for Worker Profile of WSO2 Open Banking Business Intelligence #
 
 This section defines the step-by-step instructions to build [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for Worker profile of
-WSO2 Open Banking Business Intelligence 1.4.0.
+WSO2 Open Banking Business Intelligence 1.5.0.
 
 ## Prerequisites
 
 * [Docker](https://www.docker.com/get-docker) v17.09.0 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
-* WSO2 Open Banking Business Intelligence pack downloaded through [WUM](https://docs.wso2.com/display/OB140/Setting+Up+Servers)
+* WSO2 Open Banking Business Intelligence pack downloaded through [WUM](https://docs.wso2.com/display/OB150/Setting+Up+Servers)
     + Host the downloaded pack locally or on a remote location.
     > The hosted location will be passed as the build argument `WSO2_SERVER_DIST_URL` when building the Docker image. 
 
@@ -25,13 +25,13 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBBI_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obbi-worker:1.4.0 .`
-    > eg:- Hosted locally: `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obbi-1.4.0.zip -t wso2-obbi-worker:1.4.0 .`
-    > eg:- Hosted remotely: `docker build --build-arg WSO2_SERVER_DIST_URL=http://<public_ip:port>/wso2-obbi-1.4.0.zip -t wso2-obbi-worker:1.4.0 .`
+    + `docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obbi-worker:1.5.0 .`
+    > eg:- Hosted locally: `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obbi-1.5.0.zip -t wso2-obbi-worker:1.5.0 .`
+    > eg:- Hosted remotely: `docker build --build-arg WSO2_SERVER_DIST_URL=http://<public_ip:port>/wso2-obbi-1.5.0.zip -t wso2-obbi-worker:1.5.0 .`
     
 ##### 3. Running Docker images of worker profile.
 
-- `docker run -p 9091:9091 wso2-obbi-worker:1.4.0`
+- `docker run -p 9091:9091 wso2-obbi-worker:1.5.0`
 > Here, only port 9091 has been mapped to a Docker host port.
 You may map other container service ports, which have been exposed to Docker host ports, as desired.
 
@@ -58,10 +58,10 @@ chmod o+r <SOURCE_CONFIGS>/deployment.yaml
 docker run 
 -p 7713:7713
 --volume <SOURCE_CONFIGS>/deployment.yaml:<TARGET_CONFIGS>/deployment.yaml
-wso2-obbi-worker:1.4.0
+wso2-obbi-worker:1.5.0
 ```
 
-> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obbi-1.4.0/conf/worker folder of the container.
+> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obbi-1.5.0/conf/worker folder of the container.
 
 ## Docker command usage references
 
