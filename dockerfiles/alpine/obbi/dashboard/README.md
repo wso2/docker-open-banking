@@ -1,14 +1,14 @@
 # Dockerfile for Dashboard Profile of WSO2 Open Banking Business Intelligence #
 
 This section defines the step-by-step instructions to build [Alpine](https://hub.docker.com/_/alpine/) Linux based Docker image for Dashboard profile of
-WSO2 Open Banking Business Intelligence 1.4.0.
+WSO2 Open Banking Business Intelligence 1.5.0.
 
 ## Prerequisites
 
 * [Docker](https://www.docker.com/get-docker) v17.09.0 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 
-* WSO2 Open Banking Business Intelligence pack downloaded through [WUM](https://docs.wso2.com/display/OB140/Setting+Up+Servers)
+* WSO2 Open Banking Business Intelligence pack downloaded through [WUM](https://docs.wso2.com/display/OB150/Setting+Up+Servers)
     + Host the downloaded pack locally or on a remote location.
     > The hosted location will be passed as the build argument `WSO2_SERVER_DIST_URL` when building the Docker image. 
 
@@ -26,13 +26,13 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBBI_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obbi-dashboard:1.4.0-alpine .`
-    > eg:- Hosted locally: `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obbi-1.4.0.zip -t wso2-obbi-dashboard:1.4.0-alpine .`
-    > eg:- Hosted remotely: `docker build --build-arg WSO2_SERVER_DIST_URL=http://<pubic_ip:port>/wso2-obbi-1.4.0.zip -t wso2-obbi-dashboard:1.4.0-alpine .`
+    + `docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obbi-dashboard:1.5.0-alpine .`
+    > eg:- Hosted locally: `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obbi-1.5.0.zip -t wso2-obbi-dashboard:1.5.0-alpine .`
+    > eg:- Hosted remotely: `docker build --build-arg WSO2_SERVER_DIST_URL=http://<pubic_ip:port>/wso2-obbi-1.5.0.zip -t wso2-obbi-dashboard:1.5.0-alpine .`
     
 ##### 3. Running Docker images specific to each profile.
 
-- `docker run -p 9643:9643 wso2-obbi-dashboard:1.4.0-alpine`
+- `docker run -p 9643:9643 wso2-obbi-dashboard:1.5.0-alpine`
 > Here, only port 9643 has been mapped to a Docker host port.
 You may map other container service ports, which have been exposed to Docker host ports, as desired.
 
@@ -50,7 +50,7 @@ As an example, steps required to change the port offset using `deployment.yaml` 
 
 ##### 1. Stop the Open Banking Business Intelligence container if it's already running.
 
-In WSO2 Open Banking Business Intelligence 1.4.0 product distribution, `deployment.yaml` configuration file <br>
+In WSO2 Open Banking Business Intelligence 1.5.0 product distribution, `deployment.yaml` configuration file <br>
 can be found at `<DISTRIBUTION_HOME>/conf/dashboard`. Copy the file to some suitable location of the host machine, <br>
 referred to as `<SOURCE_CONFIGS>/deployment.yaml` and change the offset value under ports to 2.
 
@@ -66,10 +66,10 @@ chmod o+r <SOURCE_CONFIGS>/deployment.yaml
 docker run 
 -p 7713:7713
 --volume <SOURCE_CONFIGS>/deployment.yaml:<TARGET_CONFIGS>/deployment.yaml
-wso2-obbi-dashboard:1.4.0-alpine
+wso2-obbi-dashboard:1.5.0-alpine
 ```
 
-> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obbi-1.4.0/conf/dashboard folder of the container.
+> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obbi-1.5.0/conf/dashboard folder of the container.
 
 ## Docker command usage references
 

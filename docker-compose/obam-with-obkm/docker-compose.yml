@@ -27,7 +27,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - "./mysql/scripts/uk:/docker-entrypoint-initdb.d"
+      - "./mysql/scripts/au:/docker-entrypoint-initdb.d"
       - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
     ulimits:
       nofile:
@@ -43,7 +43,7 @@ services:
 
   obkm:
     container_name: obkm
-    image: docker.wso2.com/wso2-obkm
+    image: docker.wso2.com/wso2-obkm:1.5.0
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9446/carbon/admin/login.jsp"]
       interval: 10s
@@ -53,7 +53,7 @@ services:
     depends_on:
       - "mysql"
     volumes:
-      - "./obkm/uk:/home/wso2carbon/wso2-config-volume"
+      - "./obkm/au:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9446:9446"
@@ -78,7 +78,7 @@ services:
       - "mysql"
       - "obkm"
     volumes:
-      - "./obam/uk:/home/wso2carbon/wso2-config-volume"
+      - "./obam/au:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9443:9443"
