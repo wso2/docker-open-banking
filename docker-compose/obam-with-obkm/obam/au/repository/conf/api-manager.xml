@@ -674,13 +674,13 @@
                 <Name>software_id_production</Name>
                 <Description>Software ID of the production</Description>
             </Attribute>
-           <Attribute required="false">
-                <Name>software_roles_production</Name>
-                <Description>Software roles of the production</Description>
-            </Attribute>
-           <Attribute required="false">
+            <Attribute required="false">
                 <Name>software_roles_sandbox</Name>
                 <Description>Software roles of the sandbox</Description>
+            </Attribute>
+            <Attribute required="false">
+                <Name>software_roles_production</Name>
+                <Description>Software roles of the production</Description>
             </Attribute>
             <Attribute required="false">
                 <Name>software_jwks_endpoint_sandbox</Name>
@@ -691,12 +691,20 @@
                 <Description>JWKS endpoint of production</Description>
             </Attribute>
             <Attribute required="false">
-                <Name>software_client_name_sandbox</Name>
-                <Description>Software Client Name of the sandbox</Description>
+                <Name>org_id_sandbox</Name>
+                <Description>Organization ID of the sandbox</Description>
             </Attribute>
             <Attribute required="false">
-                <Name>software_client_name_production</Name>
-                <Description>Software Client Name of the production</Description>
+                <Name>org_id_production</Name>
+                <Description>Organization ID of the production</Description>
+            </Attribute>
+            <Attribute required="false">
+                <Name>scope_sandbox</Name>
+                <Description>Allowed scopes for sandbox</Description>
+            </Attribute>
+            <Attribute required="false">
+                <Name>scope_production</Name>
+                <Description>Allowed scopes for production</Description>
             </Attribute>
         </ApplicationAttributes>
     </ApplicationConfiguration>

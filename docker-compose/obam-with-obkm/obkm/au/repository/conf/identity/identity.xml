@@ -82,7 +82,7 @@
          -->
         <OpenIDServerUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/openidserver</OpenIDServerUrl>
         <OpenIDUserPattern>${carbon.protocol}://${carbon.host}:${carbon.management.port}/openid</OpenIDUserPattern>
-        <OpenIDLoginUrl>${carbon.protocol}://localhost:${carbon.management.port}/authenticationendpoint/openid_login.do</OpenIDLoginUrl>
+        <OpenIDLoginUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/openid_login.do</OpenIDLoginUrl>
         <!-- If the users must be prompted for approval -->
         <OpenIDSkipUserConsent>false</OpenIDSkipUserConsent>
         <!-- Expiry time of the OpenID RememberMe token in minutes -->
@@ -176,7 +176,7 @@
         <OIDCWebFingerEPUrl>${carbon.protocol}://localhost:${carbon.management.port}/.well-known/webfinger</OIDCWebFingerEPUrl>
         <!-- For tenants below urls will be modified as https://<hostname>:<port>/t/<tenant domain>/<path>-->
         <!--OB DCR url-->
-        <OAuth2DCREPUrl>${carbon.protocol}://localhost:8243/register</OAuth2DCREPUrl>
+        <OAuth2DCREPUrl>${carbon.protocol}://localhost:8243/open-banking/0.1/register</OAuth2DCREPUrl>
         <OAuth2JWKSPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/jwks</OAuth2JWKSPage>
         <OIDCDiscoveryEPUrl>${carbon.protocol}://localhost:${carbon.management.port}/oauth2/oidcdiscovery</OIDCDiscoveryEPUrl>
         <!-- Default validity period for Authorization Code in seconds -->
@@ -239,11 +239,11 @@
                 <GrantTypeName>authorization_code</GrantTypeName>
                 <GrantTypeHandlerImplClass>com.wso2.finance.open.banking.identity.extensions.grant.type.handlers.OBAuthorizationCodeGrantHandler</GrantTypeHandlerImplClass>
             </SupportedGrantType>
-            <!--  Required to disable for OB -->
-            <!--<SupportedGrantType>
-            	<GrantTypeName>password</GrantTypeName
-             	<GrantTypeHandlerImplClass>org.wso2.carbon.apimgt.keymgt.handlers.ExtendedPasswordGrantHandler</GrantTypeHandlerImplClass>
-            </SupportedGrantType>-->
+            <!--  Supporting password grant types for non-regulatory apps -->
+            <SupportedGrantType>
+                <GrantTypeName>password</GrantTypeName>
+                <GrantTypeHandlerImplClass>org.wso2.carbon.apimgt.keymgt.handlers.ExtendedPasswordGrantHandler</GrantTypeHandlerImplClass>
+            </SupportedGrantType>
             <SupportedGrantType>
                 <GrantTypeName>refresh_token</GrantTypeName>
                 <GrantTypeHandlerImplClass>com.wso2.finance.open.banking.identity.extensions.grant.type.handlers.OBRefreshGrantHandler</GrantTypeHandlerImplClass>
@@ -355,7 +355,7 @@
             <!--UserType>LEGACY</UserType-->
         </SAML2Grant>
         <OpenIDConnect>
-            <IDTokenBuilder>com.wso2.finance.open.banking.idtoken.builder.AUIDTokeBuilder</IDTokenBuilder>
+            <IDTokenBuilder>com.wso2.finance.open.banking.idtoken.builder.OBIDTokenBuilder</IDTokenBuilder>
             <SignatureAlgorithm>SHA256withRSA</SignatureAlgorithm>
             <!-- Default asymmetric encryption algorithm that used to encrypt CEK. -->
             <IDTokenEncryptionAlgorithm>RSA-OAEP</IDTokenEncryptionAlgorithm>
@@ -431,6 +431,9 @@
             Default value : false
         -->
         <RenewTokenPerRequest>false</RenewTokenPerRequest>
+        <Introspection>
+            <EnableDataProviders>true</EnableDataProviders>
+        </Introspection>
     </OAuth>
     <MultifactorAuthentication>
         <!--Enable>false</Enable-->
@@ -453,8 +456,8 @@
             If that doesn't satisfy uncomment the following config and explicitly configure the value
         -->
         <IdentityProviderURL>${carbon.protocol}://${carbon.host}:${carbon.management.port}/samlsso</IdentityProviderURL>
-        <DefaultLogoutEndpoint>${carbon.protocol}://localhost:${carbon.management.port}/ob/authenticationendpoint/samlsso_logout.do</DefaultLogoutEndpoint>
-        <NotificationEndpoint>${carbon.protocol}://localhost:${carbon.management.port}/ob/authenticationendpoint/samlsso_notification.do</NotificationEndpoint>
+        <DefaultLogoutEndpoint>${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/samlsso_logout.do</DefaultLogoutEndpoint>
+        <NotificationEndpoint>${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/samlsso_notification.do</NotificationEndpoint>
         <SingleLogoutRetryCount>5</SingleLogoutRetryCount>
         <SingleLogoutRetryInterval>60000</SingleLogoutRetryInterval>
         <!-- in milli seconds -->
@@ -495,7 +498,7 @@
             If that doesn't satisfy uncomment the following config and explicitly configure the value
         -->
         <IdentityProviderURL>${carbon.protocol}://${carbon.host}:${carbon.management.port}/passivests</IdentityProviderURL>
-        <RetryURL>${carbon.protocol}://localhost:${carbon.management.port}/authenticationendpoint/retry.do</RetryURL>
+        <RetryURL>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/retry.do</RetryURL>
         <TokenStoreClassName>org.wso2.carbon.identity.sts.passive.utils.NoPersistenceTokenStore</TokenStoreClassName>
         <SLOHostNameVerificationEnabled>true</SLOHostNameVerificationEnabled>
     </PassiveSTS>
@@ -629,6 +632,9 @@
     </JITProvisioning>
     <EventListeners>
         <EventListener enable="true"
+                       name="com.wso2.finance.open.banking.identity.extensions.listeners.TokenRevocationListener"
+                       orderId="100" type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"/>
+        <EventListener enable="true"
                        name="org.wso2.carbon.user.mgt.workflow.userstore.UserStoreActionListener"
                        orderId="10" type="org.wso2.carbon.user.core.listener.UserOperationEventListener"/>
         <EventListener enable="false"
@@ -689,9 +695,13 @@
                        name="org.wso2.carbon.user.mgt.listeners.UserMgtFailureAuditLogger"
                        orderId="0" type="org.wso2.carbon.user.core.listener.UserManagementErrorEventListener"/>
         <!-- Open Banking Mutual TLS Authenticator -->
-        <EventListener  enable="true"
+        <EventListener  enable="false"
                         name="com.wso2.finance.open.banking.mtls.authenticator.OBMutualTLSClientAuthenticator"
                         orderId="26" type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"/>
+        <EventListener enable="true" name="com.wso2.finance.open.banking.identity.extensions.introspection.OBIntrospectionResponseInterceptor"
+                       orderId="27" type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"/>
+        <EventListener enable="true" name="com.wso2.finance.open.banking.identity.extensions.introspection.OBIntrospectionDataProvider"
+                       orderId="28" type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"/>
     </EventListeners>
     <!-- These recorders are used to write user delete information to specific sources. Default event recorder is CSV
      file recorder. This recorder is disabled by default. Enable it by setting enable="true". To run these recorders,

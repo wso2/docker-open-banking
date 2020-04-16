@@ -228,8 +228,16 @@ $out_sequences.get("$resource.getUriTemplate()").get($uri)
         #if($handlers.size() > 0)
 <handlers xmlns="http://ws.apache.org/ns/synapse">
 
+#if($apiObj.additionalProperties.get("ob-spec") && $apiObj.additionalProperties.get("ob-api-type") != "dcr")
 ## add APIInvocationLatencyStats handler
 <handler class="com.wso2.finance.open.banking.management.information.reporting.data.publisher.APIInvocationLatencyStatsHandler"/>
+#end
+## add GeoLocationStats handler
+## candidate values: PSU-IP-Address (berlin) / x-fapi-customer-ip-address (uk)
+<!-- <handler class="com.wso2.finance.open.banking.gateway.analytics.GeoLocationStatsHandler">
+         <property name="ipAddressHeaderName" value="PSU-IP-Address"/>
+</handler> -->
+
 #foreach($handler in $handlers)
 
 ## start of ob-specific handlers before the APIManagerExtensionHandler
@@ -238,66 +246,91 @@ $out_sequences.get("$resource.getUriTemplate()").get($uri)
 ##
 ## Start of AU Specification Handlers
 ##
- 
-#if($apiObj.additionalProperties.get("ob-spec") == "au")
+#if($apiObj.additionalProperties.get("ob-spec") == "au" && $apiObj.additionalProperties.get("ob-api-type") != "dcr")
+<handler class="com.wso2.finance.open.banking.mtls.validator.handler.MTLSValidationHandler"/>
+<handler class="com.wso2.finance.open.banking.mtls.validator.handler.HolderOfKeyValidationHandler"/>
 <handler class="com.wso2.finance.open.banking.gateway.api.schema.validation.RequestSchemaValidationHandler"/>
 <handler class="com.wso2.finance.open.banking.au.consent.enforcement.AUConsentEnforcementHandler">
     <property name="validationBaseUrl" value="https://obkm:9446/consent/au100"/>
 </handler>
 #end
- 
+#if($apiObj.additionalProperties.get("ob-api-type") == "dcr" && $apiObj.additionalProperties.get("ob-spec") == "au")
+<handler class="com.wso2.finance.open.banking.mtls.validator.handler.MTLSValidationHandler"/>
+#end
 ##
 ## End of AU Specific Handlers
 ##
 
 #if($apiObj.additionalProperties.get("ob-spec") == "uk")
-
+## add MTLS client token validation handler along with MTLS cert validation handler to validate the client MTLS certificate with the application data
+#*
+<handler class="com.wso2.finance.open.banking.mtls.validator.handler.MTLSValidationHandler"/>
+<handler class="com.wso2.finance.open.banking.mtls.validator.handler.MTLSClientTokenValidationHandler">
+    <property name="pspRoleValidationEnabled" value="true"/>
+    <property name="paymentInitiationScopes" value="payments"/>
+    <property name="accountInformationScopes" value="accounts"/>
+    <property name="cardBasedPaymentInstrumentsScopes" value="fundsconfirmations"/>
+</handler>
+*#
+## add gateway client authentication handler to send the client MTLS certificate to KM as a header/
+#*
+<handler class="com.wso2.finance.open.banking.mtls.validator.handler.GatewayClientAuthenticationHandler"/>
+*#
 ##add request validation handler
 ##Request validator should come before Signature validator.
-#if($!apiVersion == "v3.0" || $!apiVersion == "v3.1" || $!apiVersion == "v3.1.1" || $!apiVersion == "v2.0")
+#if($!apiVersion == "v3.0" || $!apiVersion == "v3.1" || $!apiVersion == "v3.1.1" || $!apiVersion == "v2.0" || $!apiVersion == "v3.1.2")
+<handler class="com.wso2.finance.open.banking.mtls.validator.handler.MTLSValidationHandler"/>
 <handler class="com.wso2.finance.open.banking.gateway.api.schema.validation.RequestSchemaValidationHandler"/>
 #end
-
-#if($!apiVersion == "v3.0" || $!apiVersion == "v3.1" || $!apiVersion == "v3.1.1")
+#if($!apiVersion == "v3.0" || $!apiVersion == "v3.1" || $!apiVersion == "v3.1.1" || $!apiVersion == "v3.1.2")
 <handler class="com.wso2.finance.open.banking.common.identity.validation.SignatureAlgorithmValidatorHandler"/>
-<handler class="com.wso2.finance.open.banking.gateway.jws.UKJwsSignatureHandler"/>
+#if($apiObj.additionalProperties.get("ob-api-type") == "payment" || $apiObj.additionalProperties.get("ob-api-type") == "event")
+<handler class="com.wso2.finance.open.banking.gateway.jws.UKJwsSignatureHandler">
+    <property name="xWso2ApiVersion" value='$apiObj.additionalProperties.get("ob-api-version")'/>
+    <property name="xWso2ApiType" value='$apiObj.additionalProperties.get("ob-api-type")'/>
+</handler>
 #end
-
+#end
 ## add UK-specific consent-enforcement-handler
+#if($apiObj.additionalProperties.get("ob-api-type") != "dcr" && $apiObj.additionalProperties.get("ob-api-type") != "event")
 <handler class="com.wso2.finance.open.banking.uk.consent.enforcement.ConsentEnforcementHandler">
-    #if($!apiVersion == "v3.0" || $!apiVersion == "v3.1" || $!apiVersion == "v3.1.1")
-    <property name="accountValidationUrl" value="https://obkm:9446/consent/uk300/accounts-validation"/>
-    <property name="paymentConsumtionUpdateUrl"
-              value="https://obkm:9446/consent/uk300/payments/{PaymentType}/{ConsentId}/status/{Status}"/>
-    <property name="paymentSubmissionValidationUrl"
-              value="https://obkm:9446/consent/uk300/payment-submission-validation"/>
-    <property name="paymentConsentDataUrl"
-              value="https://obkm:9446/consent/uk300/payments/{PaymentType}/{ConsentId}/Consumption"/>
-    <property name="fundConfirmationValidationUrl"
-              value="https://obkm:9446/consent/uk300/funds-confirmation-validation"/>
+    #if($!apiVersion == "v3.0" || $!apiVersion == "v3.1" || $!apiVersion == "v3.1.1" || $!apiVersion == "v3.1.2")
+    <property name="validationBaseUrl" value="https://obkm:9446/consent/uk300"/>
+    <property name="xWso2ApiVersion" value='$apiObj.additionalProperties.get("ob-api-version")'/>
     #elseif($!apiVersion == "v2.0")
-    <property name="accountValidationUrl" value="https://obkm:9446/consent/uk200/accounts-validation"/>
-    <property name="paymentSubmissionValidationUrl"
-              value="https://obkm:9446/consent/uk110/payment-submission-validation"/>
+    <property name="validationBaseUrl" value="https://obkm:9446/consent/uk200"/>
     #else
-    <property name="accountValidationUrl" value="https://obkm:9446/consent/uk110/accounts-validation"/>
-    <property name="paymentSubmissionValidationUrl"
-              value="https://obkm:9446/consent/uk110/payment-submission-validation"/>
+    <property name="validationBaseUrl" value="https://obkm:9446/consent/uk110"/>
     #end
     <property name="keyStore" value="./repository/resources/security/wso2carbon.jks"/>
     <property name="password" value="wso2carbon"/>
     <property name="alias" value="wso2carbon"/>
 </handler>
-## end of UK-specific handlers
 #end
-
 #if($apiObj.additionalProperties.get("ob-api-type") == "dcr" || $!apiName == "DynamicClientRegistrationAPI")
 <handler class="com.wso2.finance.open.banking.mtls.validator.handler.MTLSValidationHandler"/>
 <handler class="com.wso2.finance.open.banking.mtls.validator.handler.GatewayClientAuthenticationHandler"/>
+<handler class="org.wso2.carbon.apimgt.gateway.handlers.ext.APIManagerCacheExtensionHandler"/>
+#end
+## end of UK-specific handlers
+#end
+
+#if($apiObj.additionalProperties.get("ob-spec") == "pay.uk")
+#if($apiObj.additionalProperties.get("ob-api-type") == "cop")
+<handler class="com.wso2.finance.open.banking.gateway.api.schema.validation.RequestSchemaValidationHandler"/>
+<handler class="com.wso2.finance.open.banking.gateway.jws.UKJwsSignatureHandler">
+    <property name="xWso2ApiVersion" value='$apiObj.additionalProperties.get("ob-api-version")'/>
+    <property name="xWso2ApiType" value='$apiObj.additionalProperties.get("ob-api-type")'/>
+</handler>
+#end
+## end of Pay.UK-specific handlers
 #end
 
 #if($apiObj.additionalProperties.get("ob-spec") == "berlin")
 ## add ob-berlin specific handlers before the APIManagerExtensionHandler
+
+## add custom throttling handler
+<handler class="com.wso2.finance.open.banking.custom.throttling.CustomThrottlingPolicyHandler"/>
 
 ## add client certificate validation handler
 <handler class="com.wso2.finance.open.banking.gateway.berlin.EIDASCertValidationHandler"/>
@@ -335,8 +368,10 @@ $out_sequences.get("$resource.getUriTemplate()").get($uri)
 ## end of STET-specific handlers
 #end
 
+#if($apiObj.additionalProperties.get("ob-spec") && $apiObj.additionalProperties.get("ob-api-type") != "dcr")
 ##add ob-data-publisher-handler
 <handler class="com.wso2.finance.open.banking.management.information.reporting.data.publisher.ReportingDataHandler" />
+#end
 
 ## end of ob-specific handlers before the APIManagerExtensionHandler
 #end
