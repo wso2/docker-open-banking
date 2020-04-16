@@ -33,7 +33,7 @@
 
     <!--Required in OB-->
     <dbConfig name="configRegistry">
-        <dataSource>jdbc/WSO2CommonDB</dataSource>
+        <dataSource>jdbc/WSO2Config_DB</dataSource>
     </dbConfig>
 
     <remoteInstance url="https://localhost:9443/registry">
@@ -46,11 +46,11 @@
 
     <mount path="/_system/config" overwrite="true">
         <instanceId>configInstance</instanceId>
-        <targetPath>/_system/obkm/config</targetPath>
+        <targetPath>/_system/config</targetPath>
     </mount>
 
     <dbConfig name="governanceRegistry">
-        <dataSource>jdbc/WSO2CommonDB</dataSource>
+        <dataSource>jdbc/WSO2REG_DB</dataSource>
     </dbConfig>
 
     <remoteInstance url="https://localhost:9443/registry">

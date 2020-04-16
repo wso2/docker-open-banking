@@ -9,13 +9,13 @@
 	},
 	"ccportalRoles" : ["Internal/CustomerCareOfficer"],
 	"consentStatus" : ["Revoked", "Authorised", "AwaitingAuthorisation", "AcceptedTechnicalValidation", "AcceptedCustomerProfile"],
-	"DeployedSpecification" : "UK",
+	"DeployedSpecification" : "AU",
 	"consentStatuses" : {
-		"UKAccount" : ["Authorised", "AwaitingAuthorisation"],
+		"UKAccount" : ["Authorised","Revoked"],
 		"BERLINAccount" : ["received", "rejected", "partiallyAuthorised", "valid", "revokedByPsu", "expired", "terminatedByTpp"],
 		"UKPayment" : ["Authorised", "AwaitingAuthorisation", "AcceptedTechnicalValidation", "AcceptedCustomerProfile", "Consumed"],
-		"BERLINPayment" : ["received", "rejected", "AcceptedCustomerProfile"],
-		"UKCof" : ["Authorised"]
+		"BERLINPayment" : ["Received", "Rejected", "AcceptedCustomerProfile"],
+		"UKCof" : ["Authorised","Revoked"]
 	},
 	"ssoConfiguration" : {
 		"enabled" : "false",
