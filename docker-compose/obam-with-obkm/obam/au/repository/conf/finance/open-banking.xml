@@ -474,10 +474,10 @@
     <SCA>
         <IdpName>SMSAuthentication</IdpName>
         <!--Configure the primary authenticator / 1st step authenticator-->
-        <PrimaryAuthenticator>
+        <!--<PrimaryAuthenticator>
             <Name>IdentifierExecutor</Name>
             <DisplayName>identifier-first</DisplayName>
-        </PrimaryAuthenticator>
+        </PrimaryAuthenticator>-->
     </SCA>
 
     <BIServer>

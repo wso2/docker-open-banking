@@ -10,8 +10,12 @@ CREATE DATABASE openbank_openbankingdb;
 DROP DATABASE IF EXISTS openbank_mbstoredb;
 CREATE DATABASE openbank_mbstoredb;
 
-DROP DATABASE IF EXISTS openbank_commondb;
-CREATE DATABASE openbank_commondb;
+DROP DATABASE IF EXISTS openbank_userdb;
+CREATE DATABASE openbank_userdb;
+
+DROP DATABASE IF EXISTS openbank_govdb;
+CREATE DATABASE openbank_govdb;
+
 
 /*
 Create tables for openbank_apimgtdb
@@ -1722,7 +1726,8 @@ CREATE TABLE IF NOT EXISTS OB_DCR_DETAILS (
 Create tables for openbank_commondb
 */
 
-USE openbank_commondb;
+
+use openbank_govdb;
 
 CREATE TABLE IF NOT EXISTS REG_CLUSTER_LOCK (
     REG_LOCK_NAME   VARCHAR(20),
@@ -1961,9 +1966,20 @@ ALTER TABLE REG_SNAPSHOT
     ADD CONSTRAINT REG_SNAPSHOT_FK_BY_PATH_ID FOREIGN KEY (REG_PATH_ID, REG_TENANT_ID) REFERENCES REG_PATH (REG_PATH_ID, REG_TENANT_ID);
 
 
+
+
+
+
+/*
+End of create tables for openbank_commondb
+*/
+
+
 -- ################################
 -- USER MANAGER TABLES
 -- ################################
+
+USE openbank_userdb;
 
 CREATE TABLE UM_TENANT (
     UM_ID           INTEGER      NOT NULL AUTO_INCREMENT,
