@@ -32,8 +32,10 @@
         <!--Expiry time in seconds. Default is 180 seconds-->
         <NotificationExpiryTime>180</NotificationExpiryTime>
         <NotificationAPIUrl>https://obam:8243/open-banking/v3.1/event-notification</NotificationAPIUrl>
+        <NumberOfSetsToReturn>5</NumberOfSetsToReturn>
+        <SigningAlias>1</SigningAlias>
     </EventNotifications>
-
+    <LogConsentInformation>false</LogConsentInformation>
     <MultiAuthorization>
         <DaysToExpireRequest>3</DaysToExpireRequest>
     </MultiAuthorization>
@@ -45,7 +47,7 @@
     -->
     <DeployedSpecification>AU</DeployedSpecification>
 
-    <ConsentMgt>    
+    <ConsentMgt>
         <IsEnabled>false</IsEnabled>
     </ConsentMgt>
 
@@ -124,12 +126,6 @@
                     <Default>true</Default>
                 </AuthenticationObject>
             </SCAMethods>
-
-             <!--Configure the primary authenticator / 1st step authenticator-->
-            <PrimaryAuthenticator>
-                <Name>IdentifierExecutor</Name>
-                <DisplayName>identifier-first</DisplayName>
-            </PrimaryAuthenticator>
         </SCA>
 
         <AccountsRetrieveEndpoint>https://localhost:9443/open-banking-berlin/services/accounts/accounts</AccountsRetrieveEndpoint>
@@ -141,6 +137,9 @@
         <DuplicateCheck>
             <TimeIntervalInMinutes>60</TimeIntervalInMinutes>
         </DuplicateCheck>
+        <!--Enable IBAN validation for single accounts -->
+        <EnableIBANBasedSingleAccountRetrievalValidation>false</EnableIBANBasedSingleAccountRetrievalValidation>
+        <!--Enable IBAN validation for bulk accounts -->
         <EnableIBANBasedAccountRetrievalValidation>true</EnableIBANBasedAccountRetrievalValidation>
         <Host>obam</Host>
         <Port>8243</Port>
@@ -149,6 +148,15 @@
         <!--Requested maximum frequency for an account access per day using a recurring consent-->
         <!--Maximum value is 4 unless agreed bilaterally between TPP and ASPSP-->
         <FrequencyPerDay>4</FrequencyPerDay>
+        <!-- Enable frequency per day throttling for eligible API GET calls -->
+        <EnableFrequencyPerDay>true</EnableFrequencyPerDay>
+        <!--
+        Allowed values for account reference type
+            1. iban
+            2. bban
+            3. pan
+        -->
+        <AccountReferenceType>iban</AccountReferenceType>
     </Berlin>
 
     <UK>
@@ -181,46 +189,6 @@
         <!--Payment data permissions supported by the ASPSP can be given access for the TPP by specifying one or more permissions,
         separated by a pipe (|). By default, create permission is granted-->
         <DataPermission>Create</DataPermission>
-        <DCR>
-            <!--the supported authentication methods for the token endpoint -->
-            <TokenAuthentication>
-                <Method>private_key_jwt</Method>
-                <Method>client_secret_basic</Method>
-            </TokenAuthentication>
-            <!--the connection and read time out values for retrieving the remote jwks to validate the ssa and
-            request jwt signatures during tpp registration-->
-            <ConnectionTimeout>0</ConnectionTimeout>
-            <ReadTimeout>0</ReadTimeout>
-            <!--The endpoint urls are to access the rest APIs of API manager in order to
-            create the application, service provider and generate keys for the application.
-             -->
-            <EndPointURL>
-                <ServiceProviderCreation>/client-registration/v0.14/register</ServiceProviderCreation>
-                <Application>/api/am/store/v0.14/applications</Application>
-                <Token>/token</Token>
-                <KeyGeneration>/api/am/store/v0.14/applications/generate-keys</KeyGeneration>
-                <ApiSearch>/api/am/store/v0.14/apis</ApiSearch>
-                <ApiSubscribe>/api/am/store/v0.14/subscriptions/multiple</ApiSubscribe>
-            </EndPointURL>
-            <!--if true validate the policy,client,terms of service,logo uris -->
-            <EnableURIValidation>false</EnableURIValidation>
-            <!--if true validate the hostnames of policy,client,terms of service, logo uris match with the hostname of redirect uri-->
-            <EnableHostNameValidation>false</EnableHostNameValidation>
-            <APISubscriptions>
-                <PISP>
-                    <APIContext>/open-banking/v3.1/pisp</APIContext>
-                    <APIContext>/open-banking/v3.0/pisp</APIContext>
-                    <APIContext>/open-banking/v2.0/pisp</APIContext>
-                </PISP>
-                <AISP>
-                    <APIContext>/open-banking/v3.1/aisp</APIContext>
-                    <APIContext>/open-banking/v3.0/aisp</APIContext>
-                    <APIContext>/open-banking/v2.0/aisp</APIContext>
-                </AISP>
-            </APISubscriptions>
-            <!-- Use SoftwareID in SSA as Application Name-->
-            <UseSoftwareIdAsApplicationName>false</UseSoftwareIdAsApplicationName>
-        </DCR>
         <PaymentRestrictions>
             <MaximumInstructedAmount>1000.00</MaximumInstructedAmount>
 
@@ -277,7 +245,7 @@
          -->
         <SigningConfiguration>
             <!-- Enable Signing -->
-            <Enable>true</Enable>
+            <Enable>false</Enable>
             <OBIE>
                 <!--
                     Trusted Anchor Configuration
@@ -304,6 +272,7 @@
                 <APIContext>/open-banking/v3.0/pisp/</APIContext>
                 <APIContext>/open-banking/v3.1/event-notification/</APIContext>
                 <APIContext>/open-banking/v3.1/pisp/</APIContext>
+                <APIContext>/open-banking/v1.1.2/confirmation-payee/</APIContext>
             </MandatedAPIs>
         </SigningConfiguration>
 
@@ -321,7 +290,65 @@
 
         <!--Configure whether need to validate debtor account when sent in initiation payload for UK payments-->
         <ValidateDebtorAccount>true</ValidateDebtorAccount>
+
+        <!-- Validate AccountID with consented accountID in account retrieval -->
+        <ValidateAccountIdOnRetrieval>false</ValidateAccountIdOnRetrieval>
+        <!-- Enable supporting custom values for LocalInstrument attribute -->
+        <!--
+        <CustomLocalInstrumentValues>
+            <Enabled>false</Enabled>
+            <CustomValues>
+                <CustomValue></CustomValue>
+                <CustomValue></CustomValue>
+            </CustomValues>
+        </CustomLocalInstrumentValues>
+        -->
     </UK>
+    <AU>
+        <MetaDataCache>
+            <EnableMetaDataCache>false</EnableMetaDataCache>
+            <!-- Strict fetch time for periodical cache update in minutes -->
+            <MetaDataCacheUpdatePeriod>8</MetaDataCacheUpdatePeriod>
+            <!-- Cache expiry time for lazy base cache in minutes -->
+            <DefaultCacheTimeout>8</DefaultCacheTimeout>
+            <DataRecipientsDiscoveryURL>https://raw.githubusercontent.com/thiloshon/ob-au-meta/master/dr.json</DataRecipientsDiscoveryURL>
+            <SoftwareProductsDiscoveryURL>https://raw.githubusercontent.com/thiloshon/ob-au-meta/master/sp.json</SoftwareProductsDiscoveryURL>
+            <DCRInternalURL>https://localhost:9443/dynamic-client-registration/common/register/</DCRInternalURL>
+        </MetaDataCache>
+        <ResourcePaths>
+            /banking/accounts,
+            /banking/accounts/balances,
+            /banking/accounts/direct-debits,
+            /banking/accounts/{AccountId}/balance,
+            /banking/accounts/{AccountId},
+            /banking/accounts/{AccountId}/transactions,
+            /banking/accounts/{AccountId}/transactions/{transactionId},
+            /banking/accounts/{AccountId}/direct-debits,
+            /banking/accounts/{AccountId}/payments/scheduled,
+            /banking/payments/scheduled,
+            /banking/payees,
+            /banking/payees/{payeeId},
+            /banking/products,
+            /banking/products/{productId},
+            /common/customer,
+            /common/customer/detail,
+            /discovery/status,
+            /discovery/outages
+        </ResourcePaths>
+        <HolderIdentifier><!--configure bank specific identifier--></HolderIdentifier>
+        <Enforcement>
+            <Cache>
+                <CacheEnabled>true</CacheEnabled>
+                <ModifiedExpiryMinutes>15</ModifiedExpiryMinutes>
+                <AccessedExpiryMinutes>15</AccessedExpiryMinutes>
+            </Cache>
+        </Enforcement>
+    </AU>
+    <PayUK>
+        <!--Number of seconds to wait before sending a request after hitting a
+        "service unavailable(503)" or "too many requests(429)"-->
+        <RetryAfterSeconds>60</RetryAfterSeconds>
+    </PayUK>
 
     <STET>
         <Host>obam</Host>
@@ -358,27 +385,26 @@
 
     </STET>
 
-    <AU>    
-        <Enforcement>   
-            <Cache> 
-                <CacheEnabled>true</CacheEnabled>   
-                <ModifiedExpiryMinutes>15</ModifiedExpiryMinutes>   
-                <AccessedExpiryMinutes>15</AccessedExpiryMinutes>   
-            </Cache>    
-        </Enforcement>  
-    </AU>
+    <SG>
+        <!-- Name of singapore market place -->
+        <FISP></FISP>
+        <!-- Consent validity period in days -->
+        <ConsentValidityPeriod>365</ConsentValidityPeriod>
+    </SG>
 
     <APISecurity>
         <Global>
             <Username>admin@wso2.com</Username>
             <Password>wso2123</Password>
         </Global>
+        <EnableMTLSTokenBinding>false</EnableMTLSTokenBinding>
     </APISecurity>
     <Authorize>
         <Steps>
             <Retrieve>
                 <Step class="com.wso2.finance.open.banking.consent.authorize.steps.impl.steps.retrieval.OBConsentRetrievalStep"
                       priority="1"/>
+                <!-- Remove AccountListRetrievalStep step for SG. And adjust priorities of rest of the steps -->
                 <Step class="com.wso2.finance.open.banking.consent.authorize.steps.impl.steps.retrieval.AccountListRetrievalStep"
                       priority="2"/>
                 <Step class="com.wso2.finance.open.banking.consent.authorize.steps.impl.steps.retrieval.OBReportingRetrievalStep"
@@ -408,6 +434,11 @@
         <module ref="mtlscertvalidator"/>
         -->
 
+        <!-- Enable sending client cert as a transport header when the TLS is terminated before reaching Gateway-->
+        <ClientTransportCertAsHeaderEnabled>false</ClientTransportCertAsHeaderEnabled>
+        <!-- Validate the issuer of the certificate when the client cert is received as a transport header -->
+        <TransportCertIssuerValidationEnabled>true</TransportCertIssuerValidationEnabled>
+
         <!--Set the value of the transport certificate header sent in the request if MTLS is terminated before the
         gateway default value is ssl.client.auth.cert.X509-->
         <TransportCertificateHeader>ssl.client.auth.cert.X509</TransportCertificateHeader>
@@ -417,9 +448,36 @@
 
         <!-- Enable certificate OCSP and CRL validation -->
         <CertificateRevocationValidationEnabled>true</CertificateRevocationValidationEnabled>
+
+        <!-- Proxy server configuration to do TPP certificate revocation checks -->
+        <CertificateRevocationProxy>
+            <Enabled>false</Enabled>
+            <ProxyHost>PROXY_HOSTNAME</ProxyHost>
+            <ProxyPort>8080</ProxyPort>
+        </CertificateRevocationProxy>
+        <!--Mutual TLS Authenticator Certificate header-->
+        <ClientAuthenticationHeader></ClientAuthenticationHeader>
+        <!--Manager class implementation responsible for verifying certificate revocation status-->
+        <RevocationValidationManagerImplClass>com.wso2.finance.open.banking.mtlscert.validator.service.CertRevocationValidationManagerImpl</RevocationValidationManagerImplClass>
+        <!-- Retry count for validating certificate OCSP and CRL revocation status -->
+        <CertificateRevocationValidationRetryCount>3</CertificateRevocationValidationRetryCount>
+        <!-- List of issuer DNs whose issued certificates needs to be skipped from certificate revocation
+        validation.
+        e.g. <IssuerDN>CN=Test Pre-Production Issuing CA, O=Test, C=GB</IssuerDN>
+        -->
+        <RevocationValidationExcludedIssuers>
+            <IssuerDN></IssuerDN>
+        </RevocationValidationExcludedIssuers>
+        <!--Truststore dynamic loading interval (in seconds). Default value has been set to 86400 seconds-->
+        <TrustStoreDynamicLoadingInterval>86400</TrustStoreDynamicLoadingInterval>
     </CertificateManagement>
     <SCA>
         <IdpName>SMSAuthentication</IdpName>
+        <!--Configure the primary authenticator / 1st step authenticator-->
+        <!--<PrimaryAuthenticator>
+            <Name>IdentifierExecutor</Name>
+            <DisplayName>identifier-first</DisplayName>
+        </PrimaryAuthenticator>-->
     </SCA>
 
     <BIServer>
@@ -463,6 +521,8 @@
             <TotalAmountLimitOfTransactionsWithoutSCA>100</TotalAmountLimitOfTransactionsWithoutSCA>
             <LastSCATimeLimit>90</LastSCATimeLimit>
             <TransactionAmountLimit>30</TransactionAmountLimit>
+            <!-- Number of maximum days of transaction history that can be accessed with the first-time consent use for Berlin.-->
+            <FirstAccessHistoryLimit>90</FirstAccessHistoryLimit>
         </TRA>
         <FraudDetection>
             <!-- Include all configurations related to Fraud Detection -->
@@ -515,4 +575,47 @@
             <AccessedExpiryMinutes>15</AccessedExpiryMinutes>
         </Cache>
     </OBIdentityRetriever>
+
+    <DCR>
+        <!--the supported authentication methods for the token endpoint -->
+        <TokenAuthentication>
+            <Method>private_key_jwt</Method>
+        </TokenAuthentication>
+        <!--the connection and read time out values for retrieving the remote jwks to validate the ssa and
+        request jwt signatures during tpp registration-->
+        <ConnectionTimeout>0</ConnectionTimeout>
+        <ReadTimeout>0</ReadTimeout>
+        <!--The endpoint urls are to access the rest APIs of API manager in order to
+        create the application, service provider and generate keys for the application.
+         -->
+        <EndPointURL>
+            <ServiceProviderCreation>/client-registration/v0.14/register</ServiceProviderCreation>
+            <Application>/api/am/store/v0.14/applications</Application>
+            <Token>/token</Token>
+            <KeyGeneration>/api/am/store/v0.14/applications/generate-keys</KeyGeneration>
+            <ApiSearch>/api/am/store/v0.14/apis</ApiSearch>
+            <ApiSubscribe>/api/am/store/v0.14/subscriptions/multiple</ApiSubscribe>
+        </EndPointURL>
+        <!--if true validate the policy,client,terms of service,logo uris -->
+        <EnableURIValidation>false</EnableURIValidation>
+        <!--if true validate the hostnames of policy,client,terms of service, logo uris match with the hostname of redirect uri-->
+        <EnableHostNameValidation>false</EnableHostNameValidation>
+        <APISubscriptions>
+            <PISP>
+                <APIContext>/open-banking/v3.1/pisp</APIContext>
+                <APIContext>/open-banking/v3.0/pisp</APIContext>
+                <APIContext>/open-banking/v2.0/pisp</APIContext>
+            </PISP>
+            <AISP>
+                <APIContext>/open-banking/v3.1/aisp</APIContext>
+                <APIContext>/open-banking/v3.0/aisp</APIContext>
+                <APIContext>/open-banking/v2.0/aisp</APIContext>
+            </AISP>
+        </APISubscriptions>
+        <!-- Use SoftwareID in SSA as Application Name-->
+        <UseSoftwareIdAsApplicationName>false</UseSoftwareIdAsApplicationName>
+        <!--Jwks urls used to validate the SSA-->
+        <JwksUrlSandbox>https://keystore.openbankingtest.org.uk/keystore/openbanking.jwks</JwksUrlSandbox>
+        <JwksUrlProduction>https://keystore.openbanking.org.uk/keystore/openbanking.jwks</JwksUrlProduction>
+    </DCR>
 </Server>

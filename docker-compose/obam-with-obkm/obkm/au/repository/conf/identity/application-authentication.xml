@@ -153,6 +153,8 @@
             <Parameter name="SendOTPDirectlyToMobile">false</Parameter>
             <Parameter name="redirectToMultiOptionPageOnFailure">false</Parameter>
             <Parameter name="TokenExpiryTime">100</Parameter>
+            <!--<Parameter name="usecase">subjectUri</Parameter>
+            <Parameter name="secondaryUserstore">primary</Parameter>-->
         </AuthenticatorConfig>
         <AuthenticatorConfig name="x509CertificateAuthenticator" enabled="true">
             <Parameter name="AuthenticationEndpoint">https://localhost:8443/x509-certificate-servlet</Parameter>

@@ -49,15 +49,15 @@
             </definition>
         </datasource>
 
-	<datasource>
-            <name>WSO2_COMMON_DB</name>
-            <description>The datasource used by user manager</description>
+        <datasource>
+            <name>WSO2CONFIG_DB</name>
+            <description>The datasource used by the registry</description>
             <jndiConfig>
-                <name>jdbc/WSO2CommonDB</name>
+                <name>jdbc/WSO2Config_DB</name>
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:mysql://mysql:3306/openbank_commondb?autoReconnect=true&amp;useSSL=false</url>
+                    <url>jdbc:mysql://mysql:3306/openbank_govdb?autoReconnect=true&amp;useSSL=false</url>
                     <username>root</username>
                     <password>root</password>
                     <driverClassName>com.mysql.jdbc.Driver</driverClassName>
@@ -67,10 +67,52 @@
                     <validationQuery>SELECT 1</validationQuery>
                     <validationInterval>30000</validationInterval>
                     <defaultAutoCommit>false</defaultAutoCommit>
-           	</configuration>
+                </configuration>
             </definition>
-    	</datasource>
+        </datasource>
 
+        <datasource>
+            <name>WSO2REG_DB</name>
+            <description>The datasource used by the registry</description>
+            <jndiConfig>
+                <name>jdbc/WSO2REG_DB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:mysql://mysql:3306/openbank_govdb?autoReconnect=true&amp;useSSL=false</url>
+                    <username>root</username>
+                    <password>root</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>150</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>false</defaultAutoCommit>
+                </configuration>
+            </definition>
+        </datasource>
+
+        <datasource>
+            <name>WSO2UM_DB</name>
+            <description>The datasource used by user manager</description>
+            <jndiConfig>
+                <name>jdbc/WSO2UM_DB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:mysql://mysql:3306/openbank_userdb?autoReconnect=true&amp;useSSL=false</url>
+                    <username>root</username>
+                    <password>root</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>150</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>false</defaultAutoCommit>
+                </configuration>
+            </definition>
+        </datasource>
     </datasources>
-
 </datasources-configuration>
