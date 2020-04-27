@@ -7,7 +7,7 @@
    in order to run the steps provided in following **Quick Start Guide**. <br><br>
  * In order to use WSO2 Open Banking Docker images, you need an active WSO2 Open Banking subscription. If you do not possess an active WSO2
    Open Banking subscription, you can contact us from [here](https://wso2.com/solutions/financial/open-banking/).<br><br>
- * If you wish to run the Docker Compose setup using Docker images built locally, build Docker images using Docker resources available from [here](../../dockerfiles/) and remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml`. <br><br>
+ * If you wish to run the Docker Compose setup using Docker images built locally, build Docker images using Docker resources available from [here](../../dockerfiles/) and remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml` and add the version in the local image at the end. <br><br>
     
 ## Quick Start Guide
 
