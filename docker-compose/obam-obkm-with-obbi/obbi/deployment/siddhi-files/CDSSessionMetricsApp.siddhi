@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.com). All Rights Reserved.
+ *
+ * This software is the property of WSO2 Inc. and its suppliers, if any.
+ * Dissemination of any information or reproduction of any material contained
+ * herein is strictly forbidden, unless permitted by WSO2 in accordance with
+ * the WSO2 Commercial License available at http://wso2.com/licenses.
+ * For specific language governing the permissions and limitations under this
+ * license, please see the license as well as any agreement you’ve entered into
+ * with WSO2 governing the purchase of this software and any associated services.
+ */
+
+@App:name("CDSSessionMetricsApp")
+@App:description('Aggregate access token data to be used by CDS Metrics API')
+
+@source(type='wso2event',  @map(type='wso2event'))
+define stream AccessTokenInputStream(ACCESS_TOKEN string);
+
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+@purge(enable='true', interval='60 min', @retentionPeriod(sec='10 days', min='10 days', hours='90 days', days='1 year', months='2 years'))
+define aggregation CDSMetricsSessionAgg
+from AccessTokenInputStream
+select count() as sessionCount
+aggregate every seconds...month;
+
+@primaryKey('ACCESS_TOKEN')
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+define table ACCESS_TOKEN_RAW_DATA(ACCESS_TOKEN string, TIMESTAMP long);
+
+from AccessTokenInputStream
+select ACCESS_TOKEN, time:timestampInMilliseconds()/1000 as TIMESTAMP
+insert into ACCESS_TOKEN_RAW_DATA;
+
+
+
