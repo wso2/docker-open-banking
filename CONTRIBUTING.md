@@ -38,7 +38,7 @@ Please follow these guidelines when contributing to the code:
 git clone https://github.com/<user>/docker-open-banking.git
 git remote add upstream https://github.com/wso2/docker-open-banking.git
 git fetch upstream
-git checkout -b <topic-branch> upstream/1.5.0
+git checkout -b <topic-branch> upstream/1.5.x
 
 # add some work
 
