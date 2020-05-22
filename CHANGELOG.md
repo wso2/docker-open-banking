@@ -17,3 +17,5 @@ as Key Manager version 1.5.0 and WSO2 Open Banking Business Intelligence Dashboa
 
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone	For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.5.0.1](https://github.com/wso2/docker-open-banking/milestone/8)
+
+[v1.5.0.1]: https://github.com/wso2/docker-open-banking/compare/v1.4.0.6...v1.5.0.1
