@@ -1,57 +1,19 @@
 # Changelog
-All notable changes to this project 1.4.x per each release will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
-
-## [v1.4.0.6] - 2020-03-30
-
-### Added
-- Open Banking AU specification support
-
-For detailed information on the tasks carried out during this release, please see the GitHub milestone
-[v1.4.0.6](https://github.com/wso2/docker-open-banking/milestone/7).
-
-## [v1.4.0.5] - 2019-11-07
-
-### Fixed
-- Failure to accept product startup options
-- Requirement to preserve the default H2 database data of <OBAM_HOME>/repository/database directory
-
-For detailed information on the tasks carried out during this release, please see the GitHub milestone
-[v1.4.0.5](https://github.com/wso2/docker-open-banking/milestone/6).
+All notable changes to this project 1.4.x per each release will be documented in this file.	All notable changes to this project 1.5.x per each release will be documented in this file.
 
 
-## [v1.4.0.4] - 2019-10-24
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)	The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-### Added
-- Backward support for changing uk and berlin specs
-- Readme instructions on creating a keystore
-- openbank_geolocationdb mysql scripts
 
-### Changed
-- Incorrect mount path of registryDB
-- MySQL url of WSO2AM_STATS_DB
+## [v1.4.0.6] - 2020-03-30	## [v1.5.0.1] - 2020-05-22
 
-For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.4.0.4](https://github.com/wso2/docker-open-banking/milestone/5).
 
-## [v1.4.0.3] - 2019-10-11
+### Added	### Added
+- Open Banking AU specification support	- Alpine and Ubuntu based Docker resources for WSO2 Open Banking API Manager 1.5.0, WSO2 Open Banking Identity Server 
+as Key Manager version 1.5.0 and WSO2 Open Banking Business Intelligence Dashboard and Worker profiles 1.5.0.
+- Upgrade the profiles to use MySQL 5.7.24
+- Upgrade profiles to use Adopt OpenJDK jdk8u242-b08
+- Docker Compose resources for OBAM with OBKM and  OBAM, OBKM with OBBI deployment patterns.
 
-### Added
-- Docker Compose resources for Open Banking UK and Berlin specifications for Open Banking API Manager with Open Banking Key Manager profile
-- Docker Compose resources for Open Banking UK and Berlin specifications for Open Banking API Manager and Open Banking Key Manager with Open Banking Business profiles
 
-### Changed
-- Separated DB scripts into different directories based on the specification
-- Set ulimits and max_connections of MySQL containers
-
-## [v1.4.0.2] - 2019-09-26
-
-### Added
-- Docker Compose resources for Open Banking UK specification for Open Banking API Manager with Open Banking Key Manager profile
-- WSO2 Open Banking Business Intelligence v1.4.x Dockerfile for Ubuntu and Alpine
-
-## [v1.4.0.1] - 2019-09-06
-
-### Added
-- WSO2 Open Banking API Manager v1.4.x Dockerfile for Ubuntu and Alpine
-- WSO2 Open Banking Key Manager v1.4.x Dockerfile for Ubuntu and Alpine
+For detailed information on the tasks carried out during this release, please see the GitHub milestone	For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.5.0.1](https://github.com/wso2/docker-open-banking/milestone/8)
