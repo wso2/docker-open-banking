@@ -6,10 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [v1.4.0.7] - 2020-05-25
 
 ### Added
-- Open Banking SG specification support for OB 1.4.0
-
-For detailed information on the tasks carried out during this release, please refer,
-[v1.4.0.7](https://github.com/wso2/docker-open-banking/issues/68).
+- Open Banking SG specification support for OB 1.4.0 (refer issue https://github.com/wso2/docker-open-banking/issues/68)
 
 ## [v1.4.0.6] - 2020-03-30
 
