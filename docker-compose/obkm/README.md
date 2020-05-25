@@ -1,5 +1,4 @@
-# WSO2 Open Banking Open Banking Key Manager
-
+# WSO2 Open Banking Key Manager for Open Banking Singapore Specification
 
 ## Prerequisites
 
