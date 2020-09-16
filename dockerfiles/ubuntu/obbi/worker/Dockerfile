@@ -18,7 +18,8 @@
 
 # set base Docker image to AdoptOpenJDK Ubuntu Docker image
 FROM adoptopenjdk:8u242-b08-jdk-hotspot-bionic
-LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>"
+LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v1.5.0.2"
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -59,7 +60,7 @@ RUN \
     && rm -rf /var/lib/apt/lists/*
 # add the WSO2 product distribution to user's home directory
 RUN \
-    wget --no-check-certificate -O ${WSO2_SERVER}.zip "${WSO2_SERVER_DIST_URL}" \
+    wget -O ${WSO2_SERVER}.zip "${WSO2_SERVER_DIST_URL}" \
     && unzip -d ${USER_HOME} ${WSO2_SERVER}.zip \
     && chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME} \
     && rm -f ${WSO2_SERVER}.zip

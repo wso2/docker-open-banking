@@ -18,7 +18,8 @@
 
 # set base Docker image to AdoptOpenJDK Alpine Docker image
 FROM adoptopenjdk/openjdk8:jdk8u242-b08-alpine
-LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>"
+LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v1.5.0.2"
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -66,7 +67,7 @@ RUN \
         netcat-openbsd
 # add the WSO2 product distribution to user's home directory
 RUN \
-    wget --no-check-certificate -O ${WSO2_SERVER}.zip "${WSO2_SERVER_DIST_URL}" \
+    wget -O ${WSO2_SERVER}.zip "${WSO2_SERVER_DIST_URL}" \
     && unzip -d ${USER_HOME} ${WSO2_SERVER}.zip \
     && chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME} \
     && mkdir ${USER_HOME}/wso2-tmp \
