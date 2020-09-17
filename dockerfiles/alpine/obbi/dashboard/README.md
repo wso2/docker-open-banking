@@ -52,7 +52,7 @@ As an example, steps required to change the port offset using `deployment.yaml` 
 
 In WSO2 Open Banking Business Intelligence 1.5.0 product distribution, `deployment.yaml` configuration file <br>
 can be found at `<DISTRIBUTION_HOME>/conf/dashboard`. Copy the file to some suitable location of the host machine, <br>
-referred to as `<SOURCE_CONFIGS>/deployment.yaml` and change the offset value under ports to 2.
+referred to as `<SOURCE_CONFIGS>/deployment.yaml` and change the offset value under ports to 1.
 
 ##### 2. Grant read permission to `other` users for `<SOURCE_CONFIGS>/deployment.yaml`.
 
@@ -64,7 +64,7 @@ chmod o+r <SOURCE_CONFIGS>/deployment.yaml
 
 ```
 docker run 
--p 7713:7713
+-p 9641:9641
 --volume <SOURCE_CONFIGS>/deployment.yaml:<TARGET_CONFIGS>/deployment.yaml
 wso2-obbi-dashboard:1.5.0-alpine
 ```
