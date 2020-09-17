@@ -42,7 +42,7 @@ As an example, steps required to change the port offset using `deployment.yaml` 
 
 ##### 1. Stop the Open Banking Business Intelligence container if it's already running.
 
-In WSO2 Open Banking Business Intelligence 1.4.0 product distribution, `deployment.yaml` configuration file <br>
+In WSO2 Open Banking Business Intelligence 1.5.0 product distribution, `deployment.yaml` configuration file <br>
 can be found at `<DISTRIBUTION_HOME>/conf/worker`. Copy the file to some suitable location of the host machine, <br>
 referred to as `<SOURCE_CONFIGS>/deployment.yaml` and change the offset value under ports to 2.
 
