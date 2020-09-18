@@ -1,4 +1,3 @@
-
 # Contributing to docker-open-banking
 
 This repository includes Docker and Docker Compose resources for WSO2 Open Banking. We encourage contributions from our community.
