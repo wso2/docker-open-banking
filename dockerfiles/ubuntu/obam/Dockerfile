@@ -17,9 +17,9 @@
 # ------------------------------------------------------------------------
 
 # set base Docker image to AdoptOpenJDK Ubuntu Docker image
-FROM adoptopenjdk:8u242-b08-jdk-hotspot-bionic
+FROM adoptopenjdk:8u262-b10-jdk-hotspot-bionic
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
-      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v1.5.0.2"
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v2.0.0"
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -30,7 +30,7 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2-obam
-ARG WSO2_SERVER_VERSION=1.5.0
+ARG WSO2_SERVER_VERSION=2.0.0
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_SERVER_DIST_URL
