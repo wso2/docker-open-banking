@@ -1,0 +1,430 @@
+#================configs related to carbon.xml=============
+[server]
+hostname = "obiam"
+node_ip = "127.0.0.1"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+serverDetails = "WSO2 IS as KM 5.10.0"
+mode = "single"
+userAgent = "WSO2 IS as KM 5.10.0"
+offset = 3
+
+[keystore.primary]
+name = "wso2carbon.jks"
+password = "wso2carbon"
+
+[tenant_mgt]
+enable_email_domain = true
+
+#================configs related to user-mgt.xml=============
+
+[super_admin]
+username = "admin@wso2.com"
+password = "wso2123"
+create_admin_account = true
+
+[realm_manager]
+data_source= "WSO2UM_DB"
+
+[user_store]
+type = "database_unique_id"
+class = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager"
+
+[user_store.properties]
+UsernameJavaRegEx = "a-zA-Z0-9@._-{3,30}$"
+UsernameJavaScriptRegEx = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$"
+SCIMEnabled = false
+IsBulkImportSupported = false
+LeadingOrTrailingSpaceAllowedInUserName = false
+UsernameWithEmailJavaScriptRegEx = "^[\\S]{3,30}$"
+
+[authorization_manager]
+class = "org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager"
+
+[authorization_manager.properties]
+AdminRoleManagementPermissions = "/permission"
+AuthorizationCacheEnabled = true
+GetAllRolesOfUserEnabled = false
+
+#================configs related to master-datasources.xml=============
+
+# for registry data
+[database.shared_db]
+url = "jdbc:mysql://mysql:3306/openbank_govdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+
+[database.shared_db.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+# for api manager data
+[database.apim_db]
+url = "jdbc:mysql://mysql:3306/openbank_apimgtdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+
+[database.apim_db.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+# for km-config registry
+[database.config]
+url = "jdbc:mysql://mysql:3306/openbank_iskm_configdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+
+[database.config.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+# for user management data
+[[datasource]]
+id="WSO2UM_DB"
+url = "jdbc:mysql://mysql:3306/openbank_userdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+jmx_enable=false
+pool_options.maxActive = "150"
+pool_options.maxWait = "60000"
+pool_options.minIdle = "5"
+pool_options.testOnBorrow = true
+pool_options.validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+pool_options.validationInterval="30000"
+pool_options.defaultAutoCommit=false
+
+#================configs related to application-authentication.xml=============
+
+[authentication.endpoints]
+login_url = "https://obiam:9446/authenticationendpoint/login.do"
+retry_url = "https://obiam:9446/authenticationendpoint/retry.do"
+
+[authentication.endpoint.redirect_params]
+filter_policy = "include"
+remove_on_consume_from_api = "true"
+parameters = ["sessionDataKeyConsent","relyingParty", "authenticators", "authFailureMsg", "authFailure"]
+
+#================configs related to api-manager.xml=============
+
+[[apim.gateway.environment]]
+name = "Production and Sandbox"
+type = "hybrid"
+display_in_api_console = true
+description = "This is a hybrid gateway that handles both production and sandbox token traffic."
+service_url = "https://obam:9443/services/"
+username= "${admin.username}"
+password= "${admin.password}"
+https_endpoint = "https://${carbon.local.ip}:${https.nio.port}"
+http_endpoint = "http://${carbon.local.ip}:${http.nio.port}"
+ws_endpoint = "ws://${carbon.local.ip}:9099"
+
+[apim.oauth_config]
+white_listed_scopes = ["^device_.*","openid","extended_transaction_history", "^OB_.*", "^TIME_.*", "^x5t.*"]
+
+[apim.jwt]
+enable = false
+signing_algorithm = "NONE"
+header = "X-JWT-Assertion"
+
+[apim.throttling]
+enable_data_publishing = false
+enable_policy_deploy = true
+enable_blacklist_condition = true
+enable_decision_connection = true
+
+[[apim.throttling.url_group]]
+traffic_manager_urls = ["tcp://localhost:9611"]
+traffic_manager_auth_urls = ["ssl://localhost:9711"]
+type = "loadbalance"
+
+[apim.jwt_authenitcation]
+subscription_validation_via_km = false
+
+[[apim.devportal.application_attributes]]
+required = true
+hidden = false
+name ="Regulatory Compliance"
+description = "Regulatory Compliance"
+
+
+#================configs related to identity.xml=============
+
+[identity_data_source]
+skip_db_schema_creation = true
+
+[oauth.jwks_endpoint]
+enable = true
+connection_timeout = 50000
+read_timeout = 50000
+
+[oauth.endpoints]
+oauth2_authz_url = "${carbon.protocol}://obam:8243/authorize"
+oauth2_token_url = "${carbon.protocol}://obam:8243/token"
+oauth2_user_info_url = "${carbon.protocol}://obam:8243/userinfo"
+oauth2_consent_page = "${carbon.protocol}://obiam:${carbon.management.port}/ob/authenticationendpoint/oauth2_authz.do"
+oidc_consent_page = "${carbon.protocol}://obiam:${carbon.management.port}/ob/authenticationendpoint/oauth2_consent.do"
+oauth2_dcr_url = "${carbon.protocol}://obam:8243/open-banking/v3.2/register"
+
+[oauth.token_renewal]
+renew_refresh_token = false
+
+[oauth.response_type]
+token.enable = true
+code.enable = false
+id_token.enable = true
+id_token_token.enable = false
+device.enable = true
+
+[[oauth.custom_response_type]]
+name = "code"
+class = "com.wso2.finance.open.banking.identity.extensions.response.type.handlers.OBCodeResponseTypeHandler"
+validator = "com.wso2.finance.open.banking.identity.extensions.response.type.validators.OBCodeTokenResponseValidator"
+
+[[oauth.custom_response_type]]
+name = "code id_token"
+class = "com.wso2.finance.open.banking.identity.extensions.response.type.handlers.OBHybridResponseTypeHandler"
+
+[oauth.grant_type]
+authorization_code.enable = true
+authorization_code.grant_handler = "com.wso2.finance.open.banking.identity.extensions.grant.type.handlers.OBAuthorizationCodeGrantHandler"
+refresh_token.enable = true
+refresh_token.grant_handler = "com.wso2.finance.open.banking.identity.extensions.grant.type.handlers.OBRefreshGrantHandler"
+client_credentials.enable = true
+client_credentials.grant_handler = "com.wso2.finance.open.banking.identity.extensions.grant.type.handlers.OBClientCredentialsGrantHandler"
+iwa_ntlm.enable = false
+jwt_bearer.enable = false
+
+[oauth.oidc]
+extensions.id_token_builder = "com.wso2.finance.open.banking.idtoken.builder.OBIDTokenBuilder"
+id_token.issuer = "https://obam:8243/token"
+extensions.request_object_validator = "com.wso2.finance.open.banking.request.object.validator.OBRequestObjectValidatorImpl"
+
+[identity_mgt.user_self_registration]
+allow_self_registration = true
+
+[[event_listener]]
+id = "mutual_tls_authenticator"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+name = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.MutualTLSClientAuthenticator"
+order = "158"
+enable = false
+
+[[event_listener]]
+id = "ob_mutual_tls_authenticator"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+name = "com.wso2.finance.open.banking.mtls.authenticator.OBMutualTLSClientAuthenticator"
+order = "26"
+enable = false
+
+[[event_listener]]
+id = "ob_introspection_response_interceptor"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+name = "com.wso2.finance.open.banking.identity.extensions.introspection.OBIntrospectionResponseInterceptor"
+order = "27"
+enable = true
+
+[[event_listener]]
+id = "ob_introspection_data_provider"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+name = "com.wso2.finance.open.banking.identity.extensions.introspection.OBIntrospectionDataProvider"
+order = "28"
+enable = true
+
+[resource_access_control]
+default_access_allow= true
+
+[[resource.access_control]]
+context = "(.*)/berlin110/(.*)"
+secure="true"
+http_method="all"
+permissions=["/permission/admin"]
+allowed_auth_handlers = ["BasicAuthentication"]
+
+[[resource.access_control]]
+context = "(.*)/berlin130/(.*)"
+secure="true"
+http_method="all"
+permissions=["/permission/admin"]
+allowed_auth_handlers = ["BasicAuthentication"]
+
+[[resource.access_control]]
+context = "(.*)/stet140/(.*)"
+secure="true"
+http_method="all"
+permissions=["/permission/admin"]
+allowed_auth_handlers = ["BasicAuthentication"]
+
+[[resource.access_control]]
+context = "(.*)/uk110/(.*)"
+secure="true"
+http_method="all"
+permissions=["/permission/admin"]
+allowed_auth_handlers = ["BasicAuthentication"]
+
+[[resource.access_control]]
+context = "(.*)/uk200/(.*)"
+secure="true"
+http_method="all"
+permissions=["/permission/admin"]
+allowed_auth_handlers = ["BasicAuthentication"]
+
+[[resource.access_control]]
+context = "(.*)/uk300/(.*)"
+secure="true"
+http_method="all"
+permissions=["/permission/admin"]
+allowed_auth_handlers = ["BasicAuthentication"]
+
+[authentication.adaptive.event_publisher]
+url = "http://localhost:8006/"
+
+#================configs related to identity-event.properties=============
+
+[[event_handler]]
+name="userPostSelfRegistration"
+subscriptions=["POST_ADD_USER"]
+
+#================configs related to open-banking-datasources.xml=============
+
+[open_banking_database]
+config.url = "jdbc:mysql://mysql:3306/openbank_openbankingdb?autoReconnect=true&amp;useSSL=false"
+config.username = "root"
+config.password = "root"
+config.driver = "com.mysql.jdbc.Driver"
+
+[open_banking_database.config.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+#================custom filters and filter-mappings==============
+[[tomcat.filter]]
+name = "TokenFilter"
+class = "com.wso2.finance.open.banking.identity.extensions.filter.TokenFilter"
+
+[[tomcat.filter_mapping]]
+name = "TokenFilter"
+url_pattern = "/token/*"
+
+#================configs related to open-banking.xml=============
+
+[open_banking]
+deployed_spec = "UK"
+payable_accounts_retrieve_endpoint = "http://obam:9763/api/openbanking/backend-uk/services/bankaccounts/bankaccountservice/payable-accounts"
+sharable_accounts_retrieve_endpoint = "http://obam:9763/api/openbanking/backend-uk/services/bankaccounts/bankaccountservice/sharable-accounts"
+
+[open_banking.jdbc_persistence_manager.data_source]
+name= "WSO2OpenBankingDB"
+
+[open_banking.event_notifications]
+enable = true
+token_issuer = "www.openbank.com"
+api_url = "https://obam:8243/open-banking/v3.1/event-notification"
+signing_alias = "wso2carbon"
+
+[open_banking.uk]
+x_fapi_financial_id = "open-bank"
+payment_api_url = "https://obam:8243/open-banking/{version}/pisp/"
+account_api_url = "https://obam:8243/open-banking/{version}/aisp/"
+funds_confirmation_api_url = "https://obam:8243/open-banking/{version}/cbpii/"
+
+[open_banking.uk.acc_update_by_psu]
+enable = false
+
+[open_banking.uk.payment_restrictions.cut_off_date_time]
+enable = false
+policy = "REJECT"
+daily_cut_off_time = "17:30:00+00:00"
+expected_execution_time = "10:00:00+00:00"
+expected_settlement_time = "11:00:00+00:00"
+
+[open_banking.uk.signing_config]
+enable = false
+obie.trusted_anchors.signing = "openbanking.org.uk"
+obie.trusted_anchors.validation = "openbanking.org.uk"
+obie.org_id = "ABC1234"
+
+[consent_id_in_path]
+enable = true
+
+[debtor_account_validation]
+enable = true
+
+[open_banking.api_security]
+mtls_token_binding.enable = true
+
+[open_banking.api_security.global]
+username = "$ref{super_admin.username}"
+password = "$ref{super_admin.password}"
+
+[open_banking.cert_mgt]
+client_auth_header = "x-wso2-mutual-auth-cert"
+
+[open_banking.cert_mgt.cert_revocation_proxy]
+enable = false
+proxy_host = "PROXY_HOSTNAME"
+proxy_port = "8080"
+
+[open_banking.dcr]
+uri_validation.enable = false
+hostname_validation.enable = false
+software_id_as_application_name.enable = true
+
+[open_banking.bi_server]
+username = "$ref{super_admin.username}@carbon.super"
+password = "$ref{super_admin.password}"
+
+[open_banking.bi_server.data_publishing]
+enable = true
+server_url = "{tcp://obbi-worker:7612}"
+
+[open_banking.bi_server.tra]
+enable = true
+payment_validation.enable = true
+account_validation.enable = true
+
+[open_banking.bi_server.tra.receivers]
+account_validation_url = "http://obbi-worker:8007/TRAAccountValidationApp/TRAValidationStream"
+payment_validation_url = "http://obbi-worker:8007/TRAPaymentValidationApp/TRAValidationStream"
+
+[open_banking.bi_server.fraud_detection]
+enable = true
+
+[open_banking.bi_server.fraud_detection.receivers]
+fraud_detection_url = "http://obbi-worker:8007/FraudDetectionApp/FraudDetectionStream"
+invalid_submission_url = "http://obbi-worker:8006/InvalidSubmissionsApp/InvalidSubmissionsStream"
+
+[open_banking.account_id_validation_on_retrieval]
+enable = true

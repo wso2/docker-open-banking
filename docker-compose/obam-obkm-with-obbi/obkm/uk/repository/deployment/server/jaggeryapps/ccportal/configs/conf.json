@@ -9,14 +9,16 @@
 	},
 	"ccportalRoles" : ["Internal/CustomerCareOfficer"],
 	"consentStatus" : ["Revoked", "Authorised", "AwaitingAuthorisation", "AcceptedTechnicalValidation", "AcceptedCustomerProfile"],
-	"DeployedSpecification" : UK,
+	"DeployedSpecification" : "UK",
+
 	"consentStatuses" : {
-		"UKAccount" : ["Authorised", "AwaitingAuthorisation"],
+		"UKAccount" : ["Authorised","Revoked", "Rejected"],
 		"BERLINAccount" : ["received", "rejected", "partiallyAuthorised", "valid", "revokedByPsu", "expired", "terminatedByTpp"],
-		"UKPayment" : ["Authorised", "AwaitingAuthorisation", "AcceptedTechnicalValidation", "AcceptedCustomerProfile", "Consumed"],
-		"BERLINPayment" : ["received", "rejected", "AcceptedCustomerProfile"],
-		"UKCof" : ["Authorised"]
+		"UKPayment" : ["Authorised", "AwaitingAuthorisation", "AcceptedTechnicalValidation", "AcceptedCustomerProfile", "Consumed", "Rejected"],
+		"BERLINPayment" : ["Received", "Rejected", "AcceptedCustomerProfile"],
+		"UKCof" : ["AwaitingAuthorisation","Authorised","Revoked", "Rejected"]
 	},
+
 	"ssoConfiguration" : {
 		"enabled" : "false",
 		"issuer" : "ccportal",
@@ -43,7 +45,7 @@
 	"reverseProxy" : {
 		"enabled" : false,    // values true , false , "auto" - will look for  X-Forwarded-* headers
 		"host" : "sample.proxydomain.com", // If reverse proxy do not have a domain name use IP
-		"context":"",
-		//"regContext":"" // Use only if different path is used for registry
+		"context":""
+		//, "regContext":"" // Use only if different path is used for registry
 	}
 }
