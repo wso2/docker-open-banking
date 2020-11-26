@@ -42,8 +42,8 @@ services:
       start_period: 30s
 
   obkm:
-    container_name: obkm
-    image: docker.wso2.com/wso2-obkm
+    container_name: obiam
+    image: wso2-obiam:2.0.0
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9446/carbon/admin/login.jsp"]
       interval: 10s
@@ -67,7 +67,7 @@ services:
 
   obam:
     container_name: obam
-    image: docker.wso2.com/wso2-obam
+    image: wso2-obam:2.0.0
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/carbon/admin/login.jsp"]
       interval: 10s

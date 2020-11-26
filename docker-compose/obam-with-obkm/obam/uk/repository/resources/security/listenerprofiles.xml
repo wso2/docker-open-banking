@@ -16,10 +16,12 @@
   ~  specific language governing permissions and limitations
   ~  under the License.
   -->
-  
-<parameter name="customSSLProfiles" xmlns:svns="http://org.wso2.securevault/configuration">
-    <profile>
-        <servers>*</servers>
+
+<parameter name="SSLProfiles" xmlns:svns="http://org.wso2.securevault/configuration">
+
+
+<profile>
+        <bindAddress>0.0.0.0</bindAddress>
          <KeyStore>
             <Location>repository/resources/security/wso2carbon.jks</Location>
             <Type>JKS</Type>
@@ -31,6 +33,7 @@
             <Type>JKS</Type>
             <Password>wso2carbon</Password>
         </TrustStore>
+        <SSLVerifyClient>optional</SSLVerifyClient>
     </profile>
 </parameter>
 
