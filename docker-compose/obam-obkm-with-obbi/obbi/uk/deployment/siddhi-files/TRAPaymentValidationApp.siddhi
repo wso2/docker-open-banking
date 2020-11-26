@@ -1,0 +1,47 @@
+/**
+* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.com). All Rights Reserved.
+*
+* This software is the property of WSO2 Inc. and its suppliers, if any.
+* Dissemination of any information or reproduction of any material contained
+* herein is strictly forbidden, unless permitted by WSO2 in accordance with
+* the WSO2 Commercial License available at http://wso2.com/licenses. For specific
+* language governing the permissions and limitations under this license,
+* please see the license as well as any agreement you've entered into with
+* WSO2 governing the purchase of this software and any associated services.
+**/
+
+@App:name("TRAPaymentValidationApp")
+
+@App:description('Receive events via HTTP transport and view the output on the console')
+
+@Source(type = 'http-request',
+     source.id='source',
+     receiver.url='http://obbi-worker:8007/TRAPaymentValidationApp/TRAValidationStream',
+     basic.auth.enabled='false',
+     @map(type = 'json',@attributes(MESSAGE_ID='trp:messageId',TIMESTAMP='event.timestamp',USER_ID='event.userId',
+     CONSENT_ID='event.consentId', TYPE='$.event.type', DEPLOYED_SPEC='$.event.DeployedSpec',
+     RECURRING_PAYMENT_TIME='$.event.recurringPaymentTime',MAX_FREQ_WITHOUT_SCA='$.event.maxFreqWithoutSCA',
+     TOTAL_AMOUNT_WITHOUT_SCA='$.event.totalAmountWithoutSCA', MAX_TRANSACTION_AMOUNT='$.event.MaxTransactionAmount')))
+define stream TRAValidationStream (MESSAGE_ID string, TIMESTAMP long, USER_ID string, CONSENT_ID string, TYPE string,
+                        DEPLOYED_SPEC string, RECURRING_PAYMENT_TIME int, MAX_FREQ_WITHOUT_SCA int,
+                        TOTAL_AMOUNT_WITHOUT_SCA int, MAX_TRANSACTION_AMOUNT int);
+
+@sink(type = 'inMemory', topic = 'traPaymentData',@map(type = 'passThrough'))
+define stream TRAPaymentDataStream (USER_ID string, MESSAGE_ID string, CONSENT_ID string, CLIENT_ID string,
+                        AMOUNT string, CURRENT_TIMESTAMP long, TYPE string, RECURRING_PAYMENT_TIME int,
+                        MAX_FREQ_WITHOUT_SCA int, TOTAL_AMOUNT_WITHOUT_SCA int, MAX_TRANSACTION_AMOUNT int);
+
+@primaryKey('ID','TIMESTAMP')
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+define table PAYMENTS_RAW_DATA(ID string,CONSENT_ID string,USER_ID string,TPP_ID string,CLIENT_ID string,CREDITOR_ACCOUNT_ID string,
+                        DEBTOR_ACCOUNT_ID string,MULTI_AUTHORISATION bool,PAYMENT_TYPE string,CURRENCY string,
+                        NO_OF_TRANSACTIONS string,LOCAL_INSTRUMENT string,AMOUNT string,PAYMENT_SUBMISSION_ID string,
+                        TIMESTAMP long,TRA_DECISION bool, EXEMPTION string, IS_FRAUD bool, MULTI_AUTH_USERS_COUNT int,API_SPEC_VERSION string);
+
+@info(name='getTransactionData')
+from TRAValidationStream as v join PAYMENTS_RAW_DATA as t
+on t.CONSENT_ID == v.CONSENT_ID
+select v.USER_ID, v.MESSAGE_ID, v.CONSENT_ID, t.CLIENT_ID, t.AMOUNT, v.TIMESTAMP as CURRENT_TIMESTAMP, v.TYPE,
+                        v.RECURRING_PAYMENT_TIME, v.MAX_FREQ_WITHOUT_SCA, v.TOTAL_AMOUNT_WITHOUT_SCA,
+                        v.MAX_TRANSACTION_AMOUNT
+insert into TRAPaymentDataStream;

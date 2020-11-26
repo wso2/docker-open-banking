@@ -1,0 +1,60 @@
+/**
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.com). All Rights Reserved.
+ *
+ * This software is the property of WSO2 Inc. and its suppliers, if any.
+ * Dissemination of any information or reproduction of any material contained
+ * herein is strictly forbidden, unless permitted by WSO2 in accordance with
+ * the WSO2 Commercial License available at http://wso2.com/licenses. For specific
+ * language governing the permissions and limitations under this license,
+ * please see the license as well as any agreement you've entered into with
+ * WSO2 governing the purchase of this software and any associated services.
+ **/
+@App:name("FraudStatusUpdaterApp")
+
+@Source(type = 'http',
+        receiver.url='http://obbi-worker:8006/FraudStatusUpdaterApp/FraudStatusUpdaterStream',
+        basic.auth.enabled='false',
+        @map(type='json'))
+define stream FraudStatusUpdaterStream (consentId string, analystId string, option int);
+/*
+option
+0 = not fraudulent
+1 = fraudulent
+*/
+
+--Store event data to database
+
+@primaryKey('ID', 'TIMESTAMP')
+@index('CONSENT_ID', 'TIMESTAMP')
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+define table PAYMENTS_RAW_DATA(ID string,CONSENT_ID string,USER_ID string,TPP_ID string,CLIENT_ID string,CREDITOR_ACCOUNT_ID string,
+                        DEBTOR_ACCOUNT_ID string,MULTI_AUTHORISATION bool,PAYMENT_TYPE string,CURRENCY string,
+                        NO_OF_TRANSACTIONS string,LOCAL_INSTRUMENT string,AMOUNT string,PAYMENT_SUBMISSION_ID string,
+                        TIMESTAMP long,TRA_DECISION bool, EXEMPTION string, IS_FRAUD bool, MULTI_AUTH_USERS_COUNT int,API_SPEC_VERSION string);
+
+@primaryKey('consentId')
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+define table FraudulentTransactionData(consentId string, analystId string, timestamp long, status int);
+
+@info(name='updateTransactionHistoryTable')
+from FraudStatusUpdaterStream
+select consentId, option as status
+update PAYMENTS_RAW_DATA
+set PAYMENTS_RAW_DATA.IS_FRAUD = status
+on PAYMENTS_RAW_DATA.CONSENT_ID == consentId;
+
+@info(name='insertToFraudulentTransactionDataTable')
+from FraudStatusUpdaterStream [option == 1]
+select consentId, analystId, eventTimestamp() as timestamp, option as status
+update or insert into FraudulentTransactionData
+set FraudulentTransactionData.timestamp = timestamp, FraudulentTransactionData.analystId = analystId, FraudulentTransactionData.status = status
+on FraudulentTransactionData.consentId == consentId;
+
+@info(name='updateFraudulentTransactionDataTable')
+from FraudStatusUpdaterStream [option == 0]
+select consentId, option as status
+update FraudulentTransactionData
+set FraudulentTransactionData.status = status
+on FraudulentTransactionData.consentId == consentId;
+
+
