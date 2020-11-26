@@ -1,0 +1,442 @@
+#================configs related to carbon.xml=============
+[server]
+hostname = "obam"
+node_ip = "127.0.0.1"
+mode = "single" #single or ha
+base_path = "${carbon.protocol}://${carbon.host}:${carbon.management.port}"
+#discard_empty_caches = false
+server_role = "default"
+
+#================config related to axis2.xml===============
+globally_engaged_modules = ["mtlscertvalidator"]
+#================end config related to axis2.xml===========
+
+[tenant_mgt]
+enable_email_domain = true
+
+[keystore.tls]
+file_name =  "wso2carbon.jks"
+type =  "JKS"
+password =  "wso2carbon"
+alias =  "wso2carbon"
+key_password =  "wso2carbon"
+
+#================configs related to user-mgt.xml=============
+[super_admin]
+username = "admin@wso2.com"
+password = "wso2123"
+create_admin_account = true
+
+[realm_manager]
+data_source= "WSO2UM_DB"
+
+[user_store]
+type = "database_unique_id"
+class = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager"
+
+[user_store.properties]
+UsernameJavaRegEx = "a-zA-Z0-9@._-{3,30}$"
+UsernameJavaScriptRegEx = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$"
+SCIMEnabled = false
+IsBulkImportSupported = false
+LeadingOrTrailingSpaceAllowedInUserName = false
+UsernameWithEmailJavaScriptRegEx = "^[\\S]{3,30}$"
+
+[authorization_manager]
+class = "org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager"
+
+[authorization_manager.properties]
+AdminRoleManagementPermissions = "/permission"
+AuthorizationCacheEnabled = true
+GetAllRolesOfUserEnabled = false
+
+#================configs related to master-datasources.xml=============
+
+# for registry data
+[database.shared_db]
+url = "jdbc:mysql://mysql:3306/openbank_govdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+
+[database.shared_db.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+# for api manager data
+[database.apim_db]
+url = "jdbc:mysql://mysql:3306/openbank_apimgtdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+
+[database.apim_db.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+# for am-config registry
+[database.config]
+url = "jdbc:mysql://mysql:3306/openbank_am_configdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+
+[database.config.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+# for user management data
+[[datasource]]
+id="WSO2UM_DB"
+url = "jdbc:mysql://mysql:3306/openbank_userdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+jmx_enable=false
+pool_options.maxActive = "150"
+pool_options.maxWait = "60000"
+pool_options.minIdle = "5"
+pool_options.testOnBorrow = true
+pool_options.validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+pool_options.validationInterval="30000"
+pool_options.defaultAutoCommit=false
+
+# for getting statistics to API Manager
+[[datasource]]
+id="WSO2AM_STATS_DB"
+url = "jdbc:mysql://mysql:3306/openbank_apimgt_statsdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+jmx_enable=false
+pool_options.maxActive = "150"
+pool_options.maxWait = "60000"
+pool_options.minIdle = "5"
+pool_options.testOnBorrow = true
+pool_options.validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+pool_options.validationInterval="30000"
+pool_options.defaultAutoCommit=false
+
+#================configs related to api-manager.xml=============
+
+[apim.auth_manager]
+service_url = "https://obiam:9446${carbon.context}services/"
+
+[[apim.gateway.environment]]
+name = "Production and Sandbox"
+type = "hybrid"
+display_in_api_console = true
+description = "This is a hybrid gateway that handles both production and sandbox token traffic."
+show_as_token_endpoint_url = true
+service_url = "https://obam:${mgt.transport.https.port}/services/"
+username= "${admin.username}"
+password= "${admin.password}"
+ws_endpoint = "ws://obam:9099"
+wss_endpoint = "wss://obam:8099"
+http_endpoint = "http://obam:${http.nio.port}"
+https_endpoint = "https://obam:${https.nio.port}"
+
+[apim.cors]
+allow_origins = "*"
+allow_methods = ["GET","PUT","POST","DELETE","PATCH","OPTIONS"]
+allow_headers = ["authorization","Access-Control-Allow-Origin","Content-Type","SOAPAction","apikey"]
+allow_credentials = false
+
+[apim.throttling]
+enable_data_publishing = false
+jms.topic_connection_factory = "amqp://admin!wso2.com!carbon.super:${admin.password}@clientid/carbon?brokerlist='tcp://${carbon.local.ip}:${jms.port}'"
+receiver_username = "$ref{super_admin.username}@carbon.super"
+
+[apim.analytics]
+enable = true
+receiver_urls = "{tcp://obbi-worker:7612}"
+event_publisher_impl = "com.wso2.finance.open.banking.gateway.uk.monitoring.publisher.OBUsageDataBridgeDataPublisher"
+receiver_username = "$ref{super_admin.username}@carbon.super"
+receiver_password = "$ref{super_admin.password}"
+
+[apim.key_manager]
+service_url = "https://obiam:9446${carbon.context}services/"
+key_manager_client_impl = "com.wso2.finance.open.banking.sca.keymanager.SCABasedKeyManagerClient"
+
+[apim.key_manager.configuration]
+ServerURL = "https://obiam:9446${carbon.context}services/"
+Username = "${admin.username}"
+Password = "${admin.password}"
+TokenURL = "https://obam:${https.nio.port}/token"
+RevokeURL = "https://obam:${https.nio.port}/revoke"
+
+[apim.oauth_config]
+enable_outbound_auth_header = true
+white_listed_scopes = ["^device_.*", "openid", "^OB_.*", "^TIME_.*"]
+
+[apim.devportal]
+display_multiple_versions = true
+enable_comments = false
+enable_ratings = false
+enable_forum = false
+
+[apim.jwt_authenitcation]
+subscription_validation_via_km = false
+
+[[apim.devportal.application_attributes]]
+required = true
+hidden = false
+name ="regulatory"
+description = "Regulatory Compliance"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="software_id_sandbox"
+description = "Software ID of the sandbox"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="software_id_production"
+description = "Software ID of the production"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="software_roles_sandbox"
+description = "Software roles of the sandbox"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="software_roles_production"
+description = "Software roles of the production"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="software_jwks_endpoint_sandbox"
+description = "JWKS endpoint of sandbox"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="software_jwks_endpoint_production"
+description = "JWKS endpoint of production"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="org_id_sandbox"
+description = "Organization ID of the sandbox"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="org_id_production"
+description = "Organization ID of the production"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="scope_sandbox"
+description = "Allowed scopes for sandbox"
+
+[[apim.devportal.application_attributes]]
+required = false
+hidden = false
+name ="scope_production"
+description = "Allowed scopes for production"
+
+
+#================configs related to axis2.xml=============
+
+[[custom_message_formatters]]
+class = "org.apache.axis2.format.PlainTextFormatter"
+content_type = "application/jwt"
+
+[[custom_message_builders]]
+class = "org.apache.axis2.format.PlainTextBuilder"
+content_type = "application/jwt"
+
+[transport.passthru_https.sender.parameters]
+HostnameVerifier = "AllowAll"
+
+[passthru_http]
+"http.headers.preserve"="Content-Type,Date"
+
+[transport.passthru_https.listener.parameters]
+"SSLVerifyClient" = "optional"
+
+#================configs related to identity.xml=============
+
+[identity_data_source]
+skip_db_schema_creation = true
+
+[oauth.endpoints]
+oauth2_consent_page = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/oauth2_authz.do"
+oauth2_error_page = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/oauth2_error.do"
+oidc_consent_page = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/oauth2_consent.do"
+oidc_logout_consent_page = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/oauth2_logout_consent.do"
+oidc_logout_page = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/oauth2_logout.do"
+
+[oauth.grant_type]
+iwa_ntlm.enable = false
+jwt_bearer.enable = false
+
+[oauth.scope_validator]
+jdbc.enable = false
+xacml.enable = false
+
+[saml.endpoints]
+logout = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/samlsso_logout.do"
+notification = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/samlsso_notification.do"
+
+[passive_sts.endpoints]
+retry = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authenticationendpoint/retry.do"
+
+[[resource.access_control]]
+context = "(.*)/api/openbanking/dynamic-client-registration/(.*)"
+secure="true"
+http_method="all"
+permissions=["/permission/admin"]
+
+[authentication.adaptive.event_publisher]
+url = "https://localhost:8280/"
+authentication.basic.enable = true
+
+#================configs related to identity-event.properties=============
+
+[[event_handler]]
+name="userPostSelfRegistration"
+subscriptions=["POST_ADD_USER"]
+
+#================configs related to open-banking-datasources.xml=============
+
+[open_banking_database]
+config.url = "jdbc:mysql://mysql:3306/openbank_openbankingdb?autoReconnect=true&amp;useSSL=false"
+config.username = "root"
+config.password = "root"
+config.driver = "com.mysql.jdbc.Driver"
+
+[open_banking_database.config.pool_options]
+maxActive = "150"
+maxWait = "60000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+#Use below for oracle
+#validationQuery="SELECT 1 FROM DUAL"
+validationInterval="30000"
+defaultAutoCommit=false
+
+#================configs related to open-banking.xml=============
+
+[open_banking]
+deployed_spec = "UK"
+payable_accounts_retrieve_endpoint = "http://obam:9763/api/openbanking/backend-uk/services/bankaccounts/bankaccountservice/payable-accounts"
+sharable_accounts_retrieve_endpoint = "http://obam:9763/api/openbanking/backend-uk/services/bankaccounts/bankaccountservice/sharable-accounts"
+
+[open_banking.jdbc_persistence_manager.data_source]
+name= "WSO2OpenBankingDB"
+
+[open_banking.event_notifications]
+enable = true
+token_issuer = "www.openbank.com"
+api_url = "https://obam:8243/open-banking/v3.1/event-notification"
+
+[open_banking.uk]
+x_fapi_financial_id = "open-bank"
+payment_api_url = "https://obam:8243/open-banking/{version}/pisp/"
+account_api_url = "https://obam:8243/open-banking/{version}/aisp/"
+funds_confirmation_api_url = "https://obam:8243/open-banking/{version}/cbpii/"
+
+[open_banking.uk.acc_update_by_psu]
+enable = false
+
+[open_banking.uk.payment_restrictions.cut_off_date_time]
+enable = false
+policy = "REJECT"
+daily_cut_off_time = "17:30:00+00:00"
+expected_execution_time = "10:00:00+00:00"
+expected_settlement_time = "11:00:00+00:00"
+
+[open_banking.uk.signing_config]
+enable = false
+obie.trusted_anchors.signing = "openbanking.org.uk"
+obie.trusted_anchors.validation = "openbanking.org.uk"
+obie.org_id = "ABC1234"
+
+[consent_id_in_path]
+enable = true
+
+[debtor_account_validation]
+enable = true
+
+[open_banking.api_security]
+mtls_token_binding.enable = false
+
+[open_banking.api_security.global]
+username = "$ref{super_admin.username}"
+password = "$ref{super_admin.password}"
+
+[open_banking.cert_mgt]
+client_auth_header = "x-wso2-mutual-auth-cert"
+
+[open_banking.cert_mgt.cert_revocation_proxy]
+enable = false
+proxy_host = "PROXY_HOSTNAME"
+proxy_port = "8080"
+
+[open_banking.dcr]
+uri_validation.enable = false
+hostname_validation.enable = false
+software_id_as_application_name.enable = true
+
+[open_banking.bi_server]
+username = "$ref{super_admin.username}@carbon.super"
+password = "$ref{super_admin.password}"
+
+[open_banking.bi_server.data_publishing]
+enable = true
+server_url = "{tcp://obbi-worker:7612}"
+
+[open_banking.bi_server.tra]
+enable = true
+payment_validation.enable = true
+account_validation.enable = true
+
+[open_banking.bi_server.tra.receivers]
+account_validation_url = "http://obbi-worker:8007/TRAAccountValidationApp/TRAValidationStream"
+payment_validation_url = "http://obbi-worker:8007/TRAPaymentValidationApp/TRAValidationStream"
+
+[open_banking.bi_server.fraud_detection]
+enable = true
+
+[open_banking.bi_server.fraud_detection.receivers]
+fraud_detection_url = "http://obbi-worker:8007/FraudDetectionApp/FraudDetectionStream"
+invalid_submission_url = "http://obbi-worker:8006/InvalidSubmissionsApp/InvalidSubmissionsStream"
+
+[open_banking.account_id_validation_on_retrieval]
+enable = true

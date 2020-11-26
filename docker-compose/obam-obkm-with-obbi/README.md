@@ -7,7 +7,7 @@
    in order to run the steps provided in following **Quick Start Guide**. <br><br>
  * In order to use WSO2 Open Banking Docker images, you need an active WSO2 Open Banking subscription. If you do not possess an active WSO2
    Open Banking subscription, you can contact us from [here](https://wso2.com/solutions/financial/open-banking/).<br><br>
- * If you wish to run the Docker Compose setup using Docker images built locally, build Docker images using Docker resources available from [here](../../dockerfiles/) and remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml` and add the version in the local image at the end (:1.5.0). <br><br>
+ * If you wish to run the Docker Compose setup using Docker images built locally, build Docker images using Docker resources available from [here](../../dockerfiles/) and remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml` and add the version in the local image at the end (:2.0.0). <br><br>
     
 ## Quick Start Guide
 
@@ -82,13 +82,13 @@
 5. Follow the documentation to use WSO2 Open Banking:
 
 a. To deploy APIs
-    * [Deploying APIs for UK](https://docs.wso2.com/display/OB150/Deploying+APIs+for+UK)
-    * [Deploying APIs for Berlin](https://docs.wso2.com/display/OB150/Deploying+APIs+for+Berlin)
-    * [Deploying APIs for AU](https://docs.wso2.com/display/OB150/Try+Local+Setup+for+AU#TryLocalSetupforAU-ConfiguringAPIs)
+    * [Deploying APIs for UK](https://docs.wso2.com/display/OB200/Deploying+APIs+for+UK)
+    * [Deploying APIs for Berlin](https://docs.wso2.com/display/OB200/Deploying+APIs+for+Berlin)
+    * [Deploying APIs for AU](https://docs.wso2.com/display/OB200/Deploying+APIs+for+Australia)
 
 b. To try out the solution:
-    * [Try Out WSO2 Open Banking UK](https://docs.wso2.com/display/OB150/Try+Out+WSO2+Open+Banking+UK)
-    * [Try Out WSO2 Open Banking Berlin](https://docs.wso2.com/display/OB150/Try+Out+WSO2+Open+Banking+Berlin?src=sidebar)
-    * [Try Out WSO2 Open Banking AU](https://docs.wso2.com/display/OB150/Try+Out+WSO2+Open+Banking+Au)
+    * [Try Out WSO2 Open Banking UK](https://docs.wso2.com/display/OB200/Try+Out+WSO2+Open+Banking+UK)
+    * [Try Out WSO2 Open Banking Berlin](https://docs.wso2.com/display/OB200/Try+Out+WSO2+Open+Banking+Berlin?src=sidebar)
+    * [Try Out WSO2 Open Banking AU](https://docs.wso2.com/display/OB200/Try+Out+WSO2+Open+Banking+Au)
 
-For more information, see [WSO2 Open Banking documentation](https://docs.wso2.com/display/OB150).
+For more information, see [WSO2 Open Banking documentation](https://docs.wso2.com/display/OB200).

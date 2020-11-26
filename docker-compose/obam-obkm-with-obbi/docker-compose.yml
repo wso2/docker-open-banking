@@ -27,7 +27,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - "./mysql/scripts/au:/docker-entrypoint-initdb.d"
+      - "./mysql/scripts/uk:/docker-entrypoint-initdb.d"
       - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
     ulimits:
       nofile:
@@ -43,9 +43,9 @@ services:
 
   obbi-worker:
     container_name: obbi-worker
-    image: docker.wso2.com/wso2-obbi-worker
+    image: wso2-obbi-worker:2.0.0
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "9444"]
+      test: ["CMD", "nc", "-z", "localhost", "9445"]
       interval: 10s
       timeout: 10s
       start_period: 150s
@@ -53,10 +53,11 @@ services:
     depends_on:
       - "mysql"
     volumes:
-      - "./obbi:/home/wso2carbon/wso2-config-volume"
+      - "./obbi/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9444:9444"
+      - "9445:9445"
       - "8006:8006"
       - "8007:8007"
     entrypoint:
@@ -69,9 +70,9 @@ services:
 
   obbi-dashboard:
     container_name: obbi-dashboard
-    image: docker.wso2.com/wso2-obbi-dashboard
+    image: wso2-obbi-dashboard:2.0.0
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "9449"]
+      test: ["CMD", "nc", "-z", "localhost", "9649"]
       interval: 10s
       timeout: 10s
       start_period: 150s
@@ -79,22 +80,23 @@ services:
     depends_on:
       - "mysql"
     volumes:
-      - "./obbi:/home/wso2carbon/wso2-config-volume"
+      - "./obbi/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9449:9449"
       - "9643:9643"
+      - "9649:9649"
     entrypoint:
       - "/home/wso2carbon/wait-for-it.sh"
-      - "obbi-worker:9444"
+      - "obbi-worker:9445"
       - "-t"
       - "240"
       - "--"
       - "./docker-entrypoint.sh"
 
   obkm:
-    container_name: obkm
-    image: docker.wso2.com/wso2-obkm
+    container_name: obiam
+    image: wso2-obiam:2.0.0
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9446/carbon/admin/login.jsp"]
       interval: 10s
@@ -105,13 +107,13 @@ services:
       - "mysql"
       - "obbi-worker"
     volumes:
-      - "./obkm/au:/home/wso2carbon/wso2-config-volume"
+      - "./obkm/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9446:9446"
     entrypoint:
       - "/home/wso2carbon/wait-for-it.sh"
-      - "obbi-dashboard:9449"
+      - "obbi-dashboard:9649"
       - "-t"
       - "210"
       - "--"
@@ -119,7 +121,7 @@ services:
 
   obam:
     container_name: obam
-    image: docker.wso2.com/wso2-obam
+    image: wso2-obam:2.0.0
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/carbon/admin/login.jsp"]
       interval: 10s
@@ -131,7 +133,7 @@ services:
       - "obkm"
       - "obbi-worker"
     volumes:
-      - "./obam/au:/home/wso2carbon/wso2-config-volume"
+      - "./obam/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9443:9443"
