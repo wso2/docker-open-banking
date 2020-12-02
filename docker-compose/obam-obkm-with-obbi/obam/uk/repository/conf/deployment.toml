@@ -195,6 +195,7 @@ enable_outbound_auth_header = true
 white_listed_scopes = ["^device_.*", "openid", "^OB_.*", "^TIME_.*"]
 
 [apim.devportal]
+url = "https://obam:${mgt.transport.https.port}/devportal"
 display_multiple_versions = true
 enable_comments = false
 enable_ratings = false
