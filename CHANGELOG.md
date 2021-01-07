@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Docker and Docker Compose resources for WSO2 Open Banking version `1.5.x` in each resource release, will be documented in this file.
+All notable changes to Docker and Docker Compose resources for WSO2 Open Banking version `2.0.0` in each resource release, will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
