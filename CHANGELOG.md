@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Open Banking UK and BERLIN specifications support	- Alpine and Ubuntu based Docker resources for WSO2 Open Banking API Manager `2.0.0`, WSO2 Open Banking Identity Server
   as Key Manager version `2.0.0` and WSO2 Open Banking Business Intelligence Dashboard and Worker profiles `2.0.0`
-- Upgrade profiles to use Adopt OpenJDK `jdk8u272-b10`
+- Upgrade profile based dockerfiles to use Adopt OpenJDK `jdk8u272-b10` as the base image
 - Docker Compose resources for OBAM, OBKM with OBBI deployment patterns
 - Solution is based on WSO2 APIM 3.1.0 and WSO2 ISKM 5.10.0  
 - Previous XML based configurations are carried out using TOML based configurations. Please refer the documentation for detailed mapping of configuration changes [Map Configurations](https://docs.wso2.com/display/OB200/Map+XML+Configurations+to+TOML+Configurations))
