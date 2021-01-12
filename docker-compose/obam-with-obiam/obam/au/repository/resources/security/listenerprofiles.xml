@@ -17,9 +17,7 @@
   ~  under the License.
   -->
 
-<parameter name="SSLProfiles" xmlns:svns="http://org.wso2.securevault/configuration">
-
-
+<parameter name="SSLProfiles">
 <profile>
         <bindAddress>0.0.0.0</bindAddress>
          <KeyStore>
@@ -36,4 +34,3 @@
         <SSLVerifyClient>optional</SSLVerifyClient>
     </profile>
 </parameter>
-
