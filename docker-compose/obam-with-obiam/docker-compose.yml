@@ -1,0 +1,93 @@
+# ------------------------------------------------------------------------
+#
+# Copyright 2019 WSO2, Inc. (http://wso2.com)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License
+#
+# ------------------------------------------------------------------------
+
+version: '3.7'
+services:
+  
+  mysql:
+    container_name: mysql
+    image: mysql:5.7.24
+    ports:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - "./mysql/scripts/au:/docker-entrypoint-initdb.d"
+      - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
+    command: [--ssl=0]
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  obiam:
+    container_name: obiam
+    image: docker.wso2.com/wso2-obiam
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9446/carbon/admin/login.jsp"]
+      interval: 10s
+      timeout: 120s
+      start_period: 100s
+      retries: 5 
+    depends_on:
+      - "mysql"
+    volumes:
+      - "./obiam/au:/home/wso2carbon/wso2-config-volume"
+      - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
+    ports:
+      - "9446:9446"
+    entrypoint:
+      - "/home/wso2carbon/wait-for-it.sh"
+      - "mysql:3306"
+      - "-t"
+      - "150"
+      - "--"
+      - "./docker-entrypoint.sh"
+
+  obam:
+    container_name: obam
+    image: docker.wso2.com/wso2-obam
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/carbon/admin/login.jsp"]
+      interval: 10s
+      timeout: 10s
+      start_period: 150s
+      retries: 5 
+    depends_on:
+      - "mysql"
+      - "obiam"
+    volumes:
+      - "./obam/au:/home/wso2carbon/wso2-config-volume"
+      - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
+    ports:
+      - "9443:9443"
+      - "8243:8243"
+      - "8280:8280"
+    entrypoint:
+      - "/home/wso2carbon/wait-for-it.sh"
+      - "obiam:9446"
+      - "-t"
+      - "240"
+      - "--"
+      - "./docker-entrypoint.sh"
