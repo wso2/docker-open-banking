@@ -1,0 +1,172 @@
+/**
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.com). All Rights Reserved.
+ *
+ * This software is the property of WSO2 Inc. and its suppliers, if any.
+ * Dissemination of any information or reproduction of any material contained
+ * herein is strictly forbidden, unless permitted by WSO2 in accordance with
+ * the WSO2 Commercial License available at http://wso2.com/licenses. For specific
+ * language governing the permissions and limitations under this license,
+ * please see the license as well as any agreement you've entered into with
+ * WSO2 governing the purchase of this software and any associated services.
+ **/
+@App:name("TRAAccountValidationApp")
+
+@App:description('Receive events via HTTP transport and view the output on the console')
+
+@Source(type = 'http-request',
+        source.id='source',
+        receiver.url='http://obbi-worker:8007/TRAAccountValidationApp/TRAValidationStream',
+        basic.auth.enabled='false',
+        @map(type = 'json',@attributes(MESSAGE_ID='trp:messageId',TPP_ID='$.event.userId',CONSENT_ID='$.event.consentId',
+        TIMESTAMP='$.event.timestamp', TYPE='$.event.type', DEPLOYED_SPEC='$.event.DeployedSpec',
+        LAST_SCA_TIME_LIMIT='$.event.TimePeriodOfLastSCAApplied', FIRST_ACCESS_HISTORY_LIMIT = '$.event.FirstAccessHistoryLimit')))
+define stream TRAValidationStream (MESSAGE_ID string, TPP_ID string, CONSENT_ID string, TIMESTAMP long, TYPE string,
+                         DEPLOYED_SPEC string, LAST_SCA_TIME_LIMIT int, FIRST_ACCESS_HISTORY_LIMIT int);
+
+@sink(type = 'inMemory', topic = 'traAccountData',@map(type = 'passThrough'))
+define stream TRAAccountDataStream (TPP_ID string, MESSAGE_ID string, CONSENT_ID string, CLIENT_ID string,
+CURRENT_TIMESTAMP long, TYPE string, TRA_APPLICABLE bool, LAST_SCA_TIME_LIMIT int);
+--messageId string,
+
+@primaryKey('ID','TIMESTAMP')
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+define table ACCOUNTS_RAW_DATA(ID string,CONSENT_ID string,USER_ID string,TPP_ID string,CLIENT_ID string,ACCOUNT_ID string,
+                        RE_AUTHORISATION bool,TIMESTAMP long,TRA_DECISION bool,EXEMPTION string,IS_FRAUD bool,API_SPEC_VERSION string);
+
+@primaryKey('ID')
+@store(type='rdbms', datasource='OPEN_BANKING_DB')
+define table UK_ACCOUNT_INITIATION(ID string,REQUEST string,CREATED_TIMESTAMP string,STATUS string,CLIENT_ID string,
+                        STATUS_UPDATED_TIMESTAMP string,SPEC_VERSION string);
+
+@primaryKey('CONSENT_ID')
+@store(type='rdbms', datasource='OPEN_BANKING_DB')
+define table BG_ACCOUNT_BINDING(CONSENT_ID string,ACCOUNT_CONSENT string,RECURRING_INDICATOR bool,
+                        COMBINED_SERVICE_INDICATOR bool,ACCOUNT_PERMISSIONS string);
+
+define function getArrayLength[JavaScript] return int {
+    if(data[0]) {
+        var jsonArray = JSON.parse(data[0]);
+   	    return jsonArray.length;
+    } else {
+  	    return 0;
+    }
+};
+
+from TRAValidationStream [DEPLOYED_SPEC == "UK"]
+select *
+insert into UkAccountConfigDataStream;
+
+from UK_ACCOUNT_INITIATION as a
+    join UkAccountConfigDataStream as v
+    on a.ID == v.CONSENT_ID
+select v.TPP_ID, v.MESSAGE_ID, v.CONSENT_ID, v.TIMESTAMP, a.REQUEST, v.TYPE, v.DEPLOYED_SPEC, v.LAST_SCA_TIME_LIMIT
+insert into UkAccountDataStream;
+
+from UkAccountDataStream
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, json:getString(REQUEST,'$.accountData.permissions') as PERMISSION_LIST,
+                        json:getString(REQUEST, '$.accountData.transactionFromDateTime') as TRANSACTION_FROM_DATE_TIME,
+                        json:getString(REQUEST, '$.accountData.expirationDateTime') as EXPIRATION_DATE_TIME, TYPE,
+                        LAST_SCA_TIME_LIMIT
+insert into UkAccountPermissionDataStream;
+
+from UkAccountPermissionDataStream
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, PERMISSION_LIST, getArrayLength(PERMISSION_LIST) as size,
+                        TRANSACTION_FROM_DATE_TIME, EXPIRATION_DATE_TIME, TYPE, LAST_SCA_TIME_LIMIT
+insert into UkAccountDataWithElementCountStream;
+
+from UkAccountDataWithElementCountStream [size == 2]
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, ifThenElse(str:contains(PERMISSION_LIST,"READBALANCES") and
+                    (str:contains(PERMISSION_LIST,"READACCOUNTSBASIC") or str:contains(PERMISSION_LIST,"READACCOUNTSDETAIL")), true, false)
+                        as TRA_APPLICABLE, TRANSACTION_FROM_DATE_TIME, EXPIRATION_DATE_TIME, TYPE, LAST_SCA_TIME_LIMIT
+insert into UkAccountValidationStream;
+
+from UkAccountDataWithElementCountStream [size == 3]
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, ifThenElse(str:contains(PERMISSION_LIST,"READBALANCES") and
+                    str:contains(PERMISSION_LIST,"READACCOUNTSBASIC") and str:contains(PERMISSION_LIST,"READACCOUNTSDETAIL"), true, false)
+                        as TRA_APPLICABLE, TRANSACTION_FROM_DATE_TIME, EXPIRATION_DATE_TIME, TYPE, LAST_SCA_TIME_LIMIT
+insert into UkAccountValidationStream;
+
+from UkAccountDataWithElementCountStream [size<=7]
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, ifThenElse(
+    (
+        str:contains(PERMISSION_LIST,"READBENEFICIARIESDETAIL") or
+        str:contains(PERMISSION_LIST,"READBENEFICIARIESBASIC") or
+        str:contains(PERMISSION_LIST,"READDIRECTDEBITS") or
+        str:contains(PERMISSION_LIST,"READOFFERS") or
+        str:contains(PERMISSION_LIST,"READPAN") or
+        str:contains(PERMISSION_LIST,"READPARTY") or
+        str:contains(PERMISSION_LIST,"READPARTYPSU") or
+        str:contains(PERMISSION_LIST,"READPRODUCTS") or
+        str:contains(PERMISSION_LIST,"READSCHEDULEDPAYMENTSBASIC") or
+        str:contains(PERMISSION_LIST,"READSCHEDULEDPAYMENTSDETAIL") or
+        str:contains(PERMISSION_LIST,"READSTANDINGORDERSBASIC") or
+        str:contains(PERMISSION_LIST,"READSTANDINGORDERSDETAIL") or
+        str:contains(PERMISSION_LIST,"READSTATEMENTSBASIC") or
+        str:contains(PERMISSION_LIST,"READSTATEMENTSDETAIL")
+    ),
+    false, true) as TRA_APPLICABLE, TRANSACTION_FROM_DATE_TIME, EXPIRATION_DATE_TIME, TYPE, LAST_SCA_TIME_LIMIT
+insert into UkAccountValidationStream;
+
+from UkAccountDataWithElementCountStream [size > 5]
+select TPP_ID,MESSAGE_ID,CONSENT_ID,TIMESTAMP,false as TRA_APPLICABLE,TRANSACTION_FROM_DATE_TIME,EXPIRATION_DATE_TIME,
+                        TYPE, LAST_SCA_TIME_LIMIT
+insert into UkAccountValidationStream;
+
+@info(name='getUkAccountData')
+from UkAccountValidationStream as v join ACCOUNTS_RAW_DATA as a
+on a.CONSENT_ID == v.CONSENT_ID
+select v.TPP_ID, v.MESSAGE_ID, v.CONSENT_ID, a.CLIENT_ID, v.TIMESTAMP as CURRENT_TIMESTAMP,  v.TYPE, v.TRA_APPLICABLE,
+                        v.LAST_SCA_TIME_LIMIT
+insert into TRAAccountDataStream;
+
+from TRAValidationStream [DEPLOYED_SPEC == "BERLIN"]
+select *
+insert into TempBerlinAccountDataStream;
+
+from TempBerlinAccountDataStream [FIRST_ACCESS_HISTORY_LIMIT >LAST_SCA_TIME_LIMIT]
+select TPP_ID, MESSAGE_ID, CONSENT_ID, "null" as CLIENT_ID, TIMESTAMP as CURRENT_TIMESTAMP, TYPE, false as TRA_APPLICABLE,
+                               LAST_SCA_TIME_LIMIT
+insert into TRAAccountDataStream;
+
+from TempBerlinAccountDataStream [FIRST_ACCESS_HISTORY_LIMIT <= LAST_SCA_TIME_LIMIT]
+select *
+insert into BerlinAccountConfigDataStream;
+
+from BG_ACCOUNT_BINDING as a
+    join BerlinAccountConfigDataStream as v
+    on a.CONSENT_ID == v.CONSENT_ID
+select v.TPP_ID,v.MESSAGE_ID,v.CONSENT_ID,v.TIMESTAMP,v.TYPE,v.DEPLOYED_SPEC,v.LAST_SCA_TIME_LIMIT,a.ACCOUNT_CONSENT
+insert into BerlinAccountDataStream;
+
+from BerlinAccountDataStream
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, ifThenElse(json:isExists(ACCOUNT_CONSENT,"$.accounts"),json:getString(
+                        ACCOUNT_CONSENT,'$.accounts'), "{}") as ACCOUNT_LIST, ifThenElse(json:isExists(ACCOUNT_CONSENT,"$.balances"),
+                        json:getString(ACCOUNT_CONSENT,'$.balances'), "{}") as BALANCE_LIST, ifThenElse(json:isExists(ACCOUNT_CONSENT,"$.transactions"),
+                        json:getString(ACCOUNT_CONSENT,'$.transactions'), "{}") as TRANSACTION_LIST, TYPE, LAST_SCA_TIME_LIMIT
+insert into BerlinAccountPermissionDataStream;
+
+from BerlinAccountPermissionDataStream
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, ACCOUNT_LIST, ifThenElse(getArrayLength(ACCOUNT_LIST) is NULL, 0, getArrayLength(ACCOUNT_LIST))
+                        as ACCOUNT_LIST_SIZE, BALANCE_LIST, ifThenElse(getArrayLength(BALANCE_LIST) is NULL, 0, getArrayLength(BALANCE_LIST)) as BALANCE_LIST_SIZE,
+                        TRANSACTION_LIST, ifThenElse(getArrayLength(TRANSACTION_LIST) is NULL, 0, getArrayLength(TRANSACTION_LIST)) as TRANSACTION_LIST_SIZE,
+                        TYPE, LAST_SCA_TIME_LIMIT
+insert into BerlinDataWithElementCountStream;
+
+from BerlinDataWithElementCountStream [ACCOUNT_LIST_SIZE == 0 and BALANCE_LIST_SIZE > 0 and TRANSACTION_LIST_SIZE == 0]
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, true as TRA_APPLICABLE, TYPE, LAST_SCA_TIME_LIMIT
+insert into BerlinAccountValidationStream;
+
+from BerlinDataWithElementCountStream [ACCOUNT_LIST_SIZE == 0 and BALANCE_LIST_SIZE == 0 and TRANSACTION_LIST_SIZE == 0]
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, false as TRA_APPLICABLE, TYPE, LAST_SCA_TIME_LIMIT
+insert into BerlinAccountValidationStream;
+
+from BerlinDataWithElementCountStream [ACCOUNT_LIST_SIZE > 0 or TRANSACTION_LIST_SIZE > 0]
+select TPP_ID, MESSAGE_ID, CONSENT_ID, TIMESTAMP, false as TRA_APPLICABLE, TYPE, LAST_SCA_TIME_LIMIT
+insert into BerlinAccountValidationStream;
+
+@info(name='getBerlinAccountData')
+from BerlinAccountValidationStream as v join ACCOUNTS_RAW_DATA as a
+on a.CONSENT_ID == v.CONSENT_ID
+select v.TPP_ID, v.MESSAGE_ID, v.CONSENT_ID, a.CLIENT_ID, v.TIMESTAMP as CURRENT_TIMESTAMP,  v.TYPE, v.TRA_APPLICABLE,
+                        v.LAST_SCA_TIME_LIMIT
+insert into TRAAccountDataStream;
