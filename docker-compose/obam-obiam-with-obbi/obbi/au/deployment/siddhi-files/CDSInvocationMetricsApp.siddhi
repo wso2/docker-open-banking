@@ -1,0 +1,125 @@
+/**
+* Copyright (c) 2020, WSO2 Inc. (http://www.wso2.com). All Rights Reserved.
+*
+* This software is the property of WSO2 Inc. and its suppliers, if any.
+* Dissemination of any information or reproduction of any material contained
+* herein is strictly forbidden, unless permitted by WSO2 in accordance with
+* the WSO2 Commercial License available at http://wso2.com/licenses. For specific
+* language governing the permissions and limitations under this license,
+* please see the license as well as any agreement you've entered into with
+* WSO2 governing the purchase of this software and any associated services.
+**/
+
+@App:name('CDSInvocationMetricsApp')
+@App:description('Aggregate API invocation data to be used by CDS Metrics API')
+
+@primaryKey('USER_ID', 'CONSENT_ID', 'ACCOUNT_ID')
+@store(type='rdbms', datasource='OPEN_BANKING_DB')
+define table UK_ACCOUNT_CONSENT_BINDING(USER_ID string,CONSENT_ID string,ACCOUNT_ID string,TIMESTAMP string,COLLECTION_METHOD string);
+
+@source(type='inMemory', topic='apiInvocationRawData', @map(type='passThrough'))
+define stream CDSMetricsRawStream(id string, statusCode int, respTime long, electedResource string, timestamp long, customerStatus string);
+
+@primaryKey('TIMESTAMP')
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+define table CDS_METRICS_TPS(TIMESTAMP long, MAX_TPS long);
+
+define stream CDSMetricsPreprocessedStream(id string, statusCode int, respTime long, priorityTier string, timestamp long);
+
+define stream PerformanceMetricsStream(withinThreshold bool, totalReqCount long, timestamp long);
+
+define function getPriorityTier[JavaScript] return string {
+	var priorityTier;
+	var electedResource = data[0];
+	var customerStatus = data[1];
+	var unauthenticatedList = ["/banking/products", "/banking/products/{productId}"];
+	var highPriorityList = ["/banking/accounts", "/discovery/status", "/discovery/outages", "/common/customer", "/common/customer/detail", "/register",
+	        "/register/{ClientId}", "/", "/token", "/authorize", "/revoke", "/userinfo", "/introspect", "/jwks", "/.well-known/openid-configuration"];
+	var lowPriorityList = ["/banking/accounts/{accountId}", "/banking/accounts/{accountId}/balance", "/banking/accounts/balances", "/banking/accounts/{accountId}/transactions",
+	        "/banking/accounts/{accountId}/transactions/{transactionId}", "/banking/payees", "/banking/payees/{payeeId}", "/banking/accounts/{accountId}/direct-debits",
+	        "/banking/accounts/{accountId}/payments/scheduled", "/banking/payments/scheduled"];
+	var unattendedList = [ "/register/metadata", "/metrics"];
+	var largePayloadList = ["/banking/accounts/direct-debits"];
+
+	if (lowPriorityList.indexOf(electedResource) > -1) {
+	  priorityTier = "LowPriority";
+	} else if (highPriorityList.indexOf(electedResource) > -1 && ('customer-present' == customerStatus || 'undefined' == customerStatus)) {
+	  priorityTier = "HighPriority";
+	} else if (highPriorityList.indexOf(electedResource) > -1 && 'unattended' == customerStatus) {
+    	  priorityTier = "Unattended";
+	} else if (unauthenticatedList.indexOf(electedResource) > -1) {
+	  priorityTier = "Unauthenticated";
+	} else if (unattendedList.indexOf(electedResource) > -1) {
+	  priorityTier = "Unattended";
+	} else if (largePayloadList.indexOf(electedResource) > -1) {
+	  priorityTier = "LargePayload";
+	} else {
+	  priorityTier = "Uncategorized";
+	}
+
+	return priorityTier;
+};
+
+define function getIsWithinThreshold[JavaScript] return bool {
+	var priorityTier = data[0];
+	var respTime = data[1];
+	var nominatedRespTime;
+	var withinThreshold;
+
+	if ('LowPriority' == priorityTier) {
+	  nominatedRespTime = 1500;
+	} else if ('HighPriority' == priorityTier) {
+	  nominatedRespTime = 1000;
+	} else if ('Unauthenticated' == priorityTier) {
+	  nominatedRespTime = 1500;
+	} else if ('Unattended' == priorityTier) {
+	  nominatedRespTime = 4000;
+	} else if ('LargePayload' == priorityTier) {
+	  nominatedRespTime = 6000;
+	} else {
+	  nominatedRespTime = 0;
+	}
+
+	return respTime < nominatedRespTime;
+};
+
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+@purge(enable='true', interval='60 min', @retentionPeriod(sec='10 days', min='10 days', hours='90 days', days='1 year', months='2 years'))
+define aggregation CDSMetricsAgg
+from CDSMetricsPreprocessedStream
+select id as ID, priorityTier, sum(respTime) as totalRespTime, count() as totalReqCount
+group by priorityTier
+aggregate by timestamp every seconds...month;
+
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+@purge(enable='true', interval='60 min', @retentionPeriod(sec='10 days', min='10 days', hours='90 days', days='1 year', months='2 years'))
+define aggregation CDSMetricsStatusAgg
+from CDSMetricsPreprocessedStream
+select id as ID, statusCode, count() as totalReqCount
+group by statusCode
+aggregate by timestamp every seconds...month;
+
+@store(type='rdbms', datasource='OB_REPORTING_DB')
+@purge(enable='true', interval='60 min', @retentionPeriod(sec='10 days', min='10 days', hours='90 days', days='1 year', months='2 years'))
+define aggregation CDSMetricsPerfAgg
+from PerformanceMetricsStream
+select withinThreshold, count() as totalReqCount
+group by withinThreshold
+aggregate by timestamp every seconds...month;
+
+from CDSMetricsRawStream[statusCode != 429]
+select id, statusCode, respTime, getPriorityTier(electedResource, customerStatus) as priorityTier, timestamp*1000 as timestamp
+insert into CDSMetricsPreprocessedStream;
+
+from CDSMetricsPreprocessedStream[priorityTier != "Uncategorized"]
+select getIsWithinThreshold(priorityTier, respTime) as withinThreshold, count() as totalReqCount, timestamp
+insert into PerformanceMetricsStream;
+
+from CDSMetricsPreprocessedStream
+select id, timestamp, count() as tpsCount
+group by timestamp
+insert into CDSMetricsTpsStream;
+
+from CDSMetricsTpsStream#window.timeBatch(1 day)
+select time:timestampInMilliseconds()/1000 as TIMESTAMP, max(tpsCount) as MAX_TPS
+insert into CDS_METRICS_TPS;
