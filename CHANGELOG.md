@@ -4,6 +4,12 @@ All notable changes to Docker and Docker Compose resources for WSO2 Open Banking
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v2.0.0.3] - 2021-08-05
+
+### Added
+
+- WSO2 Open Banking Business Intelligence support for Australian Specification (refer to [issue](https://github.com/wso2/docker-open-banking/issues/111))
+
 ## [v2.0.0.2] - 2021-01-13
 
 ### Fixed
@@ -25,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v2.0.0.1](https://github.com/wso2/docker-open-banking/milestone/11)
 
+[v2.0.0.3]: https://github.com/wso2/docker-open-banking/compare/v2.0.0.2...v2.0.0.3
 [v2.0.0.2]: https://github.com/wso2/docker-open-banking/compare/v2.0.0.1...v2.0.0.2
 [v2.0.0.1]: https://github.com/wso2/docker-open-banking/compare/v1.5.0.2...v2.0.0.1
 
