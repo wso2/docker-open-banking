@@ -30,23 +30,31 @@ function echoBold () {
     ${ECHO} -e $'\e[1m'"${1}"$'\e[0m'
 }
 
-read -p "Enter Your Open-Banking Specification (UK[1]/Berlin[2]): " SPEC
+read -p "Enter Your Open-Banking Specification (UK[1]/Berlin[2]/AU[3]): " SPEC
 ${ECHO}
 
 if [[ ${SPEC} =~ "1" ]]; then
-    if ! ${SED} -i.bak -e 's|/berlin|/uk|' ../docker-compose.yml; then
-    echoBold "Could not configure to use the WSO2 Docker image available at DockerHub"
+    if ! ${SED} -i.bak -e 's|/berlin|/uk|;s|/au|/uk|' ../docker-compose.yml; then
+    echoBold "Could not configure to use the WSO2 Docker image available at WSO2 Private Docker registry"
     exit 1
     else
         echoBold "Configuring WSO2 Open Banking UK specification..."
         ${ECHO}
     fi
 elif [[ ${SPEC} =~ "2" ]]; then
-    if ! ${SED} -i.bak -e 's|/uk|/berlin|' ../docker-compose.yml; then
-    echoBold "Could not configure to use the WSO2 Docker image available at DockerHub"
+    if ! ${SED} -i.bak -e 's|/uk|/berlin|;s|/au|/berlin|' ../docker-compose.yml; then
+    echoBold "Could not configure to use the WSO2 Docker image available at WSO2 Private Docker registry"
     exit 1
     else
         echoBold "Configuring WSO2 Open Banking Berlin specification..."
+        ${ECHO}
+    fi
+elif [[ ${SPEC} =~ "3" ]]; then
+    if ! ${SED} -i.bak -e 's|/uk|/au|;s|/berlin|/au|' ../docker-compose.yml; then
+    echoBold "Could not configure to use the WSO2 Docker image available at WSO2 Private Docker registry"
+    exit 1
+    else
+        echoBold "Configuring WSO2 Open Banking Australia specification..."
         ${ECHO}
     fi
 else
