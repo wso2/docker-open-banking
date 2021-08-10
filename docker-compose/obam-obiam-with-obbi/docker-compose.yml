@@ -27,7 +27,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - "./mysql/scripts/au:/docker-entrypoint-initdb.d"
+      - "./mysql/scripts/uk:/docker-entrypoint-initdb.d"
       - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
     ulimits:
       nofile:
@@ -53,7 +53,7 @@ services:
     depends_on:
       - "mysql"
     volumes:
-      - "./obbi/au:/home/wso2carbon/wso2-config-volume"
+      - "./obbi/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9444:9444"
@@ -80,7 +80,7 @@ services:
     depends_on:
       - "mysql"
     volumes:
-      - "./obbi/au:/home/wso2carbon/wso2-config-volume"
+      - "./obbi/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9449:9449"
@@ -107,7 +107,7 @@ services:
       - "mysql"
       - "obbi-worker"
     volumes:
-      - "./obiam/au:/home/wso2carbon/wso2-config-volume"
+      - "./obiam/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9446:9446"
@@ -133,7 +133,7 @@ services:
       - "obiam"
       - "obbi-worker"
     volumes:
-      - "./obam/au:/home/wso2carbon/wso2-config-volume"
+      - "./obam/uk:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9443:9443"
