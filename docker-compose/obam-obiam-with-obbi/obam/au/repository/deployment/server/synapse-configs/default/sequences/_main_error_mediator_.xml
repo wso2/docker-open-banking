@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><sequence xmlns="http://ws.apache.org/ns/synapse" name="_main_error_mediator_">
+    <filter source="$axis2:HTTP_SC" regex="404">
+        <then>
+            <payloadFactory media-type="json">
+                <format>
+                        { "errors":[ {
+                            "code": "AU.CDR.Resource.NotFound",
+                            "title" : "Resource Not Found",
+                            "detail" : "The requested resource is not available",
+                            "source": {
+                                "pointer": "$1"
+                            },
+                            "meta": {}
+                        } ] }
+                    </format>
+                <args>
+                    <arg evaluator="xml" expression="fn:concat('/', $axis2:REST_URL_POSTFIX)"/>
+                </args>
+            </payloadFactory>
+        </then>
+    </filter>
+    <filter source="$axis2:HTTP_SC" regex="403">
+        <then>
+            <payloadFactory media-type="json">
+                <format>
+                        { "errors":[ {
+                            "code": "AU.CDR.Forbidden",
+                            "title" : "Runtime Error",
+                            "detail" : "Unsupported Transport [ $2 ]. The requested resource is not available.",
+                            "source": {
+                                "pointer": "$1"
+                            },
+                            "meta": {}
+                        } ] }
+                    </format>
+                <args>
+                    <arg evaluator="xml" expression="fn:concat('/', $axis2:REST_URL_POSTFIX)"/>
+                    <arg evaluator="xml" expression="$ctx:IN_TRANSPORT"/>
+                </args>
+            </payloadFactory>
+        </then>
+    </filter>
+    <property name="messageType" value="application/json" scope="axis2"/>
+</sequence>
