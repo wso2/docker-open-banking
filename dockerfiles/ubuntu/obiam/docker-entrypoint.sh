@@ -34,7 +34,6 @@ test ! -d ${WSO2_SERVER_HOME} && echo "WSO2 Docker product home does not exist" 
 unzip ${WEBAPPS_DIR}/consentmgr.war -d ${WEBAPPS_DIR}/consentmgr
 unzip ${WEBAPPS_DIR}/ob#authenticationendpoint.war -d ${WEBAPPS_DIR}/ob#authenticationendpoint
 
-
 # copy any configuration changes mounted to config_volume
 test -d ${config_volume} && [ "$(ls -A ${config_volume})" ] && cp -RL ${config_volume}/* ${WSO2_SERVER_HOME}/
 # copy any artifact changes mounted to artifact_volume
