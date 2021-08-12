@@ -21,11 +21,19 @@ set -e
 config_volume=${WORKING_DIRECTORY}/wso2-config-volume
 artifact_volume=${WORKING_DIRECTORY}/wso2-artifact-volume
 
+#directories
+WEBAPPS_DIR=${WSO2_SERVER_HOME}/repository/deployment/server/webapps
+
 # check if the WSO2 non-root user home exists
 test ! -d ${WORKING_DIRECTORY} && echo "WSO2 Docker non-root user home does not exist" && exit 1
 
 # check if the WSO2 product home exists
 test ! -d ${WSO2_SERVER_HOME} && echo "WSO2 Docker product home does not exist" && exit 1
+
+# extract webapps that require overriding configurations
+unzip ${WEBAPPS_DIR}/consentmgr.war -d ${WEBAPPS_DIR}/consentmgr
+unzip ${WEBAPPS_DIR}/ob#authenticationendpoint.war -d ${WEBAPPS_DIR}/ob#authenticationendpoint
+
 
 # copy any configuration changes mounted to config_volume
 test -d ${config_volume} && [ "$(ls -A ${config_volume})" ] && cp -RL ${config_volume}/* ${WSO2_SERVER_HOME}/
