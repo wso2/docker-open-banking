@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<sequence xmlns="http://ws.apache.org/ns/synapse" name="_token_error_mediator_">
-    <filter source="$axis2:HTTP_SC" regex="401">
-        <then>
-            <property name="HTTP_SC" value="400" scope="axis2" />
-        </then>
-    </filter>
-</sequence>
