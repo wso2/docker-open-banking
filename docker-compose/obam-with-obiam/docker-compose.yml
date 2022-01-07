@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------
 #
-# Copyright 2019 WSO2, Inc. (http://wso2.com)
+# Copyright 2022 WSO2, Inc. (http://wso2.com)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
 #
 # ------------------------------------------------------------------------
 
-version: '3.7'
+version: "3.9"
 services:
   
   mysql:
     container_name: mysql
-    image: mysql:5.7.24
+    image: mysql:8.0
     ports:
       - "3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: 9900
     volumes:
-      - "./mysql/scripts/au:/docker-entrypoint-initdb.d"
+      - "./mysql/scripts/setup.sql:/docker-entrypoint-initdb.d/setup.sql"
       - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
     ulimits:
       nofile:
@@ -40,6 +40,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+    networks:
+      - ob-network
 
   obiam:
     container_name: obiam
@@ -53,7 +55,6 @@ services:
     depends_on:
       - "mysql"
     volumes:
-      - "./obiam/au:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9446:9446"
@@ -64,6 +65,8 @@ services:
       - "150"
       - "--"
       - "./docker-entrypoint.sh"
+    networks:
+      - ob-network
 
   obam:
     container_name: obam
@@ -78,7 +81,6 @@ services:
       - "mysql"
       - "obiam"
     volumes:
-      - "./obam/au:/home/wso2carbon/wso2-config-volume"
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
     ports:
       - "9443:9443"
@@ -91,3 +93,10 @@ services:
       - "240"
       - "--"
       - "./docker-entrypoint.sh"
+    networks:
+      - ob-network
+
+networks:
+  ob-network:
+    driver: bridge
+    name: ob-network
