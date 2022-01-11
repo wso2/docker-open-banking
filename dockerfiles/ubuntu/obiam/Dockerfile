@@ -17,8 +17,7 @@
 # ------------------------------------------------------------------------
 
 # set base Docker image to WSO2 Identity Server Ubuntu Docker image
-#FROM docker.wso2.com/wso2is:5.11.0.0
-FROM wso2/wso2is:5.11.0
+FROM wso2/wso2is
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.1"
 
@@ -46,9 +45,6 @@ This Docker container comprises of The WSO2 Open Banking Solution, with its late
 which is under The WSO2 Commercial License 1.0. \n\
 Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"
 
-# create the non-root user and group and set MOTD login message
-#RUN echo '[ ! -z "${TERM}" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bash.bashrc; echo "${MOTD}" > /etc/motd
-
 # configuration properties for deployment.toml file
 # server hostnames
 ARG IS_HOSTNAME=localhost
@@ -73,11 +69,14 @@ ARG DB_OB_REPORTING_SUMMARIZED=openbank_ob_reporting_summarizeddb
 USER root
 
 # copy Open Banking artifacts to base image
-ADD --chown=wso2carbon:wso2 ${WSO2_OB_ACCELERATOR}.tar.gz ${WSO2_SERVER_HOME}/
-ADD --chown=wso2carbon:wso2 ${WSO2_SERVER_NAME}-extensions-1.2.10.tar.gz ${USER_HOME}
-COPY --chown=wso2carbon:wso2 cert ${USER_HOME}/cert
+ADD ${WSO2_OB_ACCELERATOR}.tar.gz ${WSO2_SERVER_HOME}/
+ADD  ${WSO2_SERVER_NAME}-extensions-1.2.10.tar.gz ${USER_HOME}
+COPY cert ${USER_HOME}/cert
 # change directory rights
-RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
+RUN \
+    chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
+    && chown wso2carbon:wso2 /etc/bash.bashrc \
+    && chown wso2carbon:wso2 /etc/motd
 
 # set configurations
 # read deployment.toml file
@@ -118,8 +117,11 @@ RUN \
     yes | keytool -import -alias ob-root -file cert/root.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
     && yes | keytool -import -alias ob-issuer -file cert/iss.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon
 
-# set non-user and work directory
+# set the non-user
 USER ${USER_ID}
+# set MOTD login message for non-root user
+RUN echo '[ ! -z "${TERM}" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bash.bashrc; echo "${MOTD}" > /etc/motd
+# set work directory
 WORKDIR ${USER_HOME}
 
 # expose ports

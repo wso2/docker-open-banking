@@ -45,9 +45,6 @@ This Docker container comprises of The WSO2 Open Banking Solution, with its late
 which is under The WSO2 Commercial License 1.0. \n\
 Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"
 
-# create the non-root user and group and set MOTD login message
-# RUN echo '[ ! -z "${TERM}" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bash.bashrc; echo "${MOTD}" > /etc/motd
-
 # configuration properties for deployment.toml file
 # server hostnames
 ARG IS_HOSTNAME=localhost
@@ -75,7 +72,10 @@ USER root
 ADD --chown=wso2carbon:wso2 ${WSO2_OB_ACCELERATOR}.tar.gz ${WSO2_SERVER_HOME}/
 COPY --chown=wso2carbon:wso2 cert ${USER_HOME}/cert
 # change directory rights
-RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
+RUN \
+    chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
+    && chown wso2carbon:wso2 /etc/bash.bashrc \
+    && chown wso2carbon:wso2 /etc/motd
 
 # set configurations
 # read deployment.toml file
@@ -105,14 +105,18 @@ RUN \
 RUN \
     find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
 # Copying open banking artifacts
-    && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/
+    && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/ \
+
 # add root and issuer certificates to client-truststore.jks
 RUN \
     yes | keytool -import -alias ob-root -file cert/root.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
     && yes | keytool -import -alias ob-issuer -file cert/iss.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon
 
-# set the non-user and work directory
+# set the non-user
 USER ${USER_ID}
+# set MOTD login message for non-root user
+RUN echo '[ ! -z "${TERM}" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bash.bashrc; echo "${MOTD}" > /etc/motd
+# set work directory
 WORKDIR ${USER_HOME}
 
 # expose ports
