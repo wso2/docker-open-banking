@@ -46,9 +46,6 @@ ARG MOTD='printf "\n\
  Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"'
 ENV ENV=${USER_HOME}"/.ashrc"
 
-# create the non-root user and group and set MOTD login message
-# RUN echo ${MOTD} > "${ENV}"
-
 # configuration properties for deployment.toml file
 # server hostnames
 ARG IS_HOSTNAME=localhost
@@ -112,8 +109,11 @@ RUN \
     yes | keytool -import -alias ob-root -file cert/root.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
     && yes | keytool -import -alias ob-issuer -file cert/iss.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon
 
-# set the user and work directory
+# set the non-root user
 USER ${USER_ID}
+# set MOTD login message for non-root user
+RUN echo ${MOTD} > "${ENV}"
+# set work directory
 WORKDIR ${USER_HOME}
 
 # expose ports
