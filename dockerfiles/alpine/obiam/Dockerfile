@@ -46,9 +46,6 @@ ARG MOTD='printf "\n\
  Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"'
 ENV ENV=${USER_HOME}"/.ashrc"
 
-# create the non-root user and group and set MOTD login message
-#RUN echo ${MOTD} > "${ENV}"
-
 # configuration properties for deployment.toml file
 # server hostnames
 ARG IS_HOSTNAME=localhost
@@ -113,8 +110,11 @@ RUN \
     && cp ${USER_HOME}/wso2is-extensions-1.2.10/dropins/* ${WSO2_SERVER_HOME}/repository/components/dropins/ \
     && cp ${USER_HOME}/wso2is-extensions-1.2.10/webapps/* ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/
 
-# set the user and work directory
+# set the non-root user
 USER ${USER_ID}
+# set MOTD login message for non-root user
+RUN echo ${MOTD} > "${ENV}"
+# set work directory
 WORKDIR ${USER_HOME}
 
 # expose ports
