@@ -1,13 +1,17 @@
-# Dockerfile for WSO2 Open Banking API Manager #
+# Dockerfile for WSO2 Open Banking API Manager Accelerator Module#
 This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking API Manager.
 
 ## Prerequisites
 
-* [Docker](https://www.docker.com/get-docker) v17.09.0 or above
+* [Docker](https://www.docker.com/get-docker) v20.10.10 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
-* WSO2 Open Banking API Manager pack downloaded through [WUM](https://docs.wso2.com/display/OB200/Setting+Up+Servers)
-    + Host the downloaded pack locally or on a remote location.
-    > The hosted location will be passed as the build argument `WSO2_SERVER_DIST_URL` when building the Docker image. 
+* WSO2 Open Banking API Manager Accelerator Module pack downloaded through [WSO2 Updates 2.0](https://ob.docs.wso2.com/en/latest/install-and-setup/setting-up-servers/)
+* WSO2 Open Banking root and issuer certificate zip archive
+  + Host the downloaded artifacts locally or on a remote location.
+  > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
+  > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
+  > 2.  **WSO2_OB_CERTS_URL** - Certificate zip archive location
+
 
 ## How to build an image and run
 
@@ -23,13 +27,13 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obam:2.0.0 .`
-    > eg:- Hosted locally: `docker build --build-arg WSO2_SERVER_DIST_URL=http://172.17.0.1:8000/wso2-obam-2.0.0.zip -t wso2-obam:2.0.0 .`
-    > eg:- Hosted remotely: `docker build --build-arg WSO2_SERVER_DIST_URL=http://<public_ip:port>/wso2-obam-2.0.0.zip -t wso2-obam:2.0.0 .`
-    
+  + `docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> ---build-arg WSO2_OB_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obam:3.0.0 .` <br>
+  > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://localhost:8000/wso2-obam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_CERTS_URL=http://localhost:8000/ob-cert.zip  -t wso2-obam:3.0.0 .` <br><br>
+  > eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://<public_ip:port>/wso2-obam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_CERTS_URL=http://<public_ip:port>/ob-cert.zip  -t wso2-obam:3.0.0 .`
+
 ##### 3. Running the Docker image.
 
-- `docker run -it -p 9443:9443 wso2-obam:2.0.0`
+- `docker run -it -p 9443:9443 -p 8243:8243 -p 8280:8280 wso2-obam:3.0.0`
 
 ##### 4. Accessing management console.
 
@@ -41,18 +45,18 @@ git clone https://github.com/wso2/docker-open-banking.git
 ## How to update configurations
 
 Configurations would lie on the Docker host machine and they can be volume mounted to the container. <br>
-As an example, steps required to change the port offset using `carbon.xml` is as follows:
+As an example, steps required to change the port offset using `deployment.toml` is as follows:
 
 ##### 1. Stop the API Manager container if it's already running.
 
-In WSO2 Open Banking API Manager 2.0.0 product distribution, `carbon.xml` configuration file <br>
+In WSO2 Open Banking API Manager 2.0.0 product distribution, `deployment.toml` configuration file <br>
 can be found at `<DISTRIBUTION_HOME>/repository/conf`. Copy the file to some suitable location of the host machine, <br>
-referred to as `<SOURCE_CONFIGS>/carbon.xml` and change the offset value under ports to 1.
+referred to as `<SOURCE_CONFIGS>/deployment.toml` and change the offset value under ports to 1.
 
-##### 2. Grant read permission to `other` users for `<SOURCE_CONFIGS>/carbon.xml`.
+##### 2. Grant read permission to `other` users for `<SOURCE_CONFIGS>/deployment.toml`.
 
 ```
-chmod o+r <SOURCE_CONFIGS>/carbon.xml
+chmod o+r <SOURCE_CONFIGS>/deployment.toml
 ```
 
 ##### 3. Run the image by mounting the file to container as follows:
@@ -60,32 +64,11 @@ chmod o+r <SOURCE_CONFIGS>/carbon.xml
 ```
 docker run \
 -p 9444:9444 \
---volume <SOURCE_CONFIGS>/carbon.xml:<TARGET_CONFIGS>/carbon.xml \
-wso2-obam:2.0.0
+--volume <SOURCE_CONFIGS>/deployment.toml:<TARGET_CONFIGS>/deployment.toml \
+wso2-obam:3.0.0
 ```
 
-> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2-obam-2.0.0/repository/conf folder of the container.
-
-## How to add a custom keystore
-
-##### 1. Create a new keystore.
-
-Follow the steps given in [Creating a new keystore](https://docs.wso2.com/display/ADMIN44x/Creating+New+Keystores).
-
-##### 2. Import the certificate of the keystores to the truststore.
-
-* Import the public key certificate of the new server keystore to the truststore of WSO2 Open Banking API Manager.
-* If there are any client certificates, import them to the truststore as well.
-
-##### 3. Add the new keystore and truststore to WSO2 Open Banking API Manager.
-
-* Copy the generated keystore to `<DISTRIBUTION_HOME>/repository/resources/security`.
-* Replace the existing `<DISTRIBUTION_HOME>/repository/resources/security/client-truststore.jks` with the truststore updated in step 2
-* To configure the keystore and trustore follow [Configuring KeyStores](https://docs.wso2.com/display/ADMIN44x/Configuring+Keystores+in+WSO2+Products).
-
-##### 4. Build the Docker Image for Open Banking API Manager.
-
-Build the Docker Image following the above steps.
+> In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2am-4.0.0/repository/conf folder of the container.
 
 ## Docker command usage references
 
