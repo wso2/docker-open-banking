@@ -17,7 +17,7 @@
 # ------------------------------------------------------------------------
 
 # set base Docker image to WSO2 API Manager Ubuntu Docker image
-FROM wso2/wso2am:4.0.0
+FROM docker.wso2.com/wso2am:4.0.0.0
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.1"
 
