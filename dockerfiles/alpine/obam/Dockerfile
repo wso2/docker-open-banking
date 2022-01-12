@@ -37,6 +37,8 @@ ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
+ARG WSO2_OB_Accelerator_DIST_URL
+ARG WSO2_OB_CERTS_URL
 # build argument for MOTD
 ARG MOTD='printf "\n\
  Welcome to WSO2 Docker Resources \n\
@@ -69,11 +71,14 @@ ARG DB_OB_REPORTING_SUMMARIZED=openbank_ob_reporting_summarizeddb
 # change user to root for elevated permissions to override inherited non-root user
 USER root
 
-# Copy Open Banking artifacts to base image
-ADD --chown=wso2carbon:wso2 ${WSO2_OB_ACCELERATOR}.tar.gz ${WSO2_SERVER_HOME}/
-COPY --chown=wso2carbon:wso2 cert ${USER_HOME}/cert
-# change directory rights
-RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
+# add Open Banking artifacts to base product
+RUN \
+    wget -O ${WSO2_OB_ACCELERATOR}.tar.gz "${WSO2_OB_Accelerator_DIST_URL}" \
+    && tar -xzf ${WSO2_OB_ACCELERATOR}.tar.gz --directory ${WSO2_SERVER_HOME}/ \
+    && rm -f ${WSO2_OB_ACCELERATOR}.tar.gz \
+    && wget -O ob-cert.zip "${WSO2_OB_CERTS_URL}" \
+    && unzip -d ${USER_HOME} ob-cert.zip  \
+    && rm -f ob-cert.zip
 
 # set configurations
 # read deployment.toml file
@@ -101,20 +106,25 @@ RUN \
 # copy the WSO2 OB APIM accelerator artifacts on top of WSO2 APIM base product
 # Remove old open banking artifacts from base product
 RUN \
-    find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
+    find ${WSO2_SERVER_HOME}/repository/components/dropins -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
+    && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
 # Copying open banking artifacts
     && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/
+
 # add root and issuer certificates to client-truststore.jks
 RUN \
-    yes | keytool -import -alias ob-root -file cert/root.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
-    && yes | keytool -import -alias ob-issuer -file cert/iss.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon
+    yes | keytool -import -alias ob-root -file root.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
+    && yes | keytool -import -alias ob-issuer -file iss.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
+    && rm -f root.cer iss.cer
+
+# change directory rights
+RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
 
 # set the non-root user
 USER ${USER_ID}
-# set MOTD login message for non-root user
+
+# set MOTD login message for open banking
 RUN echo ${MOTD} > "${ENV}"
-# set work directory
-WORKDIR ${USER_HOME}
 
 # expose ports
 EXPOSE 9443 8280 8243
