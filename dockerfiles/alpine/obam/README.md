@@ -1,4 +1,4 @@
-# Dockerfile for WSO2 Open Banking API Manager Accelerator Module#
+# Dockerfile for WSO2 Open Banking API Manager Accelerator Module
 This section defines the step-by-step instructions to build an [Alpine](https://hub.docker.com/_/alpine/) Linux based Docker image for WSO2 Open Banking API Manager.
 
 ## Prerequisites
