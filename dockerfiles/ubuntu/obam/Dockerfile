@@ -107,7 +107,7 @@ RUN \
 RUN \
     find ${WSO2_SERVER_HOME}/repository/components/dropins -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
     && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
-# Copying open banking artifacts
+# copy open banking artifacts
     && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/
 
 # add root and issuer certificates to client-truststore.jks
