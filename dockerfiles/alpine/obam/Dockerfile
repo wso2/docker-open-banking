@@ -104,7 +104,7 @@ RUN \
     && sed -i -e 's|</sequence>|\t<sequence key="jsonConverter"/>\n</sequence>|g' ${WSO2_SERVER_HOME}/repository/deployment/server/synapse-configs/default/sequences/_cors_request_handler_.xml
 
 # copy the WSO2 OB APIM accelerator artifacts on top of WSO2 APIM base product
-# Remove old open banking artifacts from base product
+# remove old open banking artifacts from base product
 RUN \
     find ${WSO2_SERVER_HOME}/repository/components/dropins -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
     && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
