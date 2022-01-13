@@ -108,7 +108,7 @@ RUN \
     && rm ${DEPLOYMENT_TOML_FILE}
 
 # copy the WSO2 OBIAM accelerator artifacts on top of WSO2 IS base product
-# Remove old open banking artifacts from base product
+# remove old open banking artifacts from base product
 RUN \
     find ${WSO2_SERVER_HOME}/repository/components/dropins -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
     && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
