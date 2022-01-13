@@ -29,7 +29,7 @@
     > If you want to try out an already released tag, after executing 2nd step, checkout the relevant tag, 
      i.e. for example: git checkout tags/v1.4.0.5 and continue below steps.
 
-3. Execute following Docker Compose command to start the deployment of WSO2 OPen Banking Acceleator setup.
+3. Execute following Docker Compose command to start the deployment of WSO2 Open Banking Accelerator setup.
    ```
    docker-compose up
    ```
