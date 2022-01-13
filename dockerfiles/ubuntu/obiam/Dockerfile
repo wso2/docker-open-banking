@@ -102,7 +102,7 @@ RUN \
     && sed -i -e 's|DB_USER|'${DB_USER}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|DB_PASS|'${DB_PASS}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|DB_DRIVER|'${DB_DRIVER}'|g' ${DEPLOYMENT_TOML_FILE} \
-# Copy deployment.toml file to repository/conf
+# copy deployment.toml file to original product pack location
     && cp ${DEPLOYMENT_TOML_FILE} ${WSO2_SERVER_HOME}/repository/conf/ \
     && rm ${DEPLOYMENT_TOML_FILE}
 
