@@ -114,7 +114,6 @@ RUN \
     && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
 # copy open banking artifacts
     && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/ \
-    && rm ${WSO2_SERVER_HOME}/repository/components/dropins/org.wso2.carbon.identity.application.authentication.handler.identifier-6.3.11.jar \
 # 2. configure_iskm_connector
     && cp ${WSO2_OB_KM_EXTENSION}/dropins/* ${WSO2_SERVER_HOME}/repository/components/dropins/ \
     && cp ${WSO2_OB_KM_EXTENSION}/webapps/* ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/ \
