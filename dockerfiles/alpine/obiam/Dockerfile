@@ -103,16 +103,16 @@ RUN \
     && sed -i -e 's|DB_USER|'${DB_USER}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|DB_PASS|'${DB_PASS}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|DB_DRIVER|'${DB_DRIVER}'|g' ${DEPLOYMENT_TOML_FILE} \
-# Copy deployment.toml file to repository/conf
+# copy deployment.toml file to original product pack location
     && cp ${DEPLOYMENT_TOML_FILE} ${WSO2_SERVER_HOME}/repository/conf/ \
     && rm ${DEPLOYMENT_TOML_FILE}
 
 # copy the WSO2 OBIAM accelerator artifacts on top of WSO2 IS base product
-# Remove old open banking artifacts from base product
+# remove old open banking artifacts from base product
 RUN \
     find ${WSO2_SERVER_HOME}/repository/components/dropins -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
     && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
-# Copying open banking artifacts
+# copy open banking artifacts
     && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/ \
 # 2. configure_iskm_connector
     && cp ${WSO2_OB_KM_EXTENSION}/dropins/* ${WSO2_SERVER_HOME}/repository/components/dropins/ \

@@ -1,4 +1,4 @@
-# Dockerfile for WSO2 Open Banking Identity & Access Management Accelerator Module #
+# Dockerfile for WSO2 Open Banking Identity & Access Management Accelerator Module
 This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking Identity & Access Management Module.
 
 ## Prerequisites
