@@ -55,7 +55,7 @@ In WSO2 Open Banking Identity & Access Management Module 3.0.0 product distribut
 can be found at `<DISTRIBUTION_HOME>/repository/conf`. Copy the file to some suitable location of the host machine, <br>
 referred to as `<SOURCE_CONFIGS>/deployment.toml` and change the offset value under ports to 1.
 
-##### 2. Grant read permission to `other` users for `<SOURCE_CONFIGS>/carbon.xml`.
+##### 2. Grant read permission to `other` users for `<SOURCE_CONFIGS>/deployment.toml`.
 
 ```
 chmod o+r <SOURCE_CONFIGS>/deployment.toml
