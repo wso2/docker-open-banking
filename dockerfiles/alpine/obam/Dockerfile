@@ -56,7 +56,7 @@ ARG BI_HOSTNAME=localhost
 # databases related properties
 ARG DB_TYPE=mysql
 ARG DB_USER=root
-ARG DB_PASS=9900
+ARG DB_PASS=root
 ARG DB_HOST=mysql
 ARG DB_DRIVER=com.mysql.jdbc.Driver
 ARG DB_APIMGT=openbank_apimgtdb
