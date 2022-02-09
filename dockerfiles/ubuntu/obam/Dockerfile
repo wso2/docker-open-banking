@@ -72,9 +72,9 @@ USER root
 
 # add Open Banking artifacts to base product
 RUN \
-    wget -O ${WSO2_OB_ACCELERATOR}.tar.gz "${WSO2_OB_Accelerator_DIST_URL}" \
-    && tar -xzf ${WSO2_OB_ACCELERATOR}.tar.gz --directory ${WSO2_SERVER_HOME}/ \
-    && rm -f ${WSO2_OB_ACCELERATOR}.tar.gz \
+    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
+    && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_ACCELERATOR}.zip \
+    && rm -f ${WSO2_OB_ACCELERATOR}.zip \
     && wget -O ob-cert.zip "${WSO2_OB_CERTS_URL}" \
     && unzip -d ${USER_HOME} ob-cert.zip  \
     && rm -f ob-cert.zip
