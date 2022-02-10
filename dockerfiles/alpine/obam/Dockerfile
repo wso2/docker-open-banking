@@ -120,11 +120,11 @@ RUN \
 # change directory rights
 RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
 
-# set the non-root user
-USER ${USER_ID}
-
 # set MOTD login message for open banking
 RUN echo ${MOTD} > "${ENV}"
+
+# set the non-root user
+USER ${USER_ID}
 
 # expose ports
 EXPOSE 9443 8280 8243
