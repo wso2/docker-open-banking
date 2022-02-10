@@ -11,8 +11,6 @@ drivers, extensions and other deployable artifacts are designed to be provided v
 
 Docker Compose resources have been created according to the most common WSO2 Open Banking deployment profiles available for allowing users to quickly evaluate product features along side their co-operate Open Banking requirements. The Compose resources make use of Docker images of WSO2 Open Banking API Manager, WSO2 Open Banking Identity & Access Management Module and MySQL.
 
-**Change log** from previous `v2.0.0.3` release: [View Here](CHANGELOG.md)
-
 ## Contributions
 
 For details on how to contribute to this repository, please refer [this](CONTRIBUTING.md) documentation.
