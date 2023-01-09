@@ -10,8 +10,8 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
   + Host the downloaded artifacts locally or on a remote location.
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
   > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
-  > 2.  **WSO2_OB_CERTS_URL** - Certificate zip archive location
-  > 3.   **WSO2_OB_SERVER_CERTS_URL** - OBAM server certs folder location
+  > 2. **WSO2_OB_CERTS_URL** - Certificate zip archive location
+  > 3. **WSO2_OB_SERVER_CERTS_URL** - OBAM server certs folder location
 
 
 ## How to build an image and run
