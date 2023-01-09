@@ -1,8 +1,19 @@
+# ----------------------------------------------------------------------------------------
+#
+# Copyright (c) 2022, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained
+# herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+# You may not alter or remove any copyright or other notice from copies of this content.
+#
+# ----------------------------------------------------------------------------------------
+
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION=3.0.0.0
 
 # set base Docker image to WSO2 Open Banking API Manager Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obam:${BASE_PRODUCT_VERSION}
+FROM wso2-obam:3.0.0
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -83,7 +94,7 @@ RUN \
 # Remove default backend war
 RUN \
     rm ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/api#openbanking#backend.war\
-# copy open banking artifacts
+# copy toolkit artifacts
     && cp -r ${WSO2_OB_TOOLKIT_DIR}/carbon-home/* "${WSO2_SERVER_HOME}"
 
 # change directory rights

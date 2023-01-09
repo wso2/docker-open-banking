@@ -1,8 +1,19 @@
+# ----------------------------------------------------------------------------------------
+#
+# Copyright (c) 2022, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained
+# herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+# You may not alter or remove any copyright or other notice from copies of this content.
+#
+# ----------------------------------------------------------------------------------------
+
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION=3.0.0.0
 
 # set base Docker image to WSO2 Open Banking Identity Server Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obiam:${BASE_PRODUCT_VERSION}
+FROM wso2-obiam:3.0.0
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -80,7 +91,7 @@ RUN \
     && cp ${DEPLOYMENT_TOML_FILE} ${WSO2_SERVER_HOME}/repository/conf/ \
     && rm ${DEPLOYMENT_TOML_FILE}
 
-# copy the WSO2 OB IS UK Toolkit artifacts on top of WSO2 IS base product
+# copy the WSO2 OB IAM UK Toolkit artifacts on top of WSO2 IS base product
 # copy open banking artifacts
 RUN\
     cp -r ${WSO2_OB_TOOLKIT_DIR}/carbon-home/* "${WSO2_SERVER_HOME}"
