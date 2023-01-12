@@ -74,15 +74,15 @@ RUN \
     && rm -f ${WSO2_OB_ACCELERATOR}.zip \
     && wget -O ob-cert.zip "${WSO2_OB_CERTS_URL}" \
     && unzip -d ${USER_HOME} ob-cert.zip  \
-    && rm -f ob-cert.zip \
-# add client-truststore.jks to base product
-    && wget -O client-truststore.jks "${WSO2_OB_SERVER_CERTS_URL}/client-truststore.jks" \
+    && rm -f ob-cert.zip 
+
+# add keystores to base product 
+RUN if [ -n "$WSO2_OB_SERVER_CERTS_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_SERVER_CERTS_URL}/client-truststore.jks" \
     && cp client-truststore.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
     && rm -f client-truststore.jks \
-# add wso2carbon.jks to base product 
     && wget -O wso2carbon.jks "${WSO2_OB_SERVER_CERTS_URL}/wso2carbon.jks" \
     && cp wso2carbon.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
-    && rm -f wso2carbon.jks 
+    && rm -f wso2carbon.jks; fi 
 
 # set configurations
 # read deployment.toml file
