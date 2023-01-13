@@ -47,7 +47,7 @@ As an example, steps required to change the port offset using `deployment.toml` 
 
 ##### 1. Stop the API Manager container if it's already running.
 
-In WSO2 Open Banking API Manager 3.0.0 product distribution, `deployment.toml` configuration file <br>
+In WSO2 Open Banking API Manager UK Toolkit 1.0.0 product distribution, `deployment.toml` configuration file <br>
 can be found at `<DISTRIBUTION_HOME>/repository/conf`. Copy the file to some suitable location of the host machine, <br>
 referred to as `<SOURCE_CONFIGS>/deployment.toml` and change the offset value under ports to 1.
 

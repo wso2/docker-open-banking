@@ -86,7 +86,6 @@ services:
       - "300"
       - "--"
       - "./docker-entrypoint.sh"
-      - "-DosgiConsole"
     networks:
       - ob-network
 
