@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------
 #
-# Copyright (c) 2022, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
+# Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
 #
 # This software is the property of WSO2 LLC. and its suppliers, if any.
 # Dissemination of any information or reproduction of any material contained
@@ -13,7 +13,9 @@ ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION=3.0.0.0
 
 # set base Docker image to WSO2 Open Banking Identity Server Ubuntu Docker image
-FROM wso2-obiam:3.0.0
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obiam:${BASE_PRODUCT_VERSION}
+LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.6"
 
 # set Docker image build arguments
 # build arguments for user/group configurations
