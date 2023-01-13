@@ -36,8 +36,8 @@ ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
 ARG WSO2_OB_Accelerator_DIST_URL
 ARG WSO2_OB_KEYMANAGER_DIST_URL
-ARG WSO2_OB_CERTS_URL
-ARG WSO2_OB_SERVER_CERTS_URL
+ARG OB_TRUSTED_CERTS_URL
+ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
 ARG MOTD="\n\
 Welcome to WSO2 Docker resources.\n\
@@ -77,15 +77,15 @@ RUN \
     && wget -O ${WSO2_OB_KM_EXTENSION}.zip "${WSO2_OB_KEYMANAGER_DIST_URL}" \
     && unzip ${WSO2_OB_KM_EXTENSION}.zip \
     && rm -f ${WSO2_OB_KM_EXTENSION}.zip \
-    && wget -O ob-cert.zip "${WSO2_OB_CERTS_URL}" \
+    && wget -O ob-cert.zip "${OB_TRUSTED_CERTS_URL}" \
     && unzip -d ${USER_HOME} ob-cert.zip  \
     && rm -f ob-cert.zip 
 
 # add keystores to base product 
-RUN if [ -n "$WSO2_OB_SERVER_CERTS_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_SERVER_CERTS_URL}/client-truststore.jks" \
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_KEYSTORES_URL}/client-truststore.jks" \
     && cp client-truststore.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
     && rm -f client-truststore.jks \
-    && wget -O wso2carbon.jks "${WSO2_OB_SERVER_CERTS_URL}/wso2carbon.jks" \
+    && wget -O wso2carbon.jks "${WSO2_OB_KEYSTORES_URL}/wso2carbon.jks" \
     && cp wso2carbon.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
     && rm -f wso2carbon.jks; fi 
 
