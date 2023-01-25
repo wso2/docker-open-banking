@@ -1,20 +1,13 @@
-# ------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 #
-# Copyright 2022 WSO2, Inc. (http://wso2.com)
+# Copyright (c) 2022-2023, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained
+# herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+# You may not alter or remove any copyright or other notice from copies of this content.
 #
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License
-#
-# ------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION=5.11.0.0
@@ -43,7 +36,8 @@ ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
 ARG WSO2_OB_Accelerator_DIST_URL
 ARG WSO2_OB_KEYMANAGER_DIST_URL
-ARG WSO2_OB_CERTS_URL
+ARG OB_TRUSTED_CERTS_URL
+ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
 ARG MOTD='printf "\n\
  Welcome to WSO2 Docker Resources \n\
@@ -84,9 +78,17 @@ RUN \
     && wget -O ${WSO2_OB_KM_EXTENSION}.zip "${WSO2_OB_KEYMANAGER_DIST_URL}" \
     && unzip ${WSO2_OB_KM_EXTENSION}.zip \
     && rm -f ${WSO2_OB_KM_EXTENSION}.zip \
-    && wget -O ob-cert.zip "${WSO2_OB_CERTS_URL}" \
+    && wget -O ob-cert.zip "${OB_TRUSTED_CERTS_URL}" \
     && unzip -d ${USER_HOME} ob-cert.zip  \
-    && rm -f ob-cert.zip
+    && rm -f ob-cert.zip 
+
+# add keystores to base product 
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_KEYSTORES_URL}/client-truststore.jks" \
+    && cp client-truststore.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
+    && rm -f client-truststore.jks \
+    && wget -O wso2carbon.jks "${WSO2_OB_KEYSTORES_URL}/wso2carbon.jks" \
+    && cp wso2carbon.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
+    && rm -f wso2carbon.jks; fi 
 
 # set configurations
 # read deployment.toml file
