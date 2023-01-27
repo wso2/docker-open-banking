@@ -13,7 +13,7 @@ This section defines the step-by-step instructions to build an [Alpine](https://
   > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
   > 2. **WSO2_OB_KEYMANAGER_DIST_URL** - WSO2 IS Connector location
   > 3. **OB_TRUSTED_CERTS_URL** - Certificate zip archive location
-  > 4. **WSO2_OB_KEYSTORES_URL** - OBIAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.6/dockerfiles/ubuntu/obiam/obiam-keystores)
+  > 4. **WSO2_OB_KEYSTORES_URL** - OBIAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/ubuntu/obiam/obiam-keystores)
 
 
 ## How to build an image and run
@@ -30,9 +30,9 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBIAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYMANAGER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obiam:2.0.0-alpine .` <br>
-    > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYMANAGER_DIST_URL=http://localhost:8000/wso2is-extensions-1.2.10.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/obiam-keystores  -t wso2-obiam:2.0.0-alpine .` <br><br>
-      eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYMANAGER_DIST_URL=http://<public_ip:port>/wso2is-extensions-1.2.10.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/obiam-keystores  -t wso2-obiam:2.0.0-alpine .`
+    + `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYMANAGER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obiam:3.0.0-alpine .` <br>
+    > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYMANAGER_DIST_URL=http://localhost:8000/wso2is-extensions-1.2.10.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/obiam-keystores  -t wso2-obiam:3.0.0-alpine .` <br><br>
+      eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYMANAGER_DIST_URL=http://<public_ip:port>/wso2is-extensions-1.2.10.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/obiam-keystores  -t wso2-obiam:3.0.0-alpine .`
   
 ##### 3. Running the Docker image.
 
