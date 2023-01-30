@@ -13,7 +13,7 @@ This section defines the step-by-step instructions to build an [Alpine](https://
   > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
   > 2. **WSO2_OB_KEYMANAGER_DIST_URL** - WSO2 IS Connector location
   > 3. **OB_TRUSTED_CERTS_URL** - Certificate zip archive location
-  > 4. **WSO2_OB_KEYSTORES_URL** - OBIAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/ubuntu/obiam/obiam-keystores)
+  > 4. **WSO2_OB_KEYSTORES_URL** - OBIAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/alpine/obiam/obiam-keystores)
 
 
 ## How to build an image and run

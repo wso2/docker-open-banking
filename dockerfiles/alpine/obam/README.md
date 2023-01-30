@@ -11,7 +11,7 @@ This section defines the step-by-step instructions to build an [Alpine](https://
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
   > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
   > 2. **OB_TRUSTED_CERTS_URL** - Certificate zip archive location
-  > 3. **WSO2_OB_KEYSTORES_URL** - OBAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/ubuntu/obam/obam-keystores)
+  > 3. **WSO2_OB_KEYSTORES_URL** - OBAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/alpine/obam/obam-keystores)
 
 ## How to build an image and run
 
