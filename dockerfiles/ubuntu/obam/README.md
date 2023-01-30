@@ -1,4 +1,4 @@
-# Dockerfile for WSO2 Open Banking API Manager Accelerator Module#
+# Dockerfile for WSO2 Open Banking API Manager Accelerator Module
 This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking API Manager.
 
 ## Prerequisites
@@ -11,7 +11,7 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
   > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
   > 2. **OB_TRUSTED_CERTS_URL** - Certificate zip archive location
-  > 3. **WSO2_OB_KEYSTORES_URL** - OBAM Keystores folder location
+  > 3. **WSO2_OB_KEYSTORES_URL** - OBAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/ubuntu/obam/obam-keystores)
 
 
 ## How to build an image and run
@@ -29,8 +29,8 @@ git clone https://github.com/wso2/docker-open-banking.git
 - Navigate to `<OBAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
   + `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obam:3.0.0 .` <br>
-  > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://localhost:8000/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/tree/master/dockerfiles/ubuntu/obam/obam-keystores -t wso2-obam:3.0.0 .` <br><br>
-  > eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://<public_ip:port>/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/tree/master/dockerfiles/ubuntu/obam/obam-keystores -t wso2-obam:3.0.0 .`
+  > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://localhost:8000/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=hhttp://localhost:8000/obam-keystores -t wso2-obam:3.0.0 .` <br><br>
+  > eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://<public_ip:port>/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/obam-keystores -t wso2-obam:3.0.0 .`
 
 ##### 3. Running the Docker image.
 
