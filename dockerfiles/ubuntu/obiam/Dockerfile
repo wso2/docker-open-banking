@@ -29,7 +29,7 @@ ARG WSO2_SERVER_NAME=wso2is
 ARG WSO2_SERVER_VERSION=5.11.0
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obiam-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
-ARG WSO2_OB_KM_EXTENSION=${WSO2_SERVER_NAME}-extensions-1.2.10
+ARG WSO2_OB_KM_EXTENSION=${WSO2_SERVER_NAME}-extensions-1.4.2
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
@@ -48,8 +48,8 @@ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/
 
 # configuration properties for deployment.toml file
 # server hostnames
-ARG IS_HOSTNAME=localhost
-ARG APIM_HOSTNAME=localhost
+ARG IS_HOSTNAME=obiam
+ARG APIM_HOSTNAME=obam
 ARG BI_HOSTNAME=localhost
 # databases related properties
 ARG DB_TYPE=mysql
