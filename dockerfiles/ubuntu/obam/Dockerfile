@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION=4.0.0.0
+ARG BASE_PRODUCT_VERSION=4.1.0.0
 
 # set base Docker image to WSO2 API Manager Ubuntu Docker image
 FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}
@@ -26,7 +26,7 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2am
-ARG WSO2_SERVER_VERSION=4.0.0
+ARG WSO2_SERVER_VERSION=4.1.0
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obam-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
@@ -46,8 +46,8 @@ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/
 
 # configuration properties for deployment.toml file
 # server hostnames
-ARG IS_HOSTNAME=localhost
-ARG APIM_HOSTNAME=localhost
+ARG IS_HOSTNAME=obiam
+ARG APIM_HOSTNAME=obam
 ARG BI_HOSTNAME=localhost
 # databases related properties
 ARG DB_TYPE=mysql
@@ -88,7 +88,7 @@ RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WS
 # read deployment.toml file
 ARG DEPLOYMENT_TOML_FILE=${WSO2_OB_ACCELERATOR_DIR}/repository/resources/deployment.toml
 RUN \
-    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/${WSO2_SERVER}-deployment.toml ${DEPLOYMENT_TOML_FILE} \
+    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/wso2am-4.0.0-deployment.toml ${DEPLOYMENT_TOML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
