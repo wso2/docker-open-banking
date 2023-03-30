@@ -45,9 +45,9 @@ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/
 
 # configuration properties for deployment.toml file
 # server hostnames
-ARG IS_HOSTNAME=localhost
-ARG APIM_HOSTNAME=localhost
-ARG BI_HOSTNAME=localhost
+ARG IS_HOSTNAME=obiam
+ARG APIM_HOSTNAME=obam
+ARG BI_HOSTNAME=obbi
 # databases related properties
 ARG DB_TYPE=mysql
 ARG DB_USER=root
