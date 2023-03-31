@@ -1,5 +1,5 @@
 # Dockerfile for WSO2 Open Banking Identity & Access Management UK Toolkit Module
-This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking Identity & Access Management UK Toolkit Module.
+This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking Identity & Access Management UK Toolkit Module with WSO2 IS 5.11.0.
 
 ## Prerequisites
 
