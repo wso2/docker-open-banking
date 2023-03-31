@@ -1,5 +1,5 @@
 # Dockerfile for WSO2 Open Banking API Manager UK Toolkit Module
-This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking API Manager UK Toolkit.
+This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking API Manager UK Toolkit with WSO2 APIM 4.1.0.
 
 ## Prerequisites
 
