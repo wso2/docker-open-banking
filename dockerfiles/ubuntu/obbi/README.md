@@ -40,6 +40,19 @@ git clone https://github.com/wso2/docker-open-banking.git
 Configurations would lie on the Docker host machine and they can be volume mounted to the container. <br>
 As an example, steps required to change the port offset using `deployment.yaml` is as follows:
 
+- Make sure that API Manager analytics is enabled in `<APIM_HOME>/repository/conf/deployment.toml` as follows.
+```
+[apim.analytics]
+enable = true
+```
+
+- Go to `<APIM_HOME>/repository/conf/deployment.toml` and `<IS_HOME>/repository/conf/deployment.toml` to enable open banking data publishing as follows:
+
+```
+[open_banking.data_publishing]
+enable = true
+```
+
 ##### 1. Stop the OBBI container if it's already running.
 
 In WSO2 Open Banking BI 3.0.0 product distribution, `deployment.yaml` configuration file <br>
