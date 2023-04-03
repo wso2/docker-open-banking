@@ -59,7 +59,10 @@
    * Username: admin@wso2.com 
    * Password: wso2123
    ````
-5. Follow the documentation to use WSO2 Open Banking:
+
+5. WSO2 Open Banking Business Intelligence server will serve on port 9444.
+
+6. Follow the documentation to use WSO2 Open Banking:
 
    To try out the solution: [Try Out WSO2 Open Banking](https://ob.docs.wso2.com/en/latest/get-started/quick-start-guide/)
 
