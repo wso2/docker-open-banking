@@ -15,7 +15,7 @@ ARG BASE_PRODUCT_VERSION=3.0.0.0
 # set base Docker image to WSO2 Open Banking API Manager Ubuntu Docker image
 FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obam:${BASE_PRODUCT_VERSION}
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
-      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.6"
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -26,7 +26,7 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2am
-ARG WSO2_SERVER_VERSION=4.0.0
+ARG WSO2_SERVER_VERSION=4.1.0
 ARG WSO2_OB_TOOLKIT_NAME=wso2-obam-toolkit-uk
 ARG WSO2_OB_TOOLKIT_VERSION=1.0.0
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
@@ -75,7 +75,7 @@ RUN \
 # read deployment.toml file
 ARG DEPLOYMENT_TOML_FILE=${WSO2_OB_TOOLKIT_DIR}/repository/resources/deployment.toml
 RUN \
-    cp ${WSO2_OB_TOOLKIT_DIR}/repository/resources/${WSO2_SERVER}-deployment-uk.toml ${DEPLOYMENT_TOML_FILE} \
+    cp ${WSO2_OB_TOOLKIT_DIR}/repository/resources/wso2am-4.0.0-deployment-uk.toml ${DEPLOYMENT_TOML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
