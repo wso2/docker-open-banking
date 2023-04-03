@@ -38,7 +38,7 @@ services:
 
   obbi:
     container_name: obbi
-    image: docker.wso2.com/wso2-obbi
+    image: docker.wso2.com/wso2-obbi-toolkit-uk
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "9444"]
       interval: 10s
