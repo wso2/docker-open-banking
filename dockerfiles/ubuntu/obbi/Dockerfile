@@ -10,12 +10,12 @@
 # ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION=4.0.0.0
+ARG BASE_PRODUCT_VERSION=4.2.0.0
 
 # set base Docker image to WSO2 Streaming Integrator Ubuntu Docker image
 FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2si:${BASE_PRODUCT_VERSION}
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
-      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.8"
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -26,7 +26,7 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2si
-ARG WSO2_SERVER_VERSION=4.0.0
+ARG WSO2_SERVER_VERSION=4.2.0
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obbi-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
@@ -66,6 +66,11 @@ ARG DB_OB_REPORTING_SUMMARIZED=openbank_ob_reporting_summarizeddb
 # change user to root for elevated permissions to override inherited non-root user
 USER root
 
+# install dependencies
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends unzip wget \
+    && rm -rf /var/lib/apt/lists/*
+
 # add Open Banking artifacts to base product
 RUN \
     wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
@@ -84,7 +89,7 @@ RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WS
 # read deployment.yaml file
 ARG DEPLOYMENT_YAML_FILE=${WSO2_OB_ACCELERATOR_DIR}/repository/resources/deployment.yaml
 RUN \
-    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/${WSO2_SERVER}-deployment.yaml ${DEPLOYMENT_YAML_FILE} \
+    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/wso2si-4.0.0-deployment.yaml ${DEPLOYMENT_YAML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_YAML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_YAML_FILE} \
@@ -106,6 +111,9 @@ RUN cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/
 RUN \
     chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
     && chown wso2carbon:wso2 /etc/motd
+
+# remove unnecesary packages
+RUN apt-get purge -y unzip wget
 
 # set the non-root user
 USER ${USER_ID}

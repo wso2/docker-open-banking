@@ -26,7 +26,7 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2si
-ARG WSO2_SERVER_VERSION=4.0.0
+ARG WSO2_SERVER_VERSION=4.2.0
 ARG WSO2_OB_TOOLKIT_NAME=wso2-obbi-toolkit-uk
 ARG WSO2_OB_TOOLKIT_VERSION=1.0.0
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
@@ -65,6 +65,11 @@ ARG DB_OB_REPORTING_SUMMARIZED=openbank_ob_reporting_summarizeddb
 # change user to root for elevated permissions to override inherited non-root user
 USER root
 
+# install dependencies
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends unzip wget \
+    && rm -rf /var/lib/apt/lists/*
+
 # add Open Banking artifacts to base product
 RUN \
     wget -O ${WSO2_OB_TOOLKIT}.zip "${WSO2_OB_TOOLKIT_DIST_URL}" \
@@ -82,6 +87,9 @@ RUN \
 RUN \
     chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
     && chown wso2carbon:wso2 /etc/motd
+
+# remove unnecesary packages
+RUN apt-get purge -y unzip wget
 
 # set the non-root user
 USER ${USER_ID}
