@@ -1,0 +1,122 @@
+# ----------------------------------------------------------------------------------------
+#
+# Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
+#
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained
+# herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+# You may not alter or remove any copyright or other notice from copies of this content.
+#
+# ----------------------------------------------------------------------------------------
+
+version: "3.7"
+services:
+  
+  mysql:
+    container_name: mysql
+    image: mysql:5.7.24
+    ports:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - "./mysql/scripts/setup.sql:/docker-entrypoint-initdb.d/setup.sql"
+      - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
+    command: [--ssl=0]
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - ob-network
+
+  obbi:
+    container_name: obbi
+    image: docker.wso2.com/wso2-obbi
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9444"]
+      interval: 10s
+      timeout: 10s
+      start_period: 150s
+      retries: 5
+    depends_on:
+      - "mysql"
+    volumes:
+      - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
+    ports:
+      - "9444:9444"
+    entrypoint:
+      - "/home/wso2carbon/wait-for-it.sh"
+      - "mysql:3306"
+      - "-t"
+      - "200"
+      - "--"
+      - "./docker-entrypoint.sh"
+    networks:
+      - ob-network
+
+  obiam:
+    container_name: obiam
+    image: docker.wso2.com/wso2-obiam
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9446/carbon/admin/login.jsp"]
+      interval: 10s
+      timeout: 120s
+      start_period: 100s
+      retries: 5 
+    depends_on:
+      - "mysql"
+      - "obbi"
+    volumes:
+      - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
+    ports:
+      - "9446:9446"
+    entrypoint:
+      - "/home/wso2carbon/wait-for-it.sh"
+      - "obbi:9444"
+      - "-t"
+      - "240"
+      - "--"
+      - "./docker-entrypoint.sh"
+    networks:
+      - ob-network
+
+  obam:
+    container_name: obam
+    image: docker.wso2.com/wso2-obam
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/carbon/admin/login.jsp"]
+      interval: 10s
+      timeout: 10s
+      start_period: 150s
+      retries: 5 
+    depends_on:
+      - "mysql"
+      - "obbi"
+      - "obiam"
+    volumes:
+      - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
+    ports:
+      - "9443:9443"
+      - "8243:8243"
+      - "8280:8280"
+    entrypoint:
+      - "/home/wso2carbon/wait-for-it.sh"
+      - "obiam:9446"
+      - "-t"
+      - "300"
+      - "--"
+      - "./docker-entrypoint.sh"
+    networks:
+      - ob-network
+
+networks:
+  ob-network:
+    driver: bridge
+    name: ob-network
