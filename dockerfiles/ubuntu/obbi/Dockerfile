@@ -89,7 +89,7 @@ RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WS
 # read deployment.yaml file
 ARG DEPLOYMENT_YAML_FILE=${WSO2_OB_ACCELERATOR_DIR}/repository/resources/deployment.yaml
 RUN \
-    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/wso2si-4.0.0-deployment.yaml ${DEPLOYMENT_YAML_FILE} \
+    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/${WSO2_SERVER}-deployment.yaml ${DEPLOYMENT_YAML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_YAML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_YAML_FILE} \
