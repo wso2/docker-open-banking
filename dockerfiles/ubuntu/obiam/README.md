@@ -11,9 +11,9 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
     + Host the downloaded artifacts locally or on a remote location.
     > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
     > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
-    > 2. **WSO2_OB_KEYMANAGER_DIST_URL** - WSO2 IS Connector location
+    > 2. **WSO2_OB_KEYMANAGER_DIST_URL** - WSO2 IS Connector location. Please go through this link to find the right IS Connector version which matches with your APIM version.(https://ob.docs.wso2.com/en/latest/get-started/quick-start-guide/#installing-base-products)
     > 3. **OB_TRUSTED_CERTS_URL** - Zip archive location of the certificates of WSO2 Open Banking root and issuer
-    > 4. **WSO2_OB_KEYSTORES_URL** - OBIAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/ubuntu/obiam/obiam-keystores)
+    > 4. **WSO2_OB_KEYSTORES_URL** - OBIAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/keystores)
     
 
 ## How to build an image and run

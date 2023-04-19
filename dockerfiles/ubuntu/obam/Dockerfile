@@ -10,10 +10,10 @@
 # ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION=4.1.0.0
+ARG BASE_PRODUCT_VERSION
 
 # set base Docker image to WSO2 API Manager Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}.0
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.1"
 
@@ -26,10 +26,11 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2am
-ARG WSO2_SERVER_VERSION=4.1.0
+# declaring again BASE_PRODUCT_VERSION ARG to use in build stage
+ARG BASE_PRODUCT_VERSION
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obam-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
-ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
+ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
@@ -67,6 +68,13 @@ ARG DB_OB_REPORTING_SUMMARIZED=openbank_ob_reporting_summarizeddb
 # change user to root for elevated permissions to override inherited non-root user
 USER root
 
+# install dependencies
+RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
+        apt-get update \
+        && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends unzip wget \
+        && rm -rf /var/lib/apt/lists/* ; \
+    fi
+
 # add Open Banking artifacts to base product
 RUN \
     wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
@@ -77,12 +85,10 @@ RUN \
     && rm -f ob-cert.zip 
 
 # add keystores to base product 
-RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_KEYSTORES_URL}/client-truststore.jks" \
-    && cp client-truststore.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
-    && rm -f client-truststore.jks \
-    && wget -O wso2carbon.jks "${WSO2_OB_KEYSTORES_URL}/wso2carbon.jks" \
-    && cp wso2carbon.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
-    && rm -f wso2carbon.jks; fi 
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -r -nH "${WSO2_OB_KEYSTORES_URL}" \
+    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/keystores/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
+    && keytool -importkeystore -srckeystore ${USER_HOME}/keystores/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \
+    && rm -r ${USER_HOME}/keystores ; fi  
 
 # set configurations
 # read deployment.toml file
@@ -125,6 +131,11 @@ RUN \
 RUN \
     chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
     && chown wso2carbon:wso2 /etc/motd
+
+# remove unnecesary packages
+RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
+        apt-get purge -y unzip wget ;\
+    fi
 
 # set the non-root user
 USER ${USER_ID}

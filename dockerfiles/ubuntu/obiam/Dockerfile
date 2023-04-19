@@ -10,10 +10,10 @@
 # ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION=5.11.0.0
+ARG BASE_PRODUCT_VERSION  
 
 # set base Docker image to WSO2 Identity Server Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.1"
 
@@ -22,15 +22,16 @@ LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
 ARG USER=wso2carbon
 ARG USER_ID=802
 ARG USER_GROUP=wso2
-ARG USER_GROUP_ID=802
+ARG USER_GROUP_ID=802 
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2is
-ARG WSO2_SERVER_VERSION=5.11.0
+# declaring again BASE_PRODUCT_VERSION ARG to use in build stage
+ARG BASE_PRODUCT_VERSION
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obiam-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
-ARG WSO2_OB_KM_EXTENSION=${WSO2_SERVER_NAME}-extensions-1.4.2
-ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
+ARG WSO2_OB_KM_EXTENSION=wso2is-extensions
+ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
@@ -74,26 +75,25 @@ RUN \
     wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
     && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_ACCELERATOR}.zip \
     && rm -f ${WSO2_OB_ACCELERATOR}.zip \
+    && mkdir ${WSO2_OB_KM_EXTENSION} \
     && wget -O ${WSO2_OB_KM_EXTENSION}.zip "${WSO2_OB_KEYMANAGER_DIST_URL}" \
-    && unzip ${WSO2_OB_KM_EXTENSION}.zip \
+    && unzip -o -d ./wso2is-extensions/  ${WSO2_OB_KM_EXTENSION}.zip  \
     && rm -f ${WSO2_OB_KM_EXTENSION}.zip \
     && wget -O ob-cert.zip "${OB_TRUSTED_CERTS_URL}" \
     && unzip -d ${USER_HOME} ob-cert.zip  \
     && rm -f ob-cert.zip 
 
 # add keystores to base product 
-RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_KEYSTORES_URL}/client-truststore.jks" \
-    && cp client-truststore.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
-    && rm -f client-truststore.jks \
-    && wget -O wso2carbon.jks "${WSO2_OB_KEYSTORES_URL}/wso2carbon.jks" \
-    && cp wso2carbon.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
-    && rm -f wso2carbon.jks; fi 
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -r -nH "${WSO2_OB_KEYSTORES_URL}" \
+    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/keystores/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obiam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
+    && keytool -importkeystore -srckeystore ${USER_HOME}/keystores/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \
+    && rm -r ${USER_HOME}/keystores ; fi 
 
 # set configurations
 # read deployment.toml file
 ARG DEPLOYMENT_TOML_FILE=${WSO2_OB_ACCELERATOR_DIR}/repository/resources/deployment.toml
 RUN \
-    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/${WSO2_SERVER}-deployment.toml ${DEPLOYMENT_TOML_FILE} \
+    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/wso2is-5.11.0-deployment.toml ${DEPLOYMENT_TOML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
@@ -119,9 +119,12 @@ RUN \
 # copy open banking artifacts
     && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/ \
     && find ${WSO2_SERVER_HOME}/repository/components/dropins -name "org.wso2.carbon.identity.application.authentication.handler.identifier-*" -exec rm -rf {} \; \
-# 2. configure_iskm_connector
-    && cp ${WSO2_OB_KM_EXTENSION}/dropins/* ${WSO2_SERVER_HOME}/repository/components/dropins/ \
-    && cp ${WSO2_OB_KM_EXTENSION}/webapps/* ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/ \
+# configure iskm_connector
+    && cd ./${WSO2_OB_KM_EXTENSION}/ \
+# "ls -d */" will list all the directories, "head -n 1" gives the first one from the list
+    && cp $(ls -d */|head -n 1)dropins/* ${WSO2_SERVER_HOME}/repository/components/dropins/ \
+    && cp $(ls -d */|head -n 1)webapps/* ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/ \
+    && cd ../ \
     && rm -rf ${WSO2_OB_KM_EXTENSION}
 
 # add root and issuer certificates to client-truststore.jks
