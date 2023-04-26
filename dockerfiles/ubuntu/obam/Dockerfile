@@ -34,7 +34,7 @@ ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
-ARG WSO2_OB_Accelerator_DIST_URL
+ARG WSO2_OB_ACCELERATOR_DIST_URL
 ARG OB_TRUSTED_CERTS_URL
 ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
@@ -77,7 +77,7 @@ RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
 
 # add Open Banking artifacts to base product
 RUN \
-    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
+    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_ACCELERATOR_DIST_URL}" \
     && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_ACCELERATOR}.zip \
     && rm -f ${WSO2_OB_ACCELERATOR}.zip \
     && wget -O ob-cert.zip "${OB_TRUSTED_CERTS_URL}" \
@@ -85,10 +85,12 @@ RUN \
     && rm -f ob-cert.zip 
 
 # add keystores to base product 
-RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -r -nH "${WSO2_OB_KEYSTORES_URL}" \
-    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/keystores/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
-    && keytool -importkeystore -srckeystore ${USER_HOME}/keystores/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \
-    && rm -r ${USER_HOME}/keystores ; fi  
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks" \	
+    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \	
+    && rm -f private-keys.jks\
+    && wget -O public-certs.jks "${WSO2_OB_KEYSTORES_URL}/public-certs.jks" \
+    && keytool -importkeystore -srckeystore ${USER_HOME}/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \	
+    && rm -r public-certs.jks ; fi  
 
 # set configurations
 # read deployment.toml file

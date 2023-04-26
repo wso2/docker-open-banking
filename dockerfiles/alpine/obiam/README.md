@@ -6,14 +6,15 @@ This section defines the step-by-step instructions to build an [Alpine](https://
 * [Docker](https://www.docker.com/get-docker) v20.10.10 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking Identity & Access Management Accelerator Module pack downloaded through [WSO2 Updates 2.0](https://ob.docs.wso2.com/en/latest/install-and-setup/setting-up-servers/)
-* [WSO2 IS Connector](https://apim.docs.wso2.com/en/4.0.0/assets/attachments/administer/wso2is-extensions-1.2.10.zip) to configure the Identity Server with the API Manager
+* Download the WSO2 IS Connector to configure the Identity Server with the API Manager. Please go through this [link](https://ob.docs.wso2.com/en/latest/get-started/quick-start-guide/#installing-base-products) to find respective WSO2 IS Connector according to the API Manager version. Extract the dowloaded WSO2 IS Connector into your local machine.
 * WSO2 Open Banking root and issuer certificate zip archive
+* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/keystores)
+
   + Host the downloaded artifacts locally or on a remote location.
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
-  > 1. **WSO2_OB_Accelerator_DIST_URL** - Accelerator location
-  > 2. **WSO2_OB_KEYMANAGER_DIST_URL** - WSO2 IS Connector location
-  > 3. **OB_TRUSTED_CERTS_URL** - Certificate zip archive location
-  > 4. **WSO2_OB_KEYSTORES_URL** - OBIAM Keystores folder location (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/dockerfiles/alpine/obiam/obiam-keystores)
+  > 1. **WSO2_OB_ACCELERATOR_DIST_URL** - Accelerator location
+  > 2. **OB_TRUSTED_CERTS_URL** - Zip archive location of the certificates of WSO2 Open Banking root and issuer
+  > 3. **WSO2_OB_KEYSTORES_URL** - Location of keystores folder of wso2 server certs
 
 
 ## How to build an image and run
@@ -30,13 +31,17 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBIAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYMANAGER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obiam:3.0.0-alpine .` <br>
-    > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYMANAGER_DIST_URL=http://localhost:8000/wso2is-extensions-1.2.10.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/obiam-keystores  -t wso2-obiam:3.0.0-alpine .` <br><br>
-      eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_Accelerator_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYMANAGER_DIST_URL=http://<public_ip:port>/wso2is-extensions-1.2.10.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/obiam-keystores  -t wso2-obiam:3.0.0-alpine .`
+    + `docker build --build-arg BASE_PRODUCT_VERSION=<IS BASE PRODUCT VERSION> --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obiam:3.0.0-alpine .` <br>
+    > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/obiam-keystores  -t wso2-obiam:3.0.0-alpine .` <br><br>
+    >  eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/obiam-keystores  -t wso2-obiam:3.0.0-alpine .`
   
 ##### 3. Running the Docker image.
+if you are only using the WSO2 Open Banking Identity Server, please run the below command.
+> - `docker run -it -p 9446:9446 wso2-obiam:3.0.0-alpine`
 
-- `docker run -it -p 9446:9446 wso2-obiam:3.0.0-alpine`
+If you are using WSO2 Open Banking Identity Server and WSO2 Open Banking API Manager, please run the below command.
+> - `docker run -it -p 9446:9446 -v <IS_CONNECTOR_HOME>/dropins:/home/wso2carbon/wso2-artifact-volume/repository/components/dropins/ -v <IS_CONNECTOR_HOME>/webapps:/home/wso2carbon/wso2-artifact-volume/repository/deployment/server/webapps/ wso2-obiam:3.0.0-alpine`
+> In here, <IS_CONNECTOR_HOME> refers to the root directory path of the extracted WSO2 IS Connector.
 
 ##### 4. Accessing management console.
 

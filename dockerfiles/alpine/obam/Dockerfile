@@ -10,10 +10,10 @@
 # ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION=4.0.0.0
+ARG BASE_PRODUCT_VERSION
 
 # set base Docker image to WSO2 API Manager Alpine Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}-alpine
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}.0-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.1"
 
@@ -26,14 +26,15 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2am
-ARG WSO2_SERVER_VERSION=4.0.0
+# declaring again BASE_PRODUCT_VERSION ARG to use in build stage	
+ARG BASE_PRODUCT_VERSION
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obam-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
-ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
+ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
-ARG WSO2_OB_Accelerator_DIST_URL
+ARG WSO2_OB_ACCELERATOR_DIST_URL
 ARG OB_TRUSTED_CERTS_URL
 ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
@@ -47,9 +48,9 @@ ENV ENV=${USER_HOME}"/.ashrc"
 
 # configuration properties for deployment.toml file
 # server hostnames
-ARG IS_HOSTNAME=localhost
-ARG APIM_HOSTNAME=localhost
-ARG BI_HOSTNAME=localhost
+ARG IS_HOSTNAME=obiam
+ARG APIM_HOSTNAME=obam
+ARG BI_HOSTNAME=obbi
 # databases related properties
 ARG DB_TYPE=mysql
 ARG DB_USER=root
@@ -70,26 +71,26 @@ USER root
 
 # add Open Banking artifacts to base product
 RUN \
-    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
+    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_ACCELERATOR_DIST_URL}" \
     && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_ACCELERATOR}.zip \
     && rm -f ${WSO2_OB_ACCELERATOR}.zip \
     && wget -O ob-cert.zip "${OB_TRUSTED_CERTS_URL}" \
     && unzip -d ${USER_HOME} ob-cert.zip  \
     && rm -f ob-cert.zip 
 
-# add keystores to base product 
-RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_KEYSTORES_URL}/client-truststore.jks" \
-    && cp client-truststore.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
-    && rm -f client-truststore.jks \
-    && wget -O wso2carbon.jks "${WSO2_OB_KEYSTORES_URL}/wso2carbon.jks" \
-    && cp wso2carbon.jks ${WSO2_SERVER_HOME}/repository/resources/security/ \
-    && rm -f wso2carbon.jks; fi 
+# add keystores to base product 	
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks" \	
+    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \	
+    && rm -f private-keys.jks\
+    && wget -O public-certs.jks "${WSO2_OB_KEYSTORES_URL}/public-certs.jks" \
+    && keytool -importkeystore -srckeystore ${USER_HOME}/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \	
+    && rm -r public-certs.jks ; fi  
 
 # set configurations
 # read deployment.toml file
 ARG DEPLOYMENT_TOML_FILE=${WSO2_OB_ACCELERATOR_DIR}/repository/resources/deployment.toml
 RUN \
-    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/${WSO2_SERVER}-deployment.toml ${DEPLOYMENT_TOML_FILE} \
+    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/wso2am-4.0.0-deployment.toml ${DEPLOYMENT_TOML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \

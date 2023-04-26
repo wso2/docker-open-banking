@@ -1,4 +1,4 @@
-# WSO2 Open Banking API Manager with Open Banking Identity & Access Management Accelerator Module
+# WSO2 Open Banking API Manager with Open Banking Identity & Access Management UK TOOLKIT Module
 
 
 ## Prerequisites
@@ -7,7 +7,7 @@
    in order to run the steps provided in following **Quick Start Guide**. <br><br>
  * In order to use WSO2 Open Banking Docker images, you need an active WSO2 Open Banking subscription. If you do not possess an active WSO2
    Open Banking subscription, you can contact us from [here](https://wso2.com/solutions/financial/open-banking/) <br><br>
- *  Download and extract the [WSO2 IS Connector](https://apim.docs.wso2.com/en/4.2.0/assets/attachments/administer/wso2is-extensions-1.6.8.zip) to configure the Identity Server with the API Manager. By default this docker-compose has set up WSO2 Open Banking Accelerator Docker images which are based APIM 4.2.0 and IS 6.0.0. If you wish to use wso2 Open Banking Accelerator Docker images with any other base product versions, Download the WSO2 IS Connector according to the API Manager version. Please go through this [link](https://ob.docs.wso2.com/en/latest/get-started/quick-start-guide/#installing-base-products) to find respective WSO2 IS Connector according to the API Manager version. 
+ *  Download and extract the [WSO2 IS Connector](https://apim.docs.wso2.com/en/4.2.0/assets/attachments/administer/wso2is-extensions-1.6.8.zip) to configure the Identity Server with the API Manager. By default this docker-compose has set up WSO2 Open Banking UK Toolkit Docker images which are based APIM 4.2.0 and IS 6.0.0. If you wish to use wso2 Open Banking UK Toolkit  Docker images with any other base product versions, Download the WSO2 IS Connector according to the API Manager version. Please go through this [link](https://ob.docs.wso2.com/en/latest/get-started/quick-start-guide/#installing-base-products) to find respective WSO2 IS Connector according to the API Manager version. 
  
  
 ## Quick Start Guide
@@ -19,10 +19,10 @@
     ```
     > If you are to try out an already released zip of this repo, please ignore this 1st step. 
 
-2. Switch to the `docker-compose/obam-with-obiam` folder.
+2. Switch to the `docker-compose/obam-with-obiam-uk` folder.
 
     ```
-    cd docker-open-banking/docker-compose/obam-with-obiam
+    cd docker-open-banking/docker-compose/obam-with-obiam-uk
     ```
     > If you are to try out an already released zip of this repo, please ignore this 2nd step also. 
      Instead, extract the zip file and directly browse to `docker-open-banking-<released-version-here>/docker-compose/obam-with-obiam` folder. 
@@ -40,7 +40,7 @@
 
    >> If you dont wish use locally built docker images, please ignore 4th step.
 
-5. If you wish to use WSO2 Open Banking Accelerator docker images which are based on different base product versions. please follow the steps below.
+5. If you wish to use WSO2 Open Banking UK Toolkit docker images which are based on different base product versions. please follow the steps below.
    > 1. Change the base product versions of `image` name in the `docker-compose.yml`.
    > 2. Go to `volume` mount section of the mysql service in `docker-compose.yml`.
    > 3. Change the sql script according to yor base product versions. You can find recspective sql script according to your base product versions from [here](../mysql/scripts/).
