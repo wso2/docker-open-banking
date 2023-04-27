@@ -11,8 +11,7 @@
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION
-#wso2-obam:3.0.0.34-am4.0.0.164
-#wso2-obam:3.0.0.0-am4.0.0.0
+
 ARG ACCELERATOR_PRODUCT_VERSION=3.0.0.0-am${BASE_PRODUCT_VERSION}.0
 # set base Docker image to WSO2 Open Banking API Manager Ubuntu Docker image
 FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obam:${ACCELERATOR_PRODUCT_VERSION}
