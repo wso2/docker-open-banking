@@ -6,8 +6,12 @@ This section defines the step-by-step instructions to build an [Alpine](https://
 * [Docker](https://www.docker.com/get-docker) v20.10.10 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking API Manager Accelerator Module pack downloaded through [WSO2 Updates 2.0](https://ob.docs.wso2.com/en/latest/install-and-setup/setting-up-servers/)
-* WSO2 Open Banking root and issuer certificate zip archive
-* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v3.0.0.7/keystores)
+* Zip archive file of the Open Banking root and issuer certificates. 
+> Download the root and issuer [certificates](https://openbanking.atlassian.net/wiki/spaces/DZ/pages/252018873/OB+Root+and+Issuing+Certificates+for+Sandbox).
+> Rename the `OB_SandBox_PP_Root.cer` as `root.cer`.
+> Rename the `OB_SandBox_PP_Issuing.cer` as `iss.cer`.
+> Zip the root.cer and iss.cer in one zip archive file.
+* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/keystores)
 
   + Host the downloaded artifacts locally or on a remote location.
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
