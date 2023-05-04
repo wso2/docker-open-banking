@@ -10,10 +10,10 @@
 # ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION=4.2.0.0
+ARG BASE_PRODUCT_VERSION
 
 # set base Docker image to WSO2 Streaming Integrator Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2si:${BASE_PRODUCT_VERSION}
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2si:${BASE_PRODUCT_VERSION}.0
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
@@ -26,10 +26,11 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2si
-ARG WSO2_SERVER_VERSION=4.2.0
+# declaring again BASE_PRODUCT_VERSION ARG to use in build stage
+ARG BASE_PRODUCT_VERSION
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obbi-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
-ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
+ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
@@ -67,9 +68,11 @@ ARG DB_OB_REPORTING_SUMMARIZED=openbank_ob_reporting_summarizeddb
 USER root
 
 # install dependencies
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends unzip wget \
-    && rm -rf /var/lib/apt/lists/*
+RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
+        apt-get update \
+        && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends unzip wget \
+        && rm -rf /var/lib/apt/lists/* \
+    fi
 
 # add Open Banking artifacts to base product
 RUN \
@@ -113,7 +116,9 @@ RUN \
     && chown wso2carbon:wso2 /etc/motd
 
 # remove unnecesary packages
-RUN apt-get purge -y unzip wget
+RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
+        apt-get purge -y unzip wget \
+    fi
 
 # set the non-root user
 USER ${USER_ID}
