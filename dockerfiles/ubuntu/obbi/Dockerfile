@@ -71,7 +71,7 @@ USER root
 RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
         apt-get update \
         && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends unzip wget \
-        && rm -rf /var/lib/apt/lists/* \
+        && rm -rf /var/lib/apt/lists/* ; \
     fi
 
 # add Open Banking artifacts to base product
@@ -117,7 +117,7 @@ RUN \
 
 # remove unnecesary packages
 RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
-        apt-get purge -y unzip wget \
+        apt-get purge -y unzip wget ;\
     fi
 
 # set the non-root user
