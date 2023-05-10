@@ -39,7 +39,7 @@ services:
 
   obiam:
     container_name: obiam
-    image: docker.wso2.com/wso2-obiam
+    image: docker.wso2.com/wso2-obiam:3.0.0.0-is6.0.0.0
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://obiam:9446/carbon/admin/login.jsp"]
       interval: 10s
@@ -66,7 +66,7 @@ services:
 
   obam:
     container_name: obam
-    image: wso2-obam
+    image: docker.wso2.com/wso2-obam:3.0.0.0-am4.2.0.0
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://obam:9443/carbon/admin/login.jsp"]
       interval: 10s
