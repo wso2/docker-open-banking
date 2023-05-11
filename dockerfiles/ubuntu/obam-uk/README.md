@@ -6,7 +6,6 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 * [Docker](https://www.docker.com/get-docker) v20.10.10 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking API Manager UK Toolkit Module pack 
-
   + Host the downloaded artifacts locally or on a remote location.
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
   > 1. **WSO2_OB_TOOLKIT_DIST_URL** - UK Toolkit location
@@ -26,9 +25,9 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBAM_UK_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-  + `docker build --build-arg BASE_PRODUCT_VERSION=<APIM BASE PRODUCT VERSION> --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obam-uk:1.0.0 .` <br>
-  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0 .` <br><br>
-  > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0 .`
+  + `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obam-uk:1.0.0 .` <br>
+  > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0 .` <br><br>
+  > eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0 .`
 
 ##### 3. Running the Docker image.
 

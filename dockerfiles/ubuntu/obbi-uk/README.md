@@ -6,7 +6,6 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 * [Docker](https://www.docker.com/get-docker) v20.10.10 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking API Manager UK Toolkit Module pack 
-
   + Host the downloaded artifacts locally or on a remote location.
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
   > 1. **WSO2_OB_TOOLKIT_DIST_URL** - UK Toolkit location
