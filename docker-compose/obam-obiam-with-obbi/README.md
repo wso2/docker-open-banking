@@ -30,18 +30,22 @@
     > If you want to try out an already released tag, after executing 2nd step, checkout the relevant tag, 
      i.e. for example: git checkout tags/v1.4.0.5 and continue below steps.
 
-3. Volume mount the IS connector on the obiam container.
+3. If you wish to run the Docker Compose setup using Toolkit Docker Images or Docker images built locally, please follow the steps below.
+   > 1. Build Docker images using Docker resources available from [here](../../dockerfiles/)
+   > 2. Remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml` and change the image name to the image name of the locally built image.
+
+   >> If you don't wish use locally built docker images, please ignore 3rd step.
+
+4. Volume mount the IS connector on the obiam container.
    > Go to the `volume` mount section of the obiam service in the `docker-compose.yml`.
    > Change the root directory path of the extracted WSO2 IS Connector with <IS_CONNECTOR_HOME>.
-4. If you wish to run the Docker Compose setup using Docker images built locally, please follow the steps below.
-   > 1. Build Docker images using Docker resources available from [here](../../dockerfiles/)
-   > 2. Remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml` and add the version in the local image at the end.
-   >> If you dont wish use locally built docker images, please ignore 4th step.
+
 5. If you wish to use WSO2 Open Banking Accelerator docker images which are based on different base product versions. please follow the steps below.
-   > 1. Change the base product versions of `image` name in the `docker-compose.yml`.
-   > 2. Go to `volume` mount section of the mysql service in `docker-compose.yml`.
-   > 3. Change the sql script according to yor base product versions. You can find recspective sql script according to your base product versions from [here](../mysql/scripts/).
+   1. Change the base product versions of `image` name in the `docker-compose.yml`.
+   2. Go to `volume` mount section of the mysql service in `docker-compose.yml`.
+   3. Change the sql script according to yor base product versions. You can find respective sql script according to your base product versions from [here](../mysql/scripts/).
    >> If you wish to use WSO2 Open Banking Accelerator docker images which are based on APIM 4.2.0 and IS 6.0.0, please ignore this 5th step.
+
 6. Execute following Docker Compose command to start the deployment of WSO2 Open Banking Accelerator setup.
    ```
    docker-compose up
