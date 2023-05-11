@@ -25,9 +25,9 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBBI_UK_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-  + `docker build --build-arg BASE_PRODUCT_VERSION=<APIM BASE PRODUCT VERSION> --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obbi-uk:1.0.0 .` <br>
-  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obbi-toolkit-uk-1.0.0.tar.gz -t wso2-obbi-toolkit-uk:1.0.0 .` <br><br>
-  > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obbi-toolkit-uk-1.0.0.tar.gz -t wso2-obbi-toolkit-uk:1.0.0 .`
+  + `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obbi-uk:1.0.0 .` <br>
+  > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obbi-toolkit-uk-1.0.0.tar.gz -t wso2-obbi-toolkit-uk:1.0.0 .` <br><br>
+  > eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obbi-toolkit-uk-1.0.0.tar.gz -t wso2-obbi-toolkit-uk:1.0.0 .`
 
 ##### 3. Running the Docker image.
 
