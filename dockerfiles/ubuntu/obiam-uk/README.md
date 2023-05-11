@@ -6,7 +6,6 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 * [Docker](https://www.docker.com/get-docker) v20.10.10 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking Identity & Access Management UK Toolkit Module pack 
-* Download the WSO2 IS Connector to configure the Identity Server with the API Manager. Please go through this [link](https://ob.docs.wso2.com/en/latest/get-started/quick-start-guide/#installing-base-products) to find respective WSO2 IS Connector according to the API Manager version. Extract the dowloaded WSO2 IS Connector into your local machine.
     + Host the downloaded artifacts locally or on a remote location.
     > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
     > 1. **WSO2_OB_TOOLKIT_DIST_URL** - UK Toolkit location
@@ -25,17 +24,13 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBIAM_UK_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build --build-arg BASE_PRODUCT_VERSION=<IS BASE PRODUCT VERSION> --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obiam-uk:1.0.0 .` <br>
-    > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obiam-toolkit-uk-1.0.0.tar.gz -t wso2-obiam-uk:1.0.0 .` <br><br>
-    > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obiam-toolkit-uk-1.0.0.tar.gz -t wso2-obiam-uk:1.0.0 .`
+    + `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obiam-uk:1.0.0 .` <br>
+    > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obiam-toolkit-uk-1.0.0.tar.gz -t wso2-obiam-uk:1.0.0 .` <br><br>
+    > eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obiam-toolkit-uk-1.0.0.tar.gz -t wso2-obiam-uk:1.0.0 .`
 
 ##### 3. Running the Docker image.
-if you are only using the WSO2 Open Banking Identity Server, please run the below command.
-> - `docker run -it -p 9446:9446 wso2-obiam-uk:1.0.0`
 
-If you are using WSO2 Open Banking Identity Server and WSO2 Open Banking API Manager,  please run the below command.
-> - `docker run -it -p 9446:9446 -v <IS_CONNECTOR_HOME>/dropins:/home/wso2carbon/wso2-artifact-volume/repository/components/dropins/ -v <IS_CONNECTOR_HOME>/webapps:/home/wso2carbon/wso2-artifact-volume/repository/deployment/server/webapps/ wso2-obiam-uk:1.0.0`
-> In here, <IS_CONNECTOR_HOME> refers to the root directory path of the extracted WSO2 IS Connector.
+- `docker run -it -p 9446:9446 wso2-obiam-uk:1.0.0`
 
 ##### 4. Accessing management console.
 

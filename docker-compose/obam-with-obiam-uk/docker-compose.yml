@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------
 #
-# Copyright (c) 2022, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
+# Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
 #
 # This software is the property of WSO2 LLC. and its suppliers, if any.
 # Dissemination of any information or reproduction of any material contained
@@ -14,15 +14,14 @@ services:
   
   mysql:
     container_name: mysql
-    image: mysql:8.0.32
+    image: mysql:5.7.24
     ports:
       - "3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - "../mysql/scripts/permission.sql:/docker-entrypoint-initdb.d/permission.sql"
-      - "../mysql/scripts/setup-apim4.2.0-IS6.0.0.sql:/docker-entrypoint-initdb.d/setup.sql"
-      - "../mysql/conf:/etc/mysql/conf.d"
+      - "./mysql/scripts/setup.sql:/docker-entrypoint-initdb.d/setup.sql"
+      - "./mysql/scripts/my.cnf:/etc/mysql/my.cnf"
     ulimits:
       nofile:
         soft: 20000
@@ -41,7 +40,7 @@ services:
     container_name: obiam
     image: docker.wso2.com/wso2-obiam-uk
     healthcheck:
-      test: ["CMD", "curl", "-k", "-f", "https://obiam:9446/carbon/admin/login.jsp"]
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9446/carbon/admin/login.jsp"]
       interval: 10s
       timeout: 120s
       start_period: 100s
@@ -50,8 +49,6 @@ services:
       - "mysql"
     volumes:
       - "./wait-for-it.sh:/home/wso2carbon/wait-for-it.sh"
-      - "<IS_CONNECTOR_HOME>/dropins:/home/wso2carbon/wso2-artifact-volume/repository/components/dropins/"
-      - "<IS_CONNECTOR_HOME>/webapps:/home/wso2carbon/wso2-artifact-volume/repository/deployment/server/webapps/"
     ports:
       - "9446:9446"
     entrypoint:
@@ -68,7 +65,7 @@ services:
     container_name: obam
     image: docker.wso2.com/wso2-obam-uk
     healthcheck:
-      test: ["CMD", "curl", "-k", "-f", "https://obam:9443/carbon/admin/login.jsp"]
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/carbon/admin/login.jsp"]
       interval: 10s
       timeout: 10s
       start_period: 150s
