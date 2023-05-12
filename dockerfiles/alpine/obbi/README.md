@@ -1,5 +1,5 @@
 # Dockerfile for WSO2 Open Banking Business Intelligence Accelerator Module
-This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking Business Intelligence.
+This section defines the step-by-step instructions to build an [Alpine](https://hub.docker.com/_/alpine/) Linux based Docker image for WSO2 Open Banking Business Intelligence.
 
 ## Prerequisites
 
@@ -22,19 +22,19 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 git clone https://github.com/wso2/docker-open-banking.git
 ```
 
-> The local copy of the `dockerfiles/ubuntu/obbi` directory will be referred to as `OBBI_DOCKERFILE_HOME` from this point onwards.
+> The local copy of the `dockerfiles/alpine/obbi` directory will be referred to as `OBBI_DOCKERFILE_HOME` from this point onwards.
 
 ##### 2. Build the Docker image.
 
 - Navigate to `<OBBI_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-  + `docker build --build-arg BASE_PRODUCT_VERSION=<APIM BASE PRODUCT VERSION> --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obbi:3.0.0 .` <br>
-  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obbi-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/keystores -t wso2-obbi:3.0.0 .` <br><br>
-  > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obbi-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/keystores -t wso2-obbi:3.0.0 .`
+  + `docker build --build-arg BASE_PRODUCT_VERSION=<APIM BASE PRODUCT VERSION> --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obbi:3.0.0-alpine .` <br>
+  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obbi-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/keystores -t wso2-obbi:3.0.0-alpine .` <br><br>
+  > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obbi-accelerator-3.0.0.tar.gz --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/keystores -t wso2-obbi:3.0.0-alpine .`
 
 ##### 3. Running the Docker image.
 
-- `docker run -it -p 9712:9712 -p 9612:9612 -p 7712:7712 -p 7612:7612 -p 9092:9092 -p 9444:9444 wso2-obbi:3.0.0`
+- `docker run -it -p 9712:9712 -p 9612:9612 -p 7712:7712 -p 7612:7612 -p 9092:9092 -p 9444:9444 wso2-obbi:3.0.0-alpine`
        
 ## How to update configurations
 
@@ -72,7 +72,7 @@ chmod o+r <SOURCE_CONFIGS>/deployment.yaml
 docker run \
 -p 9712:9712 -p 9612:9612 -p 7712:7712 -p 7612:7612 -p 9092:9092 -p 9444:9444 \
 --volume <SOURCE_CONFIGS>/deployment.yaml:<TARGET_CONFIGS>/deployment.yaml \
-wso2-obbi:3.0.0
+wso2-obbi:3.0.0-alpine
 ```
 
 > In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2si-4.0.0/conf/server folder of the container.

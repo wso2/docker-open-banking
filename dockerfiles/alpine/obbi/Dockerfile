@@ -12,8 +12,8 @@
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION
 
-# set base Docker image to WSO2 Streaming Integrator Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2si:${BASE_PRODUCT_VERSION}.0
+# set base Docker image to WSO2 Streaming Integrator Alpine Docker image
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2si:${BASE_PRODUCT_VERSION}.0-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
@@ -37,12 +37,13 @@ ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
 ARG WSO2_OB_ACCELERATOR_DIST_URL
 ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
-ARG MOTD="\n\
-Welcome to WSO2 Docker resources.\n\
------------------------------------- \n\
-This Docker container comprises of The WSO2 Open Banking Solution, with its latest GA release \n\
-which is under The WSO2 Commercial License 1.0. \n\
-Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"
+ARG MOTD='printf "\n\
+ Welcome to WSO2 Docker Resources \n\
+ --------------------------------- \n\
+ This Docker container comprises of the WSO2 Open Banking Solution, with its latest GA release \n\
+ which is under The WSO2 Commercial License 1.0. \n\
+ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"'
+ENV ENV=${USER_HOME}"/.ashrc"
 
 # configuration properties for deployment.toml file
 # server hostnames
@@ -66,13 +67,6 @@ ARG DB_OB_REPORTING_SUMMARIZED=openbank_ob_reporting_summarizeddb
 
 # change user to root for elevated permissions to override inherited non-root user
 USER root
-
-# install dependencies
-RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
-        apt-get update \
-        && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends unzip wget \
-        && rm -rf /var/lib/apt/lists/* ; \
-    fi
 
 # add Open Banking artifacts to base product
 RUN \
@@ -111,20 +105,13 @@ RUN \
 RUN cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/
 
 # change directory rights
-RUN \
-    chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
-    && chown wso2carbon:wso2 /etc/motd
+RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
 
-# remove unnecesary packages
-RUN if [ "${BASE_PRODUCT_VERSION}" = "4.2.0" ]; then \
-        apt-get purge -y unzip wget ;\
-    fi
+# set MOTD login message for open banking
+RUN echo ${MOTD} > "${ENV}"
 
 # set the non-root user
 USER ${USER_ID}
-
-# set MOTD login message for open banking
-RUN echo "${MOTD}" > /etc/motd
 
 # expose server ports
 EXPOSE 9712 9612 7712 7612 9092 9444
