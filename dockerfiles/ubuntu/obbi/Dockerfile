@@ -33,7 +33,7 @@ ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
-ARG WSO2_OB_Accelerator_DIST_URL
+ARG WSO2_OB_ACCELERATOR_DIST_URL
 ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
 ARG MOTD="\n\
@@ -73,17 +73,17 @@ RUN apt-get update \
 
 # add Open Banking artifacts to base product
 RUN \
-    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
+    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_ACCELERATOR_DIST_URL}" \
     && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_ACCELERATOR}.zip \
     && rm -f ${WSO2_OB_ACCELERATOR}.zip
 
 # add keystores to base product 
-RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O client-truststore.jks "${WSO2_OB_KEYSTORES_URL}/client-truststore.jks" \
-    && cp client-truststore.jks ${WSO2_SERVER_HOME}/resources/security/ \
-    && rm -f client-truststore.jks \
-    && wget -O wso2carbon.jks "${WSO2_OB_KEYSTORES_URL}/wso2carbon.jks" \
-    && cp wso2carbon.jks ${WSO2_SERVER_HOME}/resources/security/ \
-    && rm -f wso2carbon.jks; fi 
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks" \	
+    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/resources/security/wso2carbon.jks -srcalias wso2carbon-obbi -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \	
+    && rm -f private-keys.jks\
+    && wget -O public-certs.jks "${WSO2_OB_KEYSTORES_URL}/public-certs.jks" \
+    && keytool -importkeystore -srckeystore ${USER_HOME}/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \	
+    && rm -r public-certs.jks ; fi  
 
 # set configurations
 # read deployment.yaml file
