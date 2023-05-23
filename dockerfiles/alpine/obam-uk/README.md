@@ -1,5 +1,5 @@
 # Dockerfile for WSO2 Open Banking API Manager UK Toolkit Module
-This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking API Manager UK Toolkit with WSO2 APIM 4.2.0.
+This section defines the step-by-step instructions to build an [Alpine](https://hub.docker.com/_/alpine/) Linux based Docker image for WSO2 Open Banking API Manager UK Toolkit with WSO2 APIM 4.2.0.
 
 ## Prerequisites
 
@@ -20,19 +20,19 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 git clone https://github.com/wso2/docker-open-banking.git
 ```
 
-> The local copy of the `dockerfiles/ubuntu/obam-uk` directory will be referred to as `OBAM_UK_DOCKERFILE_HOME` from this point onwards.
+> The local copy of the `dockerfiles/alpine/obam-uk` directory will be referred to as `OBAM_UK_DOCKERFILE_HOME` from this point onwards.
 
 ##### 2. Build the Docker image.
 
 - Navigate to `<OBAM_UK_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-  + `docker build --build-arg BASE_PRODUCT_VERSION=<APIM BASE PRODUCT VERSION> --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obam-uk:1.0.0 .` <br>
-  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0 .` <br><br>
-  > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0 .`
+  + `docker build --build-arg BASE_PRODUCT_VERSION=<APIM BASE PRODUCT VERSION> --build-arg WSO2_OB_TOOLKIT_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obam-uk:1.0.0-alpine .` <br>
+  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://localhost:8000/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0-alpine .` <br><br>
+  > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_TOOLKIT_DIST_URL=http://<public_ip:port>/wso2-obam-toolkit-uk-1.0.0.tar.gz -t wso2-obam-uk:1.0.0-alpine .`
 
 ##### 3. Running the Docker image.
 
-- `docker run -it -p 9443:9443 -p 8243:8243 -p 8280:8280 wso2-obam-uk:1.0.0`
+- `docker run -it -p 9443:9443 -p 8243:8243 -p 8280:8280 wso2-obam-uk:1.0.0-alpine`
 
 ##### 4. Accessing management console.
 
@@ -64,7 +64,7 @@ chmod o+r <SOURCE_CONFIGS>/deployment.toml
 docker run \
 -p 9444:9444 \
 --volume <SOURCE_CONFIGS>/deployment.toml:<TARGET_CONFIGS>/deployment.toml \
-wso2-obam-uk:1.0.0
+wso2-obam-uk:1.0.0-alpine
 ```
 
 > In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2am-4.0.0/repository/conf folder of the container.

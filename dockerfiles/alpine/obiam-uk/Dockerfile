@@ -11,8 +11,8 @@
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION
-ARG ACCELERATOR_PRODUCT_VERSION=3.0.0.0-is${BASE_PRODUCT_VERSION}.0
-# set base Docker image to WSO2 Open Banking Identity Server Ubuntu Docker image
+ARG ACCELERATOR_PRODUCT_VERSION=3.0.0.0-is${BASE_PRODUCT_VERSION}.0-alpine
+# set base Docker image to WSO2 Open Banking Identity Server Alpine Docker image
 FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obiam:${ACCELERATOR_PRODUCT_VERSION}
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
@@ -36,12 +36,13 @@ ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_TOOLKIT_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_TOOLKIT}
 ARG WSO2_OB_TOOLKIT_DIST_URL
 # build argument for MOTD
-ARG MOTD="\n\
-Welcome to WSO2 Docker resources.\n\
------------------------------------- \n\
-This Docker container comprises of The WSO2 Open Banking Solution, with its latest GA release \n\
-which is under The WSO2 Commercial License 1.0. \n\
-Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"
+ARG MOTD='printf "\n\
+ Welcome to WSO2 Docker Resources \n\
+ --------------------------------- \n\
+ This Docker container comprises of The WSO2 Open Banking Solution, with its latest GA release \n\
+ which is under The WSO2 Commercial License 1.0. \n\
+ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"'
+ENV ENV=${USER_HOME}"/.ashrc"
 
 # configuration properties for deployment.toml file
 # server hostnames
@@ -100,15 +101,13 @@ RUN\
     cp -r ${WSO2_OB_TOOLKIT_DIR}/carbon-home/* "${WSO2_SERVER_HOME}"
 
 # change directory rights
-RUN \
-    chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
-    && chown wso2carbon:wso2 /etc/motd
+RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
 
 # set the non-root user
 USER ${USER_ID}
 
 # set MOTD login message for open banking
-RUN echo "${MOTD}" > /etc/motd
+RUN echo ${MOTD} > "${ENV}"
 
 # expose ports
 EXPOSE 9446
