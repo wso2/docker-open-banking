@@ -90,7 +90,7 @@ RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB
 # read deployment.toml file
 ARG DEPLOYMENT_TOML_FILE=${WSO2_OB_ACCELERATOR_DIR}/repository/resources/deployment.toml
 RUN \
-    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/wso2am-4.0.0-deployment.toml ${DEPLOYMENT_TOML_FILE} \
+    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/${WSO2_SERVER}-deployment.toml ${DEPLOYMENT_TOML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
