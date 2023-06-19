@@ -12,7 +12,7 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 > Rename the `OB_SandBox_PP_Root.cer` as `root.cer`.
 > Rename the `OB_SandBox_PP_Issuing.cer` as `iss.cer`.
 > Zip the root.cer and iss.cer in one zip archive file.
-* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/keystores)
+* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores)
 
     + Host the downloaded artifacts locally or on a remote location.
     > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>

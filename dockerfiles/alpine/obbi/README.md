@@ -6,7 +6,7 @@ This section defines the step-by-step instructions to build an [Alpine](https://
 * [Docker](https://www.docker.com/get-docker) v20.10.10 or above
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) client
 * WSO2 Open Banking Business Intelligence Accelerator Module pack downloaded through [WSO2 Updates 2.0](https://ob.docs.wso2.com/en/latest/install-and-setup/setting-up-servers/)
-* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/keystores)
+* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/tree/v3.0.0.10/dockerfiles/keystores)
 
   + Host the downloaded artifacts locally or on a remote location.
   > The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
