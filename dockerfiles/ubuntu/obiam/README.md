@@ -36,8 +36,8 @@ git clone https://github.com/wso2/docker-open-banking.git
 - Navigate to `<OBIAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
     + `docker build  --build-arg BASE_PRODUCT_VERSION=<IS BASE PRODUCT VERSION> --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obiam:3.0.0 .` <br>
-    > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/keystores -t wso2-obiam:3.0.0 .` <br><br>
-    > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/keystores -t wso2-obiam:3.0.0 .`
+    > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obiam:3.0.0 .` <br><br>
+    > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obiam:3.0.0 .`
 
 ##### 3. Running the Docker image.
 if you are only using the WSO2 Open Banking Identity Server, please run the below command.
