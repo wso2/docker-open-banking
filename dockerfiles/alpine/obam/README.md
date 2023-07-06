@@ -33,9 +33,9 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<OBAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-  + `docker build --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obam:3.0.0-alpine .` <br>
-  > eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obam:3.0.0-alpine .` <br><br>
-  > eg:- **Hosted remotely**: `docker build --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obam:3.0.0-alpine .`
+  + `docker build --build-arg BASE_PRODUCT_VERSION=<APIM BASE PRODUCT VERSION> --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obam:3.0.0-alpine .` <br>
+  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obam:3.0.0-alpine .` <br><br>
+  > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=4.2.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obam:3.0.0-alpine .`
 
 ##### 3. Running the Docker image.
 
