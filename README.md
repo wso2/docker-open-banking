@@ -32,7 +32,7 @@ Docker Compose resources have been created according to the most common WSO2 Ope
 │     └── obiam-uk (jdk11)
 └── jdk17
       ├── alpine
-      ├── obiam
+      │     ├── obiam
       │     └── obiam-uk
       └── ubuntu
             ├── obiam
