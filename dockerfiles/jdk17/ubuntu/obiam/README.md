@@ -53,7 +53,7 @@ If you are using WSO2 Open Banking Identity Server and WSO2 Open Banking API Man
 >
 > Sample command:
 >
-> ```docker run --entrypoint "/home/wso2carbon/docker-entrypoint-ob.sh" -it -p 9446:9446 wso2-obiam:3.0.0-alpine-jdk17```
+> ```docker run --entrypoint "/home/wso2carbon/docker-entrypoint-ob.sh" -it -p 9446:9446 wso2-obiam:3.0.0-ubuntu-jdk17```
 
 
 ##### 4. Accessing management console.
