@@ -47,6 +47,15 @@ If you are using WSO2 Open Banking Identity Server and WSO2 Open Banking API Man
 > - `docker run -it -p 9446:9446 -v <IS_CONNECTOR_HOME>/dropins:/home/wso2carbon/wso2-artifact-volume/repository/components/dropins/ -v <IS_CONNECTOR_HOME>/webapps:/home/wso2carbon/wso2-artifact-volume/repository/deployment/server/webapps/ wso2-obiam:3.0.0-jdk17`
 > In here, <IS_CONNECTOR_HOME> refers to the root directory path of the extracted WSO2 IS Connector.
 
+> Note: If adaptive authentication is required for the JDK17 docker container, add the following flag with the custom entrypoint path when starting the container. This will run the ```adaptive.sh``` script and download the necessary jars at the server start-up.
+>
+> ```--entrypoint "/home/wso2carbon/docker-entrypoint-ob.sh"```
+>
+> Sample command:
+>
+> ```docker run --entrypoint "/home/wso2carbon/docker-entrypoint-ob.sh" -it -p 9446:9446 wso2-obiam:3.0.0-ubuntu-jdk17```
+
+
 ##### 4. Accessing management console.
 
 - To access the management console, use the docker host IP and port 9446.

@@ -126,6 +126,10 @@ RUN \
 # change directory rights
 RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
 
+# Copy wrapper script to user home (adaptive.sh + docker-entrypoint.sh).
+# This wrapper script can be used to override the default entrypoint when using JDK17 with adaptive authentication.
+COPY --chown=wso2carbon:wso2 docker-entrypoint-ob.sh ${USER_HOME}/
+
 # set the non-root user
 USER ${USER_ID}
 
