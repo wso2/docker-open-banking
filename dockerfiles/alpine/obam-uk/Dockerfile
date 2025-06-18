@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------
 #
-# Copyright (c) 2022-2023, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
+# Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
 #
 # This software is the property of WSO2 LLC. and its suppliers, if any.
 # Dissemination of any information or reproduction of any material contained
@@ -11,9 +11,9 @@
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION
-
-# set base Docker image to WSO2 API Manager Alpine Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}.0-alpine
+ARG ACCELERATOR_PRODUCT_VERSION=3.0.0.0-am${BASE_PRODUCT_VERSION}.0-alpine
+# set base Docker image to WSO2 Open Banking API Manager Alpine Docker image
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obam:${ACCELERATOR_PRODUCT_VERSION}
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
@@ -26,17 +26,15 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2am
-# declaring again BASE_PRODUCT_VERSION ARG to use in build stage	
+# declaring again BASE_PRODUCT_VERSION ARG to use in build stage
 ARG BASE_PRODUCT_VERSION
-ARG WSO2_OB_ACCELERATOR_NAME=wso2-obam-accelerator
-ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
+ARG WSO2_OB_TOOLKIT_NAME=wso2-obam-toolkit-uk
+ARG WSO2_OB_TOOLKIT_VERSION=1.0.0
 ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
-ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
+ARG WSO2_OB_TOOLKIT=${WSO2_OB_TOOLKIT_NAME}-${WSO2_OB_TOOLKIT_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
-ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
-ARG WSO2_OB_ACCELERATOR_DIST_URL
-ARG OB_TRUSTED_CERTS_URL
-ARG WSO2_OB_KEYSTORES_URL
+ARG WSO2_OB_TOOLKIT_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_TOOLKIT}
+ARG WSO2_OB_TOOLKIT_DIST_URL
 # build argument for MOTD
 ARG MOTD='printf "\n\
  Welcome to WSO2 Docker Resources \n\
@@ -71,26 +69,15 @@ USER root
 
 # add Open Banking artifacts to base product
 RUN \
-    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_ACCELERATOR_DIST_URL}" \
-    && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_ACCELERATOR}.zip \
-    && rm -f ${WSO2_OB_ACCELERATOR}.zip \
-    && wget -O ob-cert.zip "${OB_TRUSTED_CERTS_URL}" \
-    && unzip -d ${USER_HOME} ob-cert.zip  \
-    && rm -f ob-cert.zip 
-
-# add keystores to base product 	
-RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks" \	
-    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \	
-    && rm -f private-keys.jks\
-    && wget -O public-certs.jks "${WSO2_OB_KEYSTORES_URL}/public-certs.jks" \
-    && keytool -importkeystore -srckeystore ${USER_HOME}/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \	
-    && rm -r public-certs.jks ; fi  
+    wget -O ${WSO2_OB_TOOLKIT}.zip "${WSO2_OB_TOOLKIT_DIST_URL}" \
+    && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_TOOLKIT}.zip \
+    && rm -f ${WSO2_OB_TOOLKIT}.zip
 
 # set configurations
 # read deployment.toml file
-ARG DEPLOYMENT_TOML_FILE=${WSO2_OB_ACCELERATOR_DIR}/repository/resources/deployment.toml
+ARG DEPLOYMENT_TOML_FILE=${WSO2_OB_TOOLKIT_DIR}/repository/resources/deployment.toml
 RUN \
-    cp ${WSO2_OB_ACCELERATOR_DIR}/repository/resources/${WSO2_SERVER}-deployment.toml ${DEPLOYMENT_TOML_FILE} \
+    cp ${WSO2_OB_TOOLKIT_DIR}/repository/resources/${WSO2_SERVER}-deployment-uk.toml ${DEPLOYMENT_TOML_FILE} \
 # configure hostnames
     && sed -i -e 's|IS_HOSTNAME|'${IS_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
     && sed -i -e 's|APIM_HOSTNAME|'${APIM_HOSTNAME}'|g' ${DEPLOYMENT_TOML_FILE} \
@@ -105,23 +92,14 @@ RUN \
     && sed -i -e 's|DB_DRIVER|'${DB_DRIVER}'|g' ${DEPLOYMENT_TOML_FILE} \
 # copy deployment.toml file to repository/conf
     && cp ${DEPLOYMENT_TOML_FILE} ${WSO2_SERVER_HOME}/repository/conf/ \
-    && rm ${DEPLOYMENT_TOML_FILE} \
-# add json converter for fault sequences
-    && sed -i -e 's|</sequence>|\t<sequence key="jsonConverter"/>\n</sequence>|g' ${WSO2_SERVER_HOME}/repository/deployment/server/synapse-configs/default/sequences/_cors_request_handler_.xml
+    && rm ${DEPLOYMENT_TOML_FILE} 
 
-# copy the WSO2 OB APIM accelerator artifacts on top of WSO2 APIM base product
-# remove old open banking artifacts from base product
+# copy the WSO2 OB APIM UK Toolkit artifacts on top of WSO2 APIM base product
+# Remove default backend war
 RUN \
-    find ${WSO2_SERVER_HOME}/repository/components/dropins -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
-    && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
-# copy open banking artifacts
-    && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/
-
-# add root and issuer certificates to client-truststore.jks
-RUN \
-    yes | keytool -import -alias ob-root -file root.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
-    && yes | keytool -import -alias ob-issuer -file iss.cer -storetype JKS -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks  -storepass wso2carbon \
-    && rm -f root.cer iss.cer
+    rm ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/api#openbanking#backend.war\
+# copy toolkit artifacts
+    && cp -r ${WSO2_OB_TOOLKIT_DIR}/carbon-home/* "${WSO2_SERVER_HOME}"
 
 # change directory rights
 RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/

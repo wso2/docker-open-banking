@@ -10,10 +10,10 @@
 # ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION  
+ARG BASE_PRODUCT_VERSION
 
-# set base Docker image to WSO2 Identity Server Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0
+# set base Docker image to WSO2 Identity Server Alpine Docker image
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0-alpine-jdk17
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
@@ -22,7 +22,7 @@ LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
 ARG USER=wso2carbon
 ARG USER_ID=802
 ARG USER_GROUP=wso2
-ARG USER_GROUP_ID=802 
+ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2is
@@ -38,12 +38,13 @@ ARG WSO2_OB_ACCELERATOR_DIST_URL
 ARG OB_TRUSTED_CERTS_URL
 ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
-ARG MOTD="\n\
-Welcome to WSO2 Docker resources.\n\
------------------------------------- \n\
-This Docker container comprises of The WSO2 Open Banking Solution, with its latest GA release \n\
-which is under The WSO2 Commercial License 1.0. \n\
-Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"
+ARG MOTD='printf "\n\
+ Welcome to WSO2 Docker Resources \n\
+ --------------------------------- \n\
+ This Docker container comprises of The WSO2 Open Banking Solution, with its latest GA release \n\
+ which is under The WSO2 Commercial License 1.0. \n\
+ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/licenses \n"'
+ENV ENV=${USER_HOME}"/.ashrc"
 
 # configuration properties for deployment.toml file
 # server hostnames
@@ -78,7 +79,7 @@ RUN \
     && rm -f ob-cert.zip 
 
 # add keystores to base product 
-RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks" \
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks"  \
     && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obiam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
     && rm -f private-keys.jks\
     && wget -O public-certs.jks "${WSO2_OB_KEYSTORES_URL}/public-certs.jks" \
@@ -123,15 +124,17 @@ RUN \
     && rm -f root.cer iss.cer
 
 # change directory rights
-RUN \
-    chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
-    && chown wso2carbon:wso2 /etc/motd
+RUN chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/
+
+# Copy wrapper script to user home (adaptive.sh + docker-entrypoint.sh).
+# This wrapper script can be used to override the default entrypoint when using JDK17 with adaptive authentication.
+COPY --chown=wso2carbon:wso2 docker-entrypoint-ob.sh ${USER_HOME}/
 
 # set the non-root user
 USER ${USER_ID}
 
 # set MOTD login message for open banking
-RUN echo "${MOTD}" > /etc/motd
+RUN echo ${MOTD} > "${ENV}"
 
 # expose ports
 EXPOSE 9446

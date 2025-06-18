@@ -13,7 +13,7 @@ ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION  
 
 # set base Docker image to WSO2 Identity Server Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0-jdk17
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
@@ -126,6 +126,10 @@ RUN \
 RUN \
     chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME}/ \
     && chown wso2carbon:wso2 /etc/motd
+
+# Copy wrapper script to user home (adaptive.sh + docker-entrypoint.sh).
+# This wrapper script can be used to override the default entrypoint when using JDK17 with adaptive authentication.
+COPY --chown=wso2carbon:wso2 docker-entrypoint-ob.sh ${USER_HOME}/
 
 # set the non-root user
 USER ${USER_ID}

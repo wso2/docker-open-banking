@@ -1,28 +1,21 @@
-# ------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 #
-# Copyright 2022 WSO2, Inc. (http://wso2.com)
+# Copyright (c) 2022-2023, WSO2 LLC. (https://www.wso2.com). All Rights Reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained
+# herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+# You may not alter or remove any copyright or other notice from copies of this content.
 #
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License
-#
-# ------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 
 ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
-ARG BASE_PRODUCT_VERSION=5.11.0.0
+ARG BASE_PRODUCT_VERSION
 
 # set base Docker image to WSO2 Identity Server Alpine Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}-alpine
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
-      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.1"
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
 # set Docker image build arguments
 # build arguments for user/group configurations
@@ -33,17 +26,17 @@ ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 # build arguments for WSO2 product installation
 ARG WSO2_SERVER_NAME=wso2is
-ARG WSO2_SERVER_VERSION=5.11.0
+# declaring again BASE_PRODUCT_VERSION ARG to use in build stage
+ARG BASE_PRODUCT_VERSION
 ARG WSO2_OB_ACCELERATOR_NAME=wso2-obiam-accelerator
 ARG WSO2_OB_ACCELERATOR_VERSION=3.0.0
-ARG WSO2_OB_KM_EXTENSION=${WSO2_SERVER_NAME}-extensions-1.2.10
-ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${WSO2_SERVER_VERSION}
+ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
 ARG WSO2_OB_ACCELERATOR=${WSO2_OB_ACCELERATOR_NAME}-${WSO2_OB_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_OB_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_OB_ACCELERATOR}
-ARG WSO2_OB_Accelerator_DIST_URL
-ARG WSO2_OB_KEYMANAGER_DIST_URL
-ARG WSO2_OB_CERTS_URL
+ARG WSO2_OB_ACCELERATOR_DIST_URL
+ARG OB_TRUSTED_CERTS_URL
+ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
 ARG MOTD='printf "\n\
  Welcome to WSO2 Docker Resources \n\
@@ -55,9 +48,9 @@ ENV ENV=${USER_HOME}"/.ashrc"
 
 # configuration properties for deployment.toml file
 # server hostnames
-ARG IS_HOSTNAME=localhost
-ARG APIM_HOSTNAME=localhost
-ARG BI_HOSTNAME=localhost
+ARG IS_HOSTNAME=obiam
+ARG APIM_HOSTNAME=obam
+ARG BI_HOSTNAME=obbi
 # databases related properties
 ARG DB_TYPE=mysql
 ARG DB_USER=root
@@ -78,15 +71,20 @@ USER root
 
 # add Open Banking artifacts to base product
 RUN \
-    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_Accelerator_DIST_URL}" \
+    wget -O ${WSO2_OB_ACCELERATOR}.zip "${WSO2_OB_ACCELERATOR_DIST_URL}" \
     && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_OB_ACCELERATOR}.zip \
     && rm -f ${WSO2_OB_ACCELERATOR}.zip \
-    && wget -O ${WSO2_OB_KM_EXTENSION}.zip "${WSO2_OB_KEYMANAGER_DIST_URL}" \
-    && unzip ${WSO2_OB_KM_EXTENSION}.zip \
-    && rm -f ${WSO2_OB_KM_EXTENSION}.zip \
-    && wget -O ob-cert.zip "${WSO2_OB_CERTS_URL}" \
+    && wget -O ob-cert.zip "${OB_TRUSTED_CERTS_URL}" \
     && unzip -d ${USER_HOME} ob-cert.zip  \
-    && rm -f ob-cert.zip
+    && rm -f ob-cert.zip 
+
+# add keystores to base product 
+RUN if [ -n "$WSO2_OB_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks"  \
+    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.jks -srcalias wso2carbon-obiam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
+    && rm -f private-keys.jks\
+    && wget -O public-certs.jks "${WSO2_OB_KEYSTORES_URL}/public-certs.jks" \
+    && keytool -importkeystore -srckeystore ${USER_HOME}/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.jks -srcstorepass wso2carbon -deststorepass wso2carbon \
+    && rm -r public-certs.jks ; fi 
 
 # set configurations
 # read deployment.toml file
@@ -117,11 +115,7 @@ RUN \
     && find ${WSO2_SERVER_HOME}/repository/components/lib -name "com.wso2.openbanking.*" -exec rm -rf {} \; \
 # copy open banking artifacts
     && cp -r ${WSO2_OB_ACCELERATOR_DIR}/carbon-home/* ${WSO2_SERVER_HOME}/ \
-    && find ${WSO2_SERVER_HOME}/repository/components/dropins -name "org.wso2.carbon.identity.application.authentication.handler.identifier-*" -exec rm -rf {} \; \
-# 2. configure_iskm_connector
-    && cp ${WSO2_OB_KM_EXTENSION}/dropins/* ${WSO2_SERVER_HOME}/repository/components/dropins/ \
-    && cp ${WSO2_OB_KM_EXTENSION}/webapps/* ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/ \
-    && rm -rf ${WSO2_OB_KM_EXTENSION}
+    && find ${WSO2_SERVER_HOME}/repository/components/dropins -name "org.wso2.carbon.identity.application.authentication.handler.identifier-*" -exec rm -rf {} \; 
 
 # add root and issuer certificates to client-truststore.jks
 RUN \

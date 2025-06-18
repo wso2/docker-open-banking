@@ -29,23 +29,32 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 git clone https://github.com/wso2/docker-open-banking.git
 ```
 
-> The local copy of the `dockerfiles/ubuntu/obiam` directory will be referred to as `OBIAM_DOCKERFILE_HOME` from this point onwards.
+> The local copy of the `jdk17/dockerfiles/ubuntu/obiam` directory will be referred to as `OBIAM_DOCKERFILE_HOME` from this point onwards.
 
 ##### 2. Build the Docker image.
 
 - Navigate to `<OBIAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-    + `docker build  --build-arg BASE_PRODUCT_VERSION=<IS BASE PRODUCT VERSION> --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obiam:3.0.0 .` <br>
-    > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obiam:3.0.0 .` <br><br>
-    > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obiam:3.0.0 .`
+    + `docker build  --build-arg BASE_PRODUCT_VERSION=<IS BASE PRODUCT VERSION> --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-obiam:3.0.0-jdk17 .` <br>
+    > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obiam:3.0.0-jdk17 .` <br><br>
+    > eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=6.0.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-obiam-accelerator-3.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/ob-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v3.0.0.10/dockerfiles/keystores -t wso2-obiam:3.0.0-jdk17 .`
 
 ##### 3. Running the Docker image.
 if you are only using the WSO2 Open Banking Identity Server, please run the below command.
-> - `docker run -it -p 9446:9446 wso2-obiam:3.0.0`
+> - `docker run -it -p 9446:9446 wso2-obiam:3.0.0-jdk17`
 
 If you are using WSO2 Open Banking Identity Server and WSO2 Open Banking API Manager,  please run the below command.
-> - `docker run -it -p 9446:9446 -v <IS_CONNECTOR_HOME>/dropins:/home/wso2carbon/wso2-artifact-volume/repository/components/dropins/ -v <IS_CONNECTOR_HOME>/webapps:/home/wso2carbon/wso2-artifact-volume/repository/deployment/server/webapps/ wso2-obiam:3.0.0`
+> - `docker run -it -p 9446:9446 -v <IS_CONNECTOR_HOME>/dropins:/home/wso2carbon/wso2-artifact-volume/repository/components/dropins/ -v <IS_CONNECTOR_HOME>/webapps:/home/wso2carbon/wso2-artifact-volume/repository/deployment/server/webapps/ wso2-obiam:3.0.0-jdk17`
 > In here, <IS_CONNECTOR_HOME> refers to the root directory path of the extracted WSO2 IS Connector.
+
+> Note: If adaptive authentication is required for the JDK17 docker container, add the following flag with the custom entrypoint path when starting the container. This will run the ```adaptive.sh``` script and download the necessary jars at the server start-up.
+>
+> ```--entrypoint "/home/wso2carbon/docker-entrypoint-ob.sh"```
+>
+> Sample command:
+>
+> ```docker run --entrypoint "/home/wso2carbon/docker-entrypoint-ob.sh" -it -p 9446:9446 wso2-obiam:3.0.0-ubuntu-jdk17```
+
 
 ##### 4. Accessing management console.
 
@@ -77,7 +86,7 @@ chmod o+r <SOURCE_CONFIGS>/deployment.toml
 docker run \
 -p 9447:9447 \
 --volume <SOURCE_CONFIGS>/deployment.toml:<TARGET_CONFIGS>/deployment.toml \
-wso2-obiam:3.0.0
+wso2-obiam:3.0.0-jdk17
 ```
 
 > In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2is-5.11.0/repository/conf folder of the container.
