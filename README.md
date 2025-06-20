@@ -17,9 +17,8 @@ Docker Compose resources have been created according to the most common WSO2 Ope
 
 ```bash
 ├── alpine
-│     ├── obam (jdk17)
-│     ├── obbi (jdk17)
-│     └── obiam (jdk11)
+│     ├── fsam (jdk17)
+│     └── fsiam (jdk11)
 ├── ubuntu
 │     ├── obam (jdk17)
 │     ├── obbi (jdk17)
