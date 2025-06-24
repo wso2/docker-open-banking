@@ -1,6 +1,5 @@
 # Dockerfile for WSO2 Financial Services Identity & Access Management Accelerator Module #
-This section defines the step-by-step instructions to build an [Alpine](https://hub.docker.com/_/alpine/) Linux based Docker image for WSO2 Financial Services Identity & Access Management Module.
-
+This section defines the step-by-step instructions to build an [Ubuntu](https://hub.docker.com/_/ubuntu/) Linux based Docker image for WSO2 Open Banking Identity & Access Management Module.
 ## Prerequisites
 
 * [Docker](https://www.docker.com/get-docker) v20.10.10 or above
@@ -34,13 +33,13 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 - Navigate to `<FSIAM_DOCKERFILE_HOME>` directory. <br>
   Execute `docker build` command as shown below.
-  + `docker build --build-arg BASE_PRODUCT_VERSION=<IS BASE PRODUCT VERSION> --build-arg WSO2_FS_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg FS_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_FS_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-fsiam:4.0.0-alpine .` <br>
-  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg WSO2_FS_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-fsiam-accelerator-4.0.0.tar.gz --build-arg FS_TRUSTED_CERTS_URL=http://localhost:8000/fs-cert.zip --build-arg WSO2_FS_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v4.0.0.1/dockerfiles/keystores  -t wso2-fsiam:4.0.0-alpine .` <br><br>
-  >  eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg WSO2_FS_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-fsiam-accelerator-4.0.0.tar.gz --build-arg FS_TRUSTED_CERTS_URL=http://<public_ip:port>/fs-cert.zip --build-arg WSO2_FS_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v4.0.0.1/dockerfiles/keystores  -t wso2-fsiam:4.0.0-alpine .`
+  + `docker build --build-arg BASE_PRODUCT_VERSION=<IS BASE PRODUCT VERSION> --build-arg WSO2_FS_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg FS_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_FS_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FOLDER_NAME> -t wso2-fsiam:4.0.0 .` <br>
+  > eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg WSO2_FS_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-fsiam-accelerator-4.0.0.tar.gz --build-arg FS_TRUSTED_CERTS_URL=http://localhost:8000/fs-cert.zip --build-arg WSO2_FS_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v4.0.0.1/dockerfiles/keystores  -t wso2-fsiam:4.0.0 .` <br><br>
+  >  eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg WSO2_FS_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-fsiam-accelerator-4.0.0.tar.gz --build-arg FS_TRUSTED_CERTS_URL=http://<public_ip:port>/fs-cert.zip --build-arg WSO2_FS_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v4.0.0.1/dockerfiles/keystores  -t wso2-fsiam:4.0.0 .`
 
 ##### 3. Running the Docker image.
 if you are only using the WSO2 Financial Services Identity Server, please run the below command.
-> - `docker run -it -p 9446:9446 wso2-fsiam:4.0.0-alpine`
+> - `docker run -it -p 9446:9446 wso2-fsiam:4.0.0`
 
 ##### 4. Accessing management console.
 
