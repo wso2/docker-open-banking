@@ -13,7 +13,7 @@ ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
 ARG BASE_PRODUCT_VERSION  
 
 # set base Docker image to WSO2 Identity Server Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0-jdk17
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0-jdk11
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v4.0.0.1"
 
@@ -49,7 +49,7 @@ Read more about The WSO2 Commercial License, Version 1.0 here @ http://wso2.com/
 # server hostnames
 ARG IS_HOSTNAME=fsiam
 ARG APIM_HOSTNAME=fsam
-# Admin Credentials
+# Admin Credentials. These are sample values and should be changed before using the image in production.
 ARG IS_ADMIN_USERNAME=is_admin@wso2.com
 ARG IS_ADMIN_PASSWORD=wso2123
 # databases related properties
