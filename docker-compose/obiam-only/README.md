@@ -18,13 +18,13 @@
     ```
     > If you are to try out an already released zip of this repo, please ignore this 1st step. 
 
-2. Switch to the `docker-compose/fsiam-only` folder.
+2. Switch to the `docker-compose/obiam-only` folder.
 
     ```
-    cd docker-open-banking/docker-compose/fsiam-only
+    cd docker-open-banking/docker-compose/obiam-only
     ```
     > If you are to try out an already released zip of this repo, please ignore this 2nd step also. 
-     Instead, extract the zip file and directly browse to `docker-open-banking-<released-version-here>/docker-compose/fsiam-only` folder. 
+     Instead, extract the zip file and directly browse to `docker-open-banking-<released-version-here>/docker-compose/obiam-only` folder. 
      
     > If you want to try out an already released tag, after executing 2nd step, checkout the relevant tag, 
      i.e. for example: git checkout tags/v1.4.0.5 and continue below steps.

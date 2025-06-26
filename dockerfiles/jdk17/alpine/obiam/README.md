@@ -28,7 +28,7 @@ This section defines the step-by-step instructions to build an [Alpine](https://
 git clone https://github.com/wso2/docker-open-banking.git
 ```
 
-> The local copy of the `jdk17/dockerfiles/alpine/fsiam` directory will be referred to as `FSIAM_DOCKERFILE_HOME` from this point onwards.
+> The local copy of the `jdk17/dockerfiles/alpine/obiam` directory will be referred to as `FSIAM_DOCKERFILE_HOME` from this point onwards.
 
 ##### 2. Build the Docker image.
 
