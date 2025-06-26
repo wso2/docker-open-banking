@@ -34,9 +34,9 @@ ARG WSO2_SERVER=${WSO2_SERVER_NAME}-${BASE_PRODUCT_VERSION}
 ARG WSO2_FS_ACCELERATOR=${WSO2_FS_ACCELERATOR_NAME}-${WSO2_FS_ACCELERATOR_VERSION}
 ARG WSO2_SERVER_HOME=${USER_HOME}/${WSO2_SERVER}
 ARG WSO2_FS_ACCELERATOR_DIR=${WSO2_SERVER_HOME}/${WSO2_FS_ACCELERATOR}
-ARG WSO2_FS_ACCELERATOR_DIST_URL
-ARG FS_TRUSTED_CERTS_URL
-ARG WSO2_FS_KEYSTORES_URL
+ARG WSO2_OB_ACCELERATOR_DIST_URL
+ARG OB_TRUSTED_CERTS_URL
+ARG WSO2_OB_KEYSTORES_URL
 # build argument for MOTD
 ARG MOTD='printf "\n\
  Welcome to WSO2 Docker Resources \n\
@@ -69,18 +69,18 @@ USER root
 
 # add Open Banking artifacts to base product
 RUN \
-    wget -O ${WSO2_FS_ACCELERATOR}.zip "${WSO2_FS_ACCELERATOR_DIST_URL}" \
+    wget -O ${WSO2_FS_ACCELERATOR}.zip "${WSO2_OB_ACCELERATOR_DIST_URL}" \
     && unzip -d ${WSO2_SERVER_HOME}/ ${WSO2_FS_ACCELERATOR}.zip \
     && rm -f ${WSO2_FS_ACCELERATOR}.zip \
-    && wget -O fs-cert.zip "${FS_TRUSTED_CERTS_URL}" \
+    && wget -O fs-cert.zip "${OB_TRUSTED_CERTS_URL}" \
     && unzip -d ${USER_HOME} fs-cert.zip  \
     && rm -f fs-cert.zip
 
 # add keystores to base product 
-RUN if [ -n "$WSO2_FS_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_FS_KEYSTORES_URL}/private-keys.jks"  \
+RUN if [ -n "$WSO2_FS_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_OB_KEYSTORES_URL}/private-keys.jks"  \
     && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.p12 -srcalias wso2carbon-fsiam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
     && rm -f private-keys.jks\
-    && wget -O public-certs.jks "${WSO2_FS_KEYSTORES_URL}/public-certs.jks" \
+    && wget -O public-certs.jks "${WSO2_OB_KEYSTORES_URL}/public-certs.jks" \
     && keytool -importkeystore -srckeystore ${USER_HOME}/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.p12 -srcstorepass wso2carbon -deststorepass wso2carbon \
     && rm -r public-certs.jks ; fi 
 
