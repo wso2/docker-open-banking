@@ -78,7 +78,7 @@ RUN \
 
 # add keystores to base product 
 RUN if [ -n "$WSO2_FS_KEYSTORES_URL" ]; then wget -O private-keys.jks "${WSO2_FS_KEYSTORES_URL}/private-keys.jks"  \
-    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.p12 -srcalias wso2carbon-obiam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
+    && yes | keytool -importkeystore -srckeystore ${USER_HOME}/private-keys.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/wso2carbon.p12 -srcalias wso2carbon-fsiam -destalias wso2carbon -srcstorepass wso2carbon -deststorepass wso2carbon \
     && rm -f private-keys.jks\
     && wget -O public-certs.jks "${WSO2_FS_KEYSTORES_URL}/public-certs.jks" \
     && keytool -importkeystore -srckeystore ${USER_HOME}/public-certs.jks -destkeystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.p12 -srcstorepass wso2carbon -deststorepass wso2carbon \

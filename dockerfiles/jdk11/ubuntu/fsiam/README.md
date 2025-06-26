@@ -28,7 +28,7 @@ This section defines the step-by-step instructions to build an [Ubuntu](https://
 git clone https://github.com/wso2/docker-open-banking.git
 ```
 
-> The local copy of the `jdk17/dockerfiles/ubuntu/obiam` directory will be referred to as `FSIAM_DOCKERFILE_HOME` from this point onwards.
+> The local copy of the `jdk11/dockerfiles/ubuntu/fsiam` directory will be referred to as `FSIAM_DOCKERFILE_HOME` from this point onwards.
 
 ##### 2. Build the Docker image.
 
@@ -72,7 +72,7 @@ chmod o+r <SOURCE_CONFIGS>/deployment.toml
 docker run \
 -p 9447:9447 \
 --volume <SOURCE_CONFIGS>/deployment.toml:<TARGET_CONFIGS>/deployment.toml \
-wso2-fsiam:4.0.0-jdk17
+wso2-fsiam:4.0.0-jdk11
 ```
 
 > In here, <TARGET_CONFIGS> refers to /home/wso2carbon/wso2is-7.1.0/repository/conf folder of the container.
