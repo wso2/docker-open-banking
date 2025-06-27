@@ -32,7 +32,25 @@ git clone https://github.com/wso2/docker-open-banking.git
 
 > The local copy of the `jdk17/dockerfiles/alpine/fsiam` directory will be referred to as `FSIAM_DOCKERFILE_HOME` from this point onwards.
 
-##### 2. Build the Docker image.
+##### 2. Setup the database
+
+- Create databases and tables by refereing to [Setting Up Databases](https://ob.docs.wso2.com/en/latest/install-and-setup/setting-up-databases/)
+
+##### 3. Update the Dockerfile with MySQL configs and hostnames
+
+- Open the  `<FSIAM_DOCKERFILE_HOME>/Dockerfile`  and update the following values.
+
+  ```
+  ARG IS_HOSTNAME=<IAM_HOSTNAME>
+  
+  ARG DB_TYPE=mysql
+  ARG DB_USER=<MYSQL_USER_NAME>
+  ARG DB_PASS=<MYSQL_USER_PASSWORD>
+  ARG DB_HOST=<MYSQL_HOSTNAME>
+  ARG DB_DRIVER=com.mysql.jdbc.Driver
+  ```
+
+##### 4. Build the Docker image.
 
 - Navigate to `<FSIAM_DOCKERFILE_HOME>` directory
 - Execute `docker build` command as shown below.
@@ -43,12 +61,16 @@ git clone https://github.com/wso2/docker-open-banking.git
   * eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-fsiam-accelerator-4.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/fs-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v4.0.0.1/dockerfiles/keystores  -t wso2-fsiam:4.0.0-alpine-jdk17 .` <br><br>
   * eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-fsiam-accelerator-4.0.0.tar.gz --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/fs-cert.zip --build-arg WSO2_OB_KEYSTORES_URL=https://github.com/wso2/docker-open-banking/raw/v4.0.0.1/dockerfiles/keystores  -t wso2-fsiam:4.0.0-alpine-jdk17 .`
 
-##### 3. Running the Docker image.
+##### 5. Running the Docker image.
 if you are only using the WSO2 Financial Services Identity Server, please run the below command.
   ```
   docker run -it -p 9446:9446 wso2-fsiam:4.0.0-alpine-jdk17
   ```
 
+- If you want to Docker mount the database connector file to the container run below command.
+  ```
+  docker run -it -v <LOCAL_PATH_TO_CONNECTOR:<PATH_TO_IS_LIBS_FOLDER_IN_CONTAINER>  -p 9446:9446 wso2-fsiam:4.0.0-alpine-jdk17
+  ```
 ##### 4. Accessing management console.
 
 - To access the management console, use the docker host IP and port 9446.
