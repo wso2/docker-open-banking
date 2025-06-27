@@ -118,8 +118,8 @@ RUN \
 
 RUN \
     yes | keytool -import -alias fs-root -file root.cer -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.p12  -storepass wso2carbon \
-    && yes | keytool -import -alias fs-issuer -file issuer.cer -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.p12  -storepass wso2carbon \
-    && rm -f root.cer issuer.cer
+    && yes | keytool -import -alias fs-issuer -file iss.cer -keystore ${WSO2_SERVER_HOME}/repository/resources/security/client-truststore.p12  -storepass wso2carbon \
+    && rm -f root.cer iss.cer
 
 # change directory rights
 RUN \
