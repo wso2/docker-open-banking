@@ -9,8 +9,8 @@ This section defines the step-by-step instructions to build an [Alpine](https://
 * Zip archive file of the Open Banking root and issuer certificates.
 > Download the root and issuer [certificates](https://openbanking.atlassian.net/wiki/spaces/DZ/pages/252018873/OB+Root+and+Issuing+Certificates+for+Sandbox).
 > Rename the `OB_SandBox_PP_Root.cer` as `root.cer`.
-> Rename the `OB_SandBox_PP_Issuing.cer` as `issuer.cer`.
-> Zip the root.cer and issuer.cer in one zip archive file.
+> Rename the `OB_SandBox_PP_Issuing.cer` as `iss.cer`.
+> Zip the root.cer and iss.cer in one zip archive file.
 * Keystores directory of wso2 server certs of WSO2 Financial Services Docker Images. (https://github.com/wso2/docker-open-banking/raw/v4.0.0.1/dockerfiles/keystores)
 
   + Host the downloaded artifacts locally or on a remote location.
