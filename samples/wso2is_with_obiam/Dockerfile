@@ -28,7 +28,7 @@ RUN test -d /home/wso2carbon/wso2-fsiam-accelerator-4.0.0
 # STAGE 2: FINAL WSO2 IS IMAGE (Merge Accelerator)
 # Sets up the base product and integrates the accelerator artifacts.
 # ----------------------------------------------
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}-alpine
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2is:${BASE_PRODUCT_VERSION}.0-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v4.0.0.1"
 
