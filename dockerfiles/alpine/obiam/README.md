@@ -21,11 +21,11 @@ git clone https://github.com/wso2/docker-open-banking.git
 - Navigate to `<OBIAM_DOCKERFILE_HOME>` directory
 - Execute `docker build` command as shown below.
     ```
-  docker build --build-arg WSO2_OB_ACCELERATOR_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obiam:4.0.0 .
+  docker build --build-arg WSO2_SERVER_DIST_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2-obiam:4.0.0 .
     ```
     
-    * eg:- **Hosted locally**: `docker build --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://localhost:8000/wso2-fsiam-accelerator-4.0.0.tar.gz -t wso2-obiam:4.0.0 .` <br><br>
-    * eg:- **Hosted remotely**: `docker build --build-arg --build-arg WSO2_OB_ACCELERATOR_DIST_URL=http://<public_ip:port>/wso2-fsiam-accelerator-4.0.0.tar.gz -t wso2-obiam:4.0.0 .`
+    * eg:- **Hosted locally**: `docker build --build-arg WSO2_SERVER_DIST_URL=http://localhost:8000/wso2-fsiam-accelerator-4.0.0.tar.gz -t wso2-obiam:4.0.0 .` <br><br>
+    * eg:- **Hosted remotely**: `docker build --build-arg --build-arg WSO2_SERVER_DIST_URL=http://<public_ip:port>/wso2-fsiam-accelerator-4.0.0.tar.gz -t wso2-obiam:4.0.0 .`
   
 ## Using the Docker Image
 
