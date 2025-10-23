@@ -24,14 +24,12 @@
     ```
     cd docker-open-banking/samples/docker-compose/wso2am-with-wso2is
     ```
-3. Setup Databases for WSO2 API Manager and WSO2 Open Banking Identity Server.
-   - Follow the instructions provided in [Setting up Databases](https://ob.docs.wso2.com/en/latest/install-and-setup/setting-up-databases/) to setup the databases.
-
-4. Execute following Docker Compose command to start the deployment of WSO2 Open Banking Accelerator setup.
+   
+3. Execute following Docker Compose command to start the deployment of WSO2 Open Banking Accelerator setup.
    ```
    docker-compose up
    ```
-5. Access the WSO2 Open Banking API Manager web UIs using the below URLs via a web browser.
+4. Access the WSO2 Open Banking API Manager web UIs using the below URLs via a web browser.
 
    ```
    https://obam:9443/publisher
@@ -51,7 +49,7 @@
    http://obam:8280
    ```
 
-6. WSO2 Open Banking API Manager will use WSO2 Open Banking Identity & Access Management Module to generate OAuth2 tokens and validate those tokens during API invocations. You can access the WSO2 Open Banking Identity & Access Management Module-Management portal using the below URL via a web browser.
+5. WSO2 Open Banking API Manager will use WSO2 Open Banking Identity & Access Management Module to generate OAuth2 tokens and validate those tokens during API invocations. You can access the WSO2 Open Banking Identity & Access Management Module-Management portal using the below URL via a web browser.
 
    ```
    https://obiam:9446/console
@@ -62,7 +60,7 @@
    * Username: is_admin@wso2.com 
    * Password: wso2123
    ````
-7. Follow the documentation to use WSO2 Open Banking:
+6. Follow the documentation to use WSO2 Open Banking:
 
    To try out the solution: [Try Out WSO2 Open Banking](https://ob.docs.wso2.com/en/latest/get-started/quick-start-guide/)
 

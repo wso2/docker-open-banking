@@ -27,7 +27,13 @@ git clone https://github.com/wso2/docker-open-banking.git
 ```
 > The local copy of the `samples/wso2is_with_obiam` directory will be referred to as `IAM_DOCKERFILE_HOME` from this point onwards.
 
-##### 2. Build the Docker image.
+##### 2. Update the Dockerfile with Database details.
+
+- Setup Databases for WSO2 API Manager and WSO2 Open Banking Identity Server.
+  - Follow the instructions provided in [Setting up Databases](https://ob.docs.wso2.com/en/latest/install-and-setup/setting-up-databases/) to setup the databases.
+- Open the Dockerfile inside `<AM_DOCKERFILE_HOME>` and update database details.
+
+##### 3. Build the Docker image.
 
 - Navigate to `<IAM_DOCKERFILE_HOME>` directory
 - Execute `docker build` command as shown below.
