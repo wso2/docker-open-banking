@@ -19,7 +19,7 @@ ARG BASE_PRODUCT_VERSION
 # accelerator files.
 # ----------------------------------------------
 # NOTE: The base WSO2 images usually include the full product version (e.g., 4.0.0.0 or 4.0.0)
-FROM wso2-obam:4.0.0 AS obam
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obam-accelerator:4.0.0.0-alpine AS obam
 
 # Note: The test command verifies the expected accelerator directory exists
 RUN test -d /home/wso2carbon/wso2-fsam-accelerator-4.0.0
@@ -31,7 +31,7 @@ RUN test -d /home/wso2carbon/wso2-fsam-accelerator-4.0.0
 FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}.0-alpine
 
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
-      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v4.0.0.1"
+      com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v4.0.0.3"
 
 # --- Build Arguments (WSO2 Paths and Names) ---
 # build arguments for user/group configurations

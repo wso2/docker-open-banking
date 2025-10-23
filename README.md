@@ -17,12 +17,13 @@ drivers, extensions and other deployable artifacts are designed to be provided v
 Docker Compose resources have been created according to the most common WSO2 Open Banking deployment profiles available for allowing users to quickly evaluate product features along side their co-operate Open Banking requirements. The Compose resources make use of Docker images built in the above step.
 ## Dockerfiles Structure
 
-  Outer alpine & ubuntu directories contain the dockerfiles with default jdk versions. The default jdk version of an OB product is the same the base product default jdk version. The default jdk version is mentioned within the brackets below. For other jdk versions, seperate directoriers are maintained.
+  Outer alpine directories contain the dockerfiles with default jdk versions. The default jdk version of an OB product is the same the base product default jdk version. The default jdk version is mentioned within the brackets below. For other jdk versions, seperate directoriers are maintained.
 
 ```bash
 ├── dockerfiles
-│     │── obiam
-│     └── obam
+│     └── alpine 
+│          │── obiam-accelerator
+│          └── obam-accelerator
 └── samples
       │── wso2is_with_obiam
       │── wso2am_with_obam
