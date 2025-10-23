@@ -42,7 +42,7 @@ git clone https://github.com/wso2/docker-open-banking.git
     ```
     
     * eg:- **Hosted locally**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg OB_TRUSTED_CERTS_URL=http://localhost:8000/trusted-certs.zip --build-arg WSO2_OB_KEYSTORES_URL=http://localhost:8000/docker-open-banking/samples/keystores/ --build-arg RESOURCE_URL=http://localhost:8000 -t wso2is-ob:4.0.0 .` <br><br>
-    * eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg OB_TRUSTED_CERTS_URL=http://10.100.8.22:8000/trusted-certs.zip --build-arg WSO2_OB_KEYSTORES_URL=http://10.100.8.22:8000/docker-open-banking/samples/keystores/ --build-arg RESOURCE_URL=http://10.100.8.22:8000 -t wso2is-ob:4.0.0 .`
+    * eg:- **Hosted remotely**: `docker build --build-arg BASE_PRODUCT_VERSION=7.1.0 --build-arg OB_TRUSTED_CERTS_URL=http://<public_ip:port>/trusted-certs.zip --build-arg WSO2_OB_KEYSTORES_URL=http://<public_ip:port>/docker-open-banking/samples/keystores/ --build-arg RESOURCE_URL=http://<public_ip:port> -t wso2is-ob:4.0.0 .`
 
 ## Running the Docker Image
 
