@@ -9,11 +9,12 @@
 #
 # ----------------------------------------------------------------------------------------
 
-ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
+# Adding staging env url for testing purpose
+ARG BASE_DOCKER_IMAGE_REGISTRY="80a0414c-c5b1-4cd5-9acd-31e90002e61f.dev.wdt.choreoapps.dev"
 ARG BASE_PRODUCT_VERSION
 
 # set base Docker image to WSO2 API Manager Alpine Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}.0-alpine
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-apim/am:${BASE_PRODUCT_VERSION}.0-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
