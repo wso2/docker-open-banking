@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------------------------------
 
 # Define dynamic registry and version arguments globally
-ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
+ARG BASE_DOCKER_IMAGE_REGISTRY="registry.wso2.com"
 ARG BASE_PRODUCT_VERSION
 
 # ----------------------------------------------
@@ -19,7 +19,7 @@ ARG BASE_PRODUCT_VERSION
 # accelerator files.
 # ----------------------------------------------
 # NOTE: The base WSO2 images usually include the full product version (e.g., 4.0.0.0 or 4.0.0)
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obam-accelerator:4.0.0.0-alpine AS obam
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-ob/obam-accelerator:4.0.0.0-alpine AS obam
 
 # Note: The test command verifies the expected accelerator directory exists
 RUN test -d /home/wso2carbon/wso2-fsam-accelerator-4.0.0
@@ -28,7 +28,7 @@ RUN test -d /home/wso2carbon/wso2-fsam-accelerator-4.0.0
 # STAGE 2: FINAL WSO2 AM IMAGE (Merge Accelerator)
 # Sets up the base product and integrates the accelerator artifacts.
 # ----------------------------------------------
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2am:${BASE_PRODUCT_VERSION}.0-alpine
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-apim/am:${BASE_PRODUCT_VERSION}.0-alpine
 
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v4.0.0.3"
