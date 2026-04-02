@@ -40,7 +40,7 @@ services:
 
   obbi:
     container_name: obbi
-    image: docker.wso2.com/wso2-obbi
+    image: registry.wso2.com/wso2-ob/obbi:latest-si4.0.0.0
     healthcheck:
       test: ["CMD", "nc", "-z", "obbi", "9444"]
       interval: 10s
@@ -65,7 +65,7 @@ services:
 
   obiam:
     container_name: obiam
-    image: docker.wso2.com/wso2-obiam
+    image: registry.wso2.com/wso2-ob/obiam
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://obiam:9446/carbon/admin/login.jsp"]
       interval: 10s
@@ -93,7 +93,7 @@ services:
 
   obam:
     container_name: obam
-    image: docker.wso2.com/wso2-obam
+    image: registry.wso2.com/wso2-ob/obam
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://obam:9443/carbon/admin/login.jsp"]
       interval: 10s
