@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------------------------------
 
 # Adding staging env url for testing purpose
-ARG BASE_DOCKER_IMAGE_REGISTRY="80a0414c-c5b1-4cd5-9acd-31e90002e61f.dev.wdt.choreoapps.dev"
+ARG BASE_DOCKER_IMAGE_REGISTRY="registry.wso2.com"
 ARG BASE_PRODUCT_VERSION  
 
 # set base Docker image to WSO2 Identity Server Ubuntu Docker image

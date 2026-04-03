@@ -32,7 +32,7 @@
 
 3. If you wish to run the Docker Compose setup using UK Toolkit Docker Images or Docker images built locally, please follow the steps below.
    > 1. Build Docker images using Docker resources available from [here](../../dockerfiles/) 
-   > 2. Remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml` and change the image name to the image name of the locally built image.
+   > 2. Remove the `registry.wso2.com/*` prefix from the `image` name in the `docker-compose.yml` and change the image name to the image name of the locally built image.
 
    >> If you don't wish use locally built docker images, please ignore 3rd step.
    

@@ -9,11 +9,11 @@
 #
 # ----------------------------------------------------------------------------------------
 
-ARG BASE_DOCKER_IMAGE_REGISTRY="docker.wso2.com"
+ARG BASE_DOCKER_IMAGE_REGISTRY="registry.wso2.com"
 ARG BASE_PRODUCT_VERSION
 ARG ACCELERATOR_PRODUCT_VERSION=3.0.0.0-si${BASE_PRODUCT_VERSION}.0
 # set base Docker image to WSO2 Open Banking Business Intelligence Ubuntu Docker image
-FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-obbi:${ACCELERATOR_PRODUCT_VERSION}
+FROM ${BASE_DOCKER_IMAGE_REGISTRY}/wso2-ob/obbi:${ACCELERATOR_PRODUCT_VERSION}
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v3.0.0.10"
 
