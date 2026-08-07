@@ -10,8 +10,8 @@ This section defines the step-by-step instructions to build an [Alpine](https://
   -  Rename the `OB_SandBox_PP_Root.cer` as `root.cer`.
   - Rename the `OB_SandBox_PP_Issuing.cer` as `issuer.cer`.
   - Zip the root.cer and issuer.cer in one zip archive file.
-* Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v4.0.0.3/samples/keystores)
-* DB driver file matching to the DB type and version you are going to use with WSO2 API Manager.
+* Download Keystores directory of wso2 server certs of WSO2 Open Banking Docker Images. (https://github.com/wso2/docker-open-banking/raw/v4.0.0.3/samples/keystores)
+* Download the DB driver file matching to the DB type and version you are going to use with WSO2 API Manager.
 * Host the downloaded artifacts locally or on a remote location.
   - The hosted locations of artifacts will be passed as the build arguments when building the Docker image.<br>
     1. **OB_TRUSTED_CERTS_URL** - Zip archive location of the certificates of WSO2 Open Banking root and issuer
@@ -36,6 +36,17 @@ git clone https://github.com/wso2/docker-open-banking.git
 ##### 3. Build the Docker image.
 
 - Navigate to `<AM_DOCKERFILE_HOME>` directory
+- Log in to the WSO2 Docker registry.
+
+  ```shell
+   docker login registry.wso2.com
+  ```
+
+  ````
+  - Username: Your registered email address
+  - Password: CLI secret extracted from your User Profile at [registry.wso2.com](http://registry.wso2.com)
+  ```` 
+  
 - Execute `docker build` command as shown below.
     ```
     docker build --build-arg BASE_PRODUCT_VERSION=<APIM_VERSION> --build-arg OB_TRUSTED_CERTS_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg WSO2_OB_KEYSTORES_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> --build-arg RESOURCE_URL=<URL_OF_THE_HOSTED_LOCATION/FILENAME> -t wso2am-ob:4.0.0 .
