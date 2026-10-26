@@ -21,6 +21,14 @@ FROM adoptopenjdk/openjdk8:jdk8u272-b10-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>" \
       com.wso2.docker.source="https://github.com/wso2/docker-open-banking/releases/tag/v2.0.0.1"
 
+# Block the compromised eMudhra intermediates, including their Sectigo cross-signs.
+COPY emudhra-blocked-certs.txt /tmp/emudhra-blocked-certs.txt
+RUN \
+    test -f "${JAVA_HOME}/jre/lib/security/blacklisted.certs" \
+    && echo >> "${JAVA_HOME}/jre/lib/security/blacklisted.certs" \
+    && cat /tmp/emudhra-blocked-certs.txt >> "${JAVA_HOME}/jre/lib/security/blacklisted.certs" \
+    && rm /tmp/emudhra-blocked-certs.txt
+
 # set Docker image build arguments
 # build arguments for user/group configurations
 ARG USER=wso2carbon
